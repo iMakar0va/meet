@@ -1,6 +1,6 @@
 FROM php:8.0-apache
 
-# Устанавливаем необходимые зависимости для PostgreSQL
+# Устанавливаем зависимости для PostgreSQL
 RUN apt-get update && apt-get install -y libpq-dev
 
 # Устанавливаем PHP расширения
