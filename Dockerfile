@@ -1,17 +1,19 @@
-# Используем официальный образ PHP с Apache
 FROM php:8.0-apache
 
-# Устанавливаем необходимые расширения для работы с PostgreSQL
+# Устанавливаем необходимые зависимости для PostgreSQL
+RUN apt-get update && apt-get install -y libpq-dev
+
+# Устанавливаем PHP расширения
 RUN docker-php-ext-install pdo pdo_pgsql
 
-# Копируем все файлы проекта в контейнер
+# Копируем все файлы в контейнер
 COPY . /var/www/html/
 
-# Устанавливаем рабочую директорию
-WORKDIR /var/www/html/
+# Обеспечиваем доступ к нужным папкам
+RUN chown -R www-data:www-data /var/www/html
 
-# Открываем порт 80 для доступа к приложению
+# Открываем порт для Apache
 EXPOSE 80
 
-# Запускаем Apache с флагом foreground, чтобы контейнер не завершился
+# Запускаем Apache
 CMD ["apache2-foreground"]
