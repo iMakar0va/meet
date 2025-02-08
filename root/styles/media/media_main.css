@@ -1,0 +1,61 @@
+@import url(media_general.css);
+
+@media (max-width: 1200px) {
+    .banner__block-item:first-child {
+        right: 75px;
+    }
+
+    .banner__block-item:last-child {
+        right: 190px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .banner__block:last-child {
+        display: none;
+    }
+
+    .banner__block:first-child {
+        width: 100%;
+    }
+}
+
+@media (max-width: 890px) {
+    .carousel {
+        padding: 0;
+    }
+
+    .info {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .info__block {
+        width: 450px;
+    }
+
+    .h2 {
+        margin: 20px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .banner-title {
+        margin-bottom: 40px;
+    }
+
+    .banner__block a {
+        margin-bottom: 10px;
+    }
+
+    .info__block {
+        width: 350px;
+    }
+}
+
+@media (max-width: 365px) {
+    .info__block {
+        width: 300px;
+    }
+}

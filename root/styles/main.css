@@ -1,0 +1,188 @@
+@import url(general.css);
+@import url(https://fonts.googleapis.com/css?family=Arsenal:regular,italic,700,700italic);
+
+/* =============Banner============= */
+.banner {
+    position: relative;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    width: 100%;
+    height: 90vh;
+
+    background-image: url(../img/banner.png);
+    background-color: var(--blue-color);
+    border-top: 3px solid var(--white-color);
+    padding: 50px 0;
+}
+
+.banner__wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+}
+
+.banner-title {
+    font-family: "Arsenal";
+    font-size: 64px;
+    font-weight: bold;
+    max-width: 580px;
+}
+
+.banner-desc {
+    font-size: 18px;
+    max-width: 620px;
+    margin-top: 40px;
+    margin-bottom: 80px;
+}
+
+.banner__block:first-child {
+    width: 50%;
+}
+
+.banner__block:last-child{
+    position: relative;
+}
+
+.banner__block-item {
+    position: absolute;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: auto;
+}
+
+.banner__block-item:first-child {
+    bottom: -20px;
+    right: 0px;
+
+    width: 270px;
+    height: 270px;
+}
+
+.banner__block-item:nth-child(2) {
+    bottom: -186px;
+    right: 255px;
+
+    width: 240px;
+    height: 240px;
+
+}
+
+.banner__block-item:last-child {
+    top: 120px;
+    right: 68px;
+
+    width: 200px;
+    height: 200px;
+}
+
+/* =============Hash============= */
+.carousel {
+    /* margin: 0 0; */
+    /* padding: 20px 0; */
+    overflow: hidden;
+    display: flex;
+}
+
+.hash {
+    display: flex;
+    gap: 20px;
+    padding-right: 20px;
+    animation: scrolling 25s linear infinite;
+
+    margin: 35px 0px;
+    display: flex;
+    justify-content: center;
+}
+
+.hash__item {
+    min-width: 230px;
+    border-radius: 25px;
+    padding: 5px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hash__item img {
+    margin-right: 10px;
+}
+
+.hash__item:nth-child(odd) {
+    background-color: var(--very-light-blue-color);
+    color: var(--blue-color);
+    border: 3px solid var(--blue-color);
+}
+
+.hash__item:nth-child(even) {
+    background-color: var(--blue-color);
+    color: var(--white-color);
+}
+
+@keyframes scrolling {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* =============Info============= */
+
+.info {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}
+
+.info__block {
+    width: 455px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 55px 15px 20px;
+    background-color: #3E626C;
+    border-radius: 10px;
+}
+
+.info__block .title1 {
+    font-weight: bold;
+}
+
+.info__number {
+    position: relative;
+    font-weight: bold;
+    color: #FADD84;
+    /* color: var(--yellow-color); */
+}
+
+.info__number img {
+    position: absolute;
+    right: -30px;
+    bottom: -5px;
+}
+
+/* =============Creation============= */
+.creation {
+    margin-bottom: 35px;
+    padding: 32px;
+    background-color: #3E626C;
+    border-radius: 10px;
+}
+
+.creation-title {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.creation-text {
+    margin: 15px 0px 31px;
+    max-width: 800px;
+    font-size: 20px;
+    font-weight: lighter;
+}

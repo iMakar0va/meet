@@ -1,0 +1,171 @@
+/* Форма создать мероприятие */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form {
+    /* max-width: 740px;
+    min-height: 440px;
+
+    margin: 50px auto;
+    padding: 0 0 50px;
+    text-align: center;
+
+    border-radius: 10px;
+    background-color: var(--color3); */
+    max-width: 740px;
+    margin: 35px auto;
+    padding: 35px 28px 100px;
+    border-radius: 15px;
+    background-color: var(--blue-color);
+}
+
+
+.form__group {
+    /* margin-bottom: 20px; */
+    /* padding: 0 20px; */
+    flex: 1;
+    position: relative;
+
+}
+
+.input {
+    width: 100%;
+    padding: 18px 26px;
+    color: black;
+    border-radius: 10px;
+    background-color: white;
+    font-size: 18px;
+}
+
+.input::placeholder {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.input:focus::placeholder {
+    opacity: 1;
+}
+
+.input:focus+.label {
+    transform: translateY(-25px);
+    font-size: 12px;
+}
+
+.input:focus {
+    border: 3px solid rgb(189, 213, 211);
+}
+
+/* .input:focus+.label,
+.input:not(:placeholder-shown)+.label {
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+} */
+
+.input:not(:placeholder-shown)+.label {
+    transform: translateY(-25px);
+    font-size: 12px;
+}
+
+textarea .input::placeholder {
+    opacity: 1;
+}
+
+textarea {
+    max-width: 928px;
+    min-width: 300px;
+    min-height: 125px;
+}
+
+.label {
+    color: black;
+    position: absolute;
+    top: 18px;
+    left: 30px;
+    pointer-events: none;
+    transition: all .2s ease;
+}
+
+.form__group:nth-child(6) {
+    display: flex;
+    gap: 15px;
+}
+
+
+select {
+    background-color: #fff;
+    color: black;
+    padding: 18px 26px;
+    font-size: 16px;
+    border-radius: 10px;
+    width: 100%;
+}
+
+
+.error {
+    text-align: center;
+    font-weight: bold;
+    color: var(--green-color);
+}
+
+.input-file-row {
+    display: inline-block;
+    text-align: center;
+}
+
+.input-file {
+    position: relative;
+    display: inline-block;
+}
+
+.input-file span {
+    display: inline-block;
+    cursor: pointer;
+    color: rgb(255 255 255);
+    border-radius: 10px;
+    background-color: var(--light-green-color);
+    padding: 20px 30px;
+    transition: background-color 0.2s;
+}
+
+.input-file input[type=file] {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+    display: block;
+    width: 0;
+    height: 0;
+}
+
+.input-file:hover span {
+    background-color: #0c757a;
+}
+
+.input-file-list {
+    padding-top: 20px;
+}
+
+.input-file-list-item {
+    display: inline-block;
+    width: 150px;
+    position: relative;
+}
+
+.input-file-list-item img {
+    width: 150px;
+}
+
+.input-file-list-remove {
+    color: #fff;
+    display: inline-block;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ff0202;
+    width: 16px;
+    line-height: 15px;
+    border-radius: 50%;
+}

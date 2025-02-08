@@ -1,0 +1,28 @@
+@import url(media_general.css);
+@media (max-width: 800px) {
+
+    .lk {
+        flex-direction: column;
+    }
+
+    .lk__menu {
+        border-radius: 15px 15px 0 0;
+        padding-top: 10px;
+        padding-bottom: 30px;
+    }
+
+    .lk__setting,
+    .lk__participant,
+    .lk__profile {
+        border-radius: 0 0 15px 15px;
+        padding-top: 25px;
+    }
+
+}
+
+@media (max-width: 600px) {
+    .lk__profile-top {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

@@ -1,0 +1,224 @@
+@import url(general.css);
+
+/* ===============lk__menu=============== */
+.lk {
+    display: flex;
+    margin: 35px auto;
+    min-height: 420px;
+}
+
+/* .lk a {
+    color: var(--white-color);
+} */
+
+.lk__menu {
+    padding: 20px;
+    background-color: var(--blue-color);
+    color: var(--white-color);
+    border-radius: 15px 0 0 15px;
+    width: 400px;
+}
+
+.lk__menu div:first-child {
+    cursor: pointer;
+}
+
+.lk__menu div:first-child:hover {
+    color: var(--yellow-color);
+}
+
+.lk__menu a {
+    color: white;
+}
+.lk__menu a:hover {
+    color: #02494C;
+}
+
+.lk__menu-title:first-child {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.lk__menu-title:first-child img {
+    width: 36px;
+}
+
+.lk__menu-title {
+    margin-top: 20px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.lk__menu-title div {
+    font-weight: 200;
+}
+.lk__menu-items{
+    margin-left: 10px;
+}
+.lk__menu-items a {
+    display: block;
+    margin-bottom: 8px;
+    line-height: 1;
+    color: var(--white-color);
+}
+
+.lk__menu-items a:hover {
+    text-decoration: underline;
+}
+
+.lk__menu-items div {
+    position: relative;
+    margin-top: 7px;
+    padding-left: 10px;
+    transition: color .3s ease;
+}
+
+.lk__menu-items div:hover {
+    cursor: pointer;
+    color: var(--yellow-color);
+}
+
+/* ===============lk__profile=============== */
+.setting {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.setting img {
+    width: 40px;
+}
+
+.lk__profile {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+    padding: 35px;
+    background-color: var(--very-light-blue-color);
+    /* color: var(--black-color); */
+    border-radius: 0 15px 15px 0;
+}
+
+.lk__profile .title1 {
+    font-weight: 500;
+    color: var(--black-color);
+}
+
+.lk__right {
+    color: var(--black-color);
+}
+
+.lk__profile .title2 {
+    font-weight: 300;
+}
+
+.lk__profile-top {
+    display: flex;
+    gap: 50px;
+    margin-bottom: 25px;
+}
+
+.lk__profile-img img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.lk__profile-data {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.desc {
+    /* width: 500px; */
+    display: inline-block;
+    display: flex;
+    word-wrap: break-word;
+}
+
+/* ===============lk__setting=============================== */
+.lk__setting {
+    width: 100%;
+    padding: 35px;
+    background-color: var(--very-light-blue-color);
+    color: var(--black-color);
+    border-radius: 0 15px 15px 0;
+}
+
+.lk__setting .title1 {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* ===============lk__participant-currentEven=============== */
+.lk__participant {
+    width: 100%;
+    padding: 35px;
+    background-color: var(--very-light-blue-color);
+    border-radius: 0 15px 15px 0;
+}
+
+.lk__participant .title1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--black-color);
+    font-weight: bold;
+}
+
+.pastEvent {
+    display: none;
+}
+
+.currentEvent {
+    display: block;
+}
+
+
+/* Card new */
+
+/* .cards {
+    margin-right: -15px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+
+    margin-right: 15px;
+    margin-bottom: 20px;
+
+    border: 3px solid var(--green-color);
+    border-radius: 25px;
+    width: 300px;
+    background-color: var(--green-color);
+    transition: box-shadow .2s ease-in;
+}
+
+.card__photo {
+    position: relative;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    width: 25px;
+    height: 25px;
+}
+
+.card__photo::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+} */

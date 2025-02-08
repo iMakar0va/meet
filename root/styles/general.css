@@ -1,0 +1,314 @@
+@import url(reset.css);
+/* @import url(https://fonts.googleapis.com/css?family=Inter:100,200,300,regular,500,600,700,800,900,100italic,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic); */
+@import url(https://fonts.googleapis.com/css?family=Roboto:100,200,300,regular,500,600,700,800,900,100italic,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic);
+
+/* @import url(https://fonts.googleapis.com/css?family=Poppins:100,100italic,200,200italic,300,300italic,regular,italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic); */
+/* @import url(media/media_general.css); */
+/* @import url(https://fonts.googleapis.com/css?family=Lato:100,100italic,300,300italic,regular,italic,700,700italic,900,900italic); */
+/* =============Общие настройки============= */
+:root {
+    --blue-color: #0C949C;
+    --light-blue-color: #69E5EB;
+    --very-light-blue-color: #c2e4e6;
+    --green-color: #02494C;
+    --light-green-color: #296163;
+    /* --yellow-color: #FFA150; */
+    --yellow-color: #ff8f2d;
+    --brown-color: #a26f42;
+    --white-color: #f2f2f2;
+    --black-color: #2B2C2D;
+}
+
+body {
+    font-family: "Roboto", sans-serif;
+    color: #fff;
+}
+
+.container {
+    max-width: 1336px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.h2 {
+    margin: 35px 0 25px;
+    font-weight: bold;
+    color: var(--black-color);
+    text-align: center;
+}
+
+.title {
+    font-size: 54px;
+}
+
+.title0 {
+    font-size: 32px;
+}
+
+.title1 {
+    font-size: 24px;
+}
+
+.title2 {
+    font-size: 20px;
+}
+
+.title3 {
+    font-size: 16px;
+}
+
+.title4 {
+    font-size: 12px;
+}
+
+.title5 {
+    font-size: 10px;
+}
+
+.btn1 {
+    display: inline-block;
+    min-width: 140px;
+    width: fit-content;
+    background: var(--yellow-color);
+    color: var(--black-color);
+    padding: 10px 20px;
+    border: 3px solid var(--brown-color);
+    border-radius: 10px;
+    text-align: center;
+    transition: background-color, box-shadow .3s ease-in-out;
+}
+
+.btn1:hover {
+    background-color: #f48625;
+    box-shadow: 0px 0px 13px var(--brown-color);
+}
+
+.btn2 {
+    background-color: transparent;
+    color: var(--white-color);
+}
+
+.logo img {
+    height: 50px;
+}
+
+.btn1 a {
+    color: #2B2C2D;
+}
+
+.no-results {
+    background-color: #02494C;
+    border-radius: 10px;
+    color: #fff;
+}
+
+/* =============Header============= */
+header {
+    /* position: sticky;
+    top: 0;
+    z-index: 90; */
+    background-color: #44969a;
+}
+
+.header__wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+}
+
+.menu {
+    display: flex;
+    gap: 35px;
+}
+
+.menu a {
+    position: relative;
+    color: var(--white-color);
+}
+
+.menu a::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--yellow-color);
+    border-radius: 15px;
+    opacity: 0;
+    transition: opacity .3s ease-in;
+}
+
+.menu a:hover::after {
+    opacity: 1;
+}
+
+.header__icons img {
+    width: 46px;
+}
+
+.header__icons {
+    display: flex;
+    gap: 10px;
+}
+
+#lk {
+    display: none;
+}
+
+/* -------------- */
+
+.nav-button {
+    display: none;
+}
+
+
+/* =============Footer============= */
+footer {
+    background-color: var(--blue-color);
+    padding: 25px 0;
+}
+
+.footer__wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.footer__block {
+    text-align: right;
+}
+
+.footer__block a {
+    color: #FADD84;
+    font-weight: bold;
+}
+
+.footer__block a:hover {
+    text-decoration: underline;
+}
+
+.footer-title {
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.footer-help a {
+    display: block;
+    margin-top: 5px;
+    font-weight: 300;
+    color: #fff;
+}
+
+.footer-help a:hover {
+    color: #bcbcbc;
+}
+
+.footer__cookie {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.footer__cookie div {
+    max-width: 734px;
+}
+
+/* =============Cards============= */
+
+.cards {
+    margin-right: -15px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+
+    margin-right: 15px;
+    margin-bottom: 20px;
+
+    border: 3px solid var(--green-color);
+    border-radius: 15px;
+    width: 300px;
+    background-color: var(--green-color);
+    transition: box-shadow .2s ease-in;
+}
+
+.card:hover {
+    box-shadow: 5px 7px 10px #4c7476;
+}
+
+.card__img {
+    position: relative;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    width: 100%;
+    height: 170px;
+
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.card__content {
+    padding: 15px 10px;
+}
+
+.card__type {
+    border-radius: 5px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-weight: 500;
+    width: fit-content;
+    padding: 5px 10px;
+    background-color: #ffffff28;
+}
+
+.card__date {
+    margin-top: 10px;
+    color: #FADD84;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.card__time {
+    margin-bottom: 25px;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.card__city {
+    margin-bottom: 5px;
+    font-size: 13px;
+    font-weight: 200;
+}
+
+.card__title {
+    font-size: 18px;
+    height: 60px;
+    margin-bottom: 5px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    /* Ограничивает количество строк (например, 2 строки) */
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    /* Это поможет разрывать слова, если они слишком длинные */
+}
+
+
+
+.card .btn1 {
+    display: flex;
+    justify-content: center;
+    margin: 10px auto;
+}

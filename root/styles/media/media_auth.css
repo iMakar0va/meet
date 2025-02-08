@@ -1,0 +1,11 @@
+@import url(media_general.css);
+
+@media (max-width: 485px) {
+    .text-field__icon input {
+        padding: 0 20px 0 52px;
+    }
+
+    .text-field__icon::before {
+        left: 10px;
+    }
+}
