@@ -29,10 +29,8 @@
                 <button class="btn1 title2">Войти</button>
                 <a href="./reg.php" class="title3" id="link-reg">Зарегистрироваться</a>
                 <a href="https://leader-id.ru/oauth/authorize?client_id=6749818&redirect_uri=http://localhost/wow/lk.php&response_type=code&scope=openid">
-    Войти через LeaderID
-</a>
-
-
+                    Войти через LeaderID
+                </a>
             </form>
         </div>
         <!-- /form -->
