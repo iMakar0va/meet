@@ -25,16 +25,19 @@
                 <div class="cards">
                     <?php
                     $userId = $_SESSION['user_id'];
-                    $getEventUser = "SELECT * FROM organizators o JOIN organizators_events oe ON o.organizator_id = oe.organizator_id JOIN events e ON oe.event_id = e.event_id WHERE o.organizator_id = '$userId' and e.event_date > CURRENT_DATE;";
+                    $getEventUser = "SELECT * FROM organizators o
+                                     JOIN organizators_events oe ON o.organizator_id = oe.organizator_id
+                                     JOIN events e ON oe.event_id = e.event_id
+                                     WHERE o.organizator_id = $1 and e.event_date > CURRENT_DATE;";
 
-                    $resultGetEventUser = pg_query($conn, $getEventUser);
+                    $resultGetEventUser = pg_query_params($conn, $getEventUser, [$userId]);
 
-                    if ($resultGetEventUser) {
+                    if ($resultGetEventUser && pg_num_rows($resultGetEventUser) > 0) {
                         while ($row = pg_fetch_assoc($resultGetEventUser)) {
                             require './php/card_change.php';
                         }
                     } else {
-                        echo "Ошибка при получении данных: " . pg_last_error();
+                        echo "<p>Нет текущих мероприятий для отображения.</p>";
                     } ?>
                 </div>
                 <!-- /cards -->

@@ -9,6 +9,9 @@
 </head>
 
 <body>
+    <?php
+    require './php/header.php';
+    ?>
     <div class="form">
         <div class="form-title title0">Восстановление пароля</div>
         <form id="resetPasswordForm">
@@ -16,10 +19,14 @@
                 <input id="email" name="email" class="text-field__input title2" type="email" placeholder="Почта" required>
             </div>
             <button type="submit" class="btn1">Отправить</button>
-            <div id="error" class="error title2" ></div>
+            <div id="error" class="error title2"></div>
             <div id="success" class="success title2" style="color: green; display: none;"></div>
+            <a href="./auth.php" class="title3" id="link-auth">Вернуться назад</a>
         </form>
     </div>
+    <?php
+    require './php/footer.php';
+    ?>
     <script>
         document.getElementById('resetPasswordForm').addEventListener('submit', function(e) {
             e.preventDefault();
