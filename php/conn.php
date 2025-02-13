@@ -8,8 +8,8 @@
 // if (!$conn) {
 //     die("Ошибка подключения к базе данных: " . pg_last_error());
 // }
-$host = 'roundhouse.proxy.rlwy.net';  // Хост от Railway
-$port = '55214';                     // Порт от Railway
+$host = 'postgres.railway.internal';  // Хост от Railway
+$port = '5432';                     // Порт от Railway
 $user = 'postgres';                  // Ваш PostgreSQL пользователь
 $password = 'KalODFtzEMVpNfunTSziOygJjQpyhGzv';  // Ваш пароль от Railway
 $dbname = 'railway';                 // Имя базы данных, указанное на Railway
