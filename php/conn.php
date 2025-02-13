@@ -14,13 +14,17 @@ $user = 'postgres';                    // Имя пользователя
 $password = 'KalODFtzEMVpNfunTSziOygJjQpyhGzv';  // Пароль
 $dbname = 'railway';                  // Имя базы данных
 
-// Строка подключения
-$conn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$password");
+try {
+    // Строка подключения с использованием PDO
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
+    $conn = new PDO($dsn, $user, $password);
 
-if (!$conn) {
-    die("Ошибка подключения к базе данных: " . pg_last_error());
+    // Устанавливаем атрибут для исключений
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    echo "Подключение успешно!";
+} catch (PDOException $e) {
+    echo "Ошибка подключения: " . $e->getMessage();
 }
-
-echo "Подключение успешно!";
 ?>
 

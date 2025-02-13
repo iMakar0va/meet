@@ -11,11 +11,13 @@ if (!isset($_SESSION['user_id'])) {
 $userId = $_SESSION['user_id'];
 
 // Проверяем, является ли пользователь организатором, учитывая, что статус имеет тип boolean
-$sql = "SELECT * FROM organizators WHERE organizator_id = $1 AND isorganizator = true";
-$result = pg_query_params($conn, $sql, [$userId]);
+$sql = "SELECT * FROM organizators WHERE organizator_id = :userId AND isorganizator = true";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+$stmt->execute();
 
 // Если запрос вернул хотя бы одну строку, значит пользователь - организатор
-if ($result && pg_num_rows($result) > 0) {
+if ($stmt->rowCount() > 0) {
     header("Location: ../creatingEvent.php");
     exit;
 }

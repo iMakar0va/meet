@@ -83,10 +83,11 @@
                 </div>
                 <div class="info__number title0">
                     <?php
-                    $getUsers = "select count(*) from users;";
-                    $resultGetUsers = pg_query($conn, $getUsers);
-                    $row = pg_fetch_row($resultGetUsers);
-                    $count = $row[0];
+                    // Получение количества пользователей
+                    $getUsers = "SELECT count(*) FROM users;";
+                    $resultGetUsers = $conn->query($getUsers);
+                    $row = $resultGetUsers->fetch(PDO::FETCH_ASSOC);
+                    $count = $row['count'];
                     echo $count;
                     ?>
                     <img src="img/icons/people.svg" alt="people">
@@ -99,10 +100,11 @@
                 </div>
                 <div class="info__number title0">
                     <?php
-                    $getUsers = "select count(*) from events;";
-                    $resultGetUsers = pg_query($conn, $getUsers);
-                    $row = pg_fetch_row($resultGetUsers);
-                    $count = $row[0];
+                    // Получение количества мероприятий
+                    $getEvents = "SELECT count(*) FROM events;";
+                    $resultGetEvents = $conn->query($getEvents);
+                    $row = $resultGetEvents->fetch(PDO::FETCH_ASSOC);
+                    $count = $row['count'];
                     echo $count;
                     ?>
                     <img src="img/icons/calendar.svg" alt="calendar">
@@ -115,16 +117,25 @@
         <div class="h2 title0">Популярные мероприятия</div>
         <div class="cards">
             <?php
-            $getEvents = "SELECT e.event_id,e.image,e.title,e.type,e.topic,e.description, e.start_time, e.end_time, e.event_date, e.city, e.address, e.organizer, e.place, e.phone, e.email, COUNT(ue.user_id) AS participants_count FROM events e LEFT JOIN user_events ue ON e.event_id = ue.event_id WHERE e.event_date > CURRENT_DATE GROUP BY e.event_id ORDER BY participants_count DESC LIMIT 3;";
-            $resultGetEvents = pg_query($conn, $getEvents);
-            if ($resultGetEvents) {
-                while ($row = pg_fetch_assoc($resultGetEvents)) {
-                    require './php/card.php';
+            // Запрос на выборку популярных мероприятий
+            $getPopularEvents = "
+                SELECT e.event_id, e.image, e.title, e.type, e.topic, e.description, e.start_time, e.end_time, e.event_date, e.city, e.address, e.organizer, e.place, e.phone, e.email,
+                       COUNT(ue.user_id) AS participants_count
+                FROM events e
+                LEFT JOIN user_events ue ON e.event_id = ue.event_id
+                WHERE e.event_date > CURRENT_DATE
+                GROUP BY e.event_id
+                ORDER BY participants_count DESC
+                LIMIT 3;
+            ";
+            $resultGetPopularEvents = $conn->query($getPopularEvents);
+            if ($resultGetPopularEvents) {
+                while ($row = $resultGetPopularEvents->fetch(PDO::FETCH_ASSOC)) {
+                    require './php/card.php'; // выводим карточки мероприятия
                 }
             } else {
-                echo "Ошибка при получении данных: " . pg_last_error();
+                echo "Ошибка при получении данных: " . $conn->errorInfo();
             }
-            pg_close($conn);
             ?>
         </div>
         <!-- /cards -->
