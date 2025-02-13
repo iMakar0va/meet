@@ -22,7 +22,7 @@ try {
     // Устанавливаем атрибут для исключений
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    echo "Подключение успешно!";
+    // echo "Подключение успешно!";
 } catch (PDOException $e) {
     echo "Ошибка подключения: " . $e->getMessage();
 }

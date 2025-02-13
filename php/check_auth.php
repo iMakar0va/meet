@@ -1,48 +1,57 @@
 <?php
-
-require 'conn.php';
+require 'conn.php';  // Подключение к базе данных через PDO
 session_start();
 
-header('Content-Type: application/json');
-
+// Проверка на POST запрос
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $input = json_decode(file_get_contents('php://input'), true);
+    // Получаем данные из формы
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
 
     // Проверка наличия данных
-    $email = $input['email'] ?? '';
-    $password = $input['password'] ?? '';
-
     if (empty($email) || empty($password)) {
-        echo json_encode(['success' => false, 'message' => 'Email и пароль обязательны для входа.']);
+        echo "Email и пароль обязательны для входа.";
         exit;
     }
 
-    // Подготовленные выражения для безопасных запросов
-    $getUserQuery = "SELECT user_id, password FROM users WHERE email = $1";
-    $resultGetUser = pg_query_params($conn, $getUserQuery, [$email]);
+    try {
+        // Подготовленное выражение для безопасного запроса
+        $sql = "SELECT user_id, password FROM users WHERE email = :email";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->execute();
 
-    if ($resultGetUser && pg_num_rows($resultGetUser) > 0) {
-        // Получаем хеш пароля из базы данных
-        $row = pg_fetch_assoc($resultGetUser);
-        $hashedPasswordFromDb = $row['password'];
+        // Проверка, если пользователь найден в базе
+        if ($stmt->rowCount() > 0) {
+            // Получаем данные из результата запроса
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $hashedPasswordFromDb = $row['password'];
 
-        if (password_verify($password, $hashedPasswordFromDb)) {
-            // Получаем ID пользователя
-            $userId = $row['user_id'];
+            // Проверка пароля
+            if (password_verify($password, $hashedPasswordFromDb)) {
+                // Получаем ID пользователя
+                $userId = $row['user_id'];
 
-            // Создаем новую сессию и устанавливаем cookie
-            session_regenerate_id(true); // Обновляем ID сессии для защиты
-            $_SESSION['user_id'] = $userId;
-            setcookie("user_id", $userId, time() + 3600 * 24 * 30, "/"); // cookie на 30 дней
+                // Создаем новую сессию и устанавливаем cookie
+                session_regenerate_id(true); // Обновляем ID сессии для защиты
+                $_SESSION['user_id'] = $userId;
+                setcookie("user_id", $userId, time() + 3600 * 24 * 30, "/"); // cookie на 30 дней
 
-            echo json_encode(['success' => true]);
+                // Перенаправляем на главную страницу или страницу профиля
+                header("Location: /dashboard.php"); // Убедитесь, что файл существует
+                exit;
+            } else {
+                echo "Неверный пароль.";
+            }
         } else {
-            echo json_encode(['success' => false, 'message' => 'Неверный пароль.']);
+            echo "Пользователь с таким email не найден.";
         }
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Пользователь с таким email не найден.']);
+    } catch (PDOException $e) {
+        // Обработка ошибок
+        echo "Ошибка при подключении к базе данных: " . $e->getMessage();
     }
 } else {
     // Если не POST запрос
-    echo json_encode(['success' => false, 'message' => 'Неверный метод запроса.']);
+    echo "Неверный метод запроса.";
 }
+?>
