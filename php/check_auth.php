@@ -1,16 +1,18 @@
 <?php
-require 'conn.php';  // Подключение к базе данных через PDO
+require 'conn.php';  // Подключение через PDO
 session_start();
 
-// Проверка на POST запрос
+// Проверяем, что данные пришли через POST и в формате JSON
+$input = json_decode(file_get_contents('php://input'), true);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Получаем данные из формы
-    $email = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
+    // Получаем email и пароль из JSON
+    $email = $input['email'] ?? '';
+    $password = $input['password'] ?? '';
 
     // Проверка наличия данных
     if (empty($email) || empty($password)) {
-        echo "Email и пароль обязательны для входа.";
+        echo json_encode(['success' => false, 'message' => 'Email и пароль обязательны для входа.']);
         exit;
     }
 
@@ -37,21 +39,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_id'] = $userId;
                 setcookie("user_id", $userId, time() + 3600 * 24 * 30, "/"); // cookie на 30 дней
 
-                // Перенаправляем на главную страницу или страницу профиля
-                header("Location: /dashboard.php"); // Убедитесь, что файл существует
-                exit;
+                // Возвращаем успешный ответ
+                echo json_encode(['success' => true]);
             } else {
-                echo "Неверный пароль.";
+                echo json_encode(['success' => false, 'message' => 'Неверный пароль.']);
             }
         } else {
-            echo "Пользователь с таким email не найден.";
+            echo json_encode(['success' => false, 'message' => 'Пользователь с таким email не найден.']);
         }
     } catch (PDOException $e) {
         // Обработка ошибок
-        echo "Ошибка при подключении к базе данных: " . $e->getMessage();
+        echo json_encode(['success' => false, 'message' => 'Ошибка при подключении к базе данных: ' . $e->getMessage()]);
     }
 } else {
     // Если не POST запрос
-    echo "Неверный метод запроса.";
+    echo json_encode(['success' => false, 'message' => 'Неверный метод запроса.']);
 }
 ?>

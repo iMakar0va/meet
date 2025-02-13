@@ -12,18 +12,23 @@ document.getElementById('authForm').addEventListener('submit', function (e) {
         },
         body: JSON.stringify({ email, password }),
     })
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Ошибка на сервере');
+            }
+            return response.json();
+        })
         .then((data) => {
             if (data.success) {
-                window.location.href = './lk.php';
+                window.location.href = './lk.php';  // Перенаправление после успешной авторизации
             } else {
-                errorBlock.textContent = data.message;
+                errorBlock.textContent = data.message;  // Вывод ошибки
                 errorBlock.style.display = 'block';
             }
         })
         .catch((error) => {
             console.error('Ошибка:', error);
-            errorBlock.textContent = 'Произошла ошибка. Попробуйте снова.';
+            errorBlock.textContent = 'Произошла ошибка. Попробуйте снова.';  // Обработка ошибок
             errorBlock.style.display = 'block';
         });
 });
@@ -31,5 +36,5 @@ document.getElementById('authForm').addEventListener('submit', function (e) {
 // Обработчик для ссылки "Восстановить пароль"
 document.getElementById('resetPasswordLink').addEventListener('click', function (e) {
     e.preventDefault();
-    window.location.href = './reset_password.php';
+    window.location.href = './reset_password.php';  // Переход на страницу восстановления пароля
 });
