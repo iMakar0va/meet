@@ -4,7 +4,7 @@ require './php/conn.php';
 
 $client_id = "9736370e-6438-4d5c-bbe8-b2e9252fd0d5";
 $client_secret = "tqGScc3gssZ4W3lGOTqi2cvF1mHCSKTO";
-$redirect_uri = "hhttps://meet-production-3c0b.up.railway.app/leaderid_callback.php";
+$redirect_uri = "https://meet-production-3c0b.up.railway.app/leaderid_callback.php";
 
 if (!isset($_GET['code'])) {
     die("Ошибка авторизации!");
@@ -32,15 +32,28 @@ $options = [
 
 $context  = stream_context_create($options);
 $response = file_get_contents($token_url, false, $context);
+
+if ($response === FALSE) {
+    die("Ошибка при запросе на получение токена.");
+}
+
 $token_data = json_decode($response, true);
 
+// Отладка: Выводим информацию о токене
+echo "<pre>";
+echo "Ответ API на получение токена: ";
+print_r($token_data);
+echo "</pre>";
+
 if (!isset($token_data['access_token'])) {
+    // Выводим возможную ошибку из ответа
+    echo "Ошибка получения токена: " . json_encode($token_data);
     die("Ошибка получения токена!");
 }
 
 $access_token = $token_data['access_token'];
 
-// Шаг 2: Получаем email пользователя
+// Шаг 2: Получаем данные пользователя
 $user_url = "https://leader-id.ru/api/users/me/";
 $options = [
     'http' => [
@@ -51,9 +64,22 @@ $options = [
 
 $context  = stream_context_create($options);
 $user_response = file_get_contents($user_url, false, $context);
+
+if ($user_response === FALSE) {
+    die("Ошибка при запросе данных пользователя.");
+}
+
 $user_data = json_decode($user_response, true);
 
+// Отладка: Выводим информацию о пользователе
+echo "<pre>";
+echo "Ответ API на запрос данных пользователя: ";
+print_r($user_data);
+echo "</pre>";
+
 if (!$user_data || !isset($user_data['email'])) {
+    // Выводим возможную ошибку из ответа
+    echo "Ошибка получения данных пользователя: " . json_encode($user_data);
     die("Ошибка получения данных пользователя!");
 }
 
