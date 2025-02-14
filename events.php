@@ -13,7 +13,42 @@
     <?php
     require './php/header.php';
     require './php/conn.php';
+
+    try {
+        $whereClauses = [];
+        $params = [];
+
+        if (!empty($_GET['city'])) {
+            $whereClauses[] = "city ILIKE ?";
+            $params[] = '%' . $_GET['city'] . '%';
+        }
+
+        if (!empty($_GET['type'])) {
+            $whereClauses[] = "type = ?";
+            $params[] = $_GET['type'];
+        }
+
+        if (!empty($_GET['topic'])) {
+            $whereClauses[] = "topic = ?";
+            $params[] = $_GET['topic'];
+        }
+
+        if (!empty($_GET['event_date'])) {
+            $whereClauses[] = "event_date = ?";
+            $params[] = $_GET['event_date'];
+        }
+
+        $whereClause = count($whereClauses) > 0 ? " AND " . implode(" AND ", $whereClauses) : "";
+
+        $getEvents = "SELECT * FROM events WHERE event_date >= CURRENT_DATE" . $whereClause;
+        $stmt = $conn->prepare($getEvents);
+        $stmt->execute($params);
+        $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "Ошибка при получении данных: " . $e->getMessage();
+    }
     ?>
+
     <div class="container">
         <div class="search-form">
             <form id="eventSearchForm" method="GET" action="">
@@ -53,51 +88,21 @@
                 <button type="button" id="resetButton"><img src="./img/icons/close.svg" alt="Сбросить"></button>
             </form>
         </div>
+
         <div class="cards" style="margin-top: 25px;">
             <?php
-            $whereClauses = [];
-            $params = [];
-
-            if (isset($_GET['city']) && !empty($_GET['city'])) {
-                $whereClauses[] = "city LIKE '%' || $" . (count($params) + 1) . " || '%'";
-                $params[] = $_GET['city'];
-            }
-
-            if (isset($_GET['type']) && !empty($_GET['type'])) {
-                $whereClauses[] = "type = $" . (count($params) + 1);
-                $params[] = $_GET['type'];
-            }
-
-            if (isset($_GET['topic']) && !empty($_GET['topic'])) {
-                $whereClauses[] = "topic = $" . (count($params) + 1);
-                $params[] = $_GET['topic'];
-            }
-
-            if (isset($_GET['event_date']) && !empty($_GET['event_date'])) {
-                $whereClauses[] = "event_date = $" . (count($params) + 1);
-                $params[] = $_GET['event_date'];
-            }
-
-            $whereClause =  count($whereClauses) > 0 ? " AND " . implode(" AND ", $whereClauses) : "";
-            $getEvents = "SELECT * FROM events WHERE event_date >= CURRENT_DATE" . $whereClause;
-
-            $resultGetEvents = pg_query_params($conn, $getEvents, $params);
-
-            if (!$resultGetEvents) {
-                echo "Ошибка при получении данных: " . pg_last_error();
-            } elseif (pg_num_rows($resultGetEvents) == 0) {
-            ?>
+            if (empty($events)) {
+                ?>
                 <div class="no-results">
                     <img src="./img/icons/not_found.svg" alt="not found">
                     <div>Мероприятий не найдено</div>
                 </div>
-            <?php
+                <?php
             } else {
-                while ($row = pg_fetch_assoc($resultGetEvents)) {
+                foreach ($events as $row) {
                     require './php/card.php'; // Включает шаблон карточки мероприятия
                 }
             }
-            pg_close($conn);
             ?>
         </div>
     </div>
@@ -105,13 +110,11 @@
     <?php require './php/footer.php'; ?>
 
     <script>
-        // Функция капитализации первой буквы
         function capitalizeCity() {
             const cityInput = document.getElementById('city');
             cityInput.value = cityInput.value.charAt(0).toUpperCase() + cityInput.value.slice(1);
         }
 
-        // Сброс формы поиска
         document.getElementById('resetButton').addEventListener('click', function() {
             document.getElementById('eventSearchForm').reset();
             window.location.href = window.location.pathname;
