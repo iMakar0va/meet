@@ -8,16 +8,16 @@
 // if (!$conn) {
 //     die("Ошибка подключения к базе данных: " . pg_last_error());
 // }
-// $host = 'roundhouse.proxy.rlwy.net';  // Хост для внешнего подключения
-// $port = '55214';                      // Порт для внешнего подключения
-// $user = 'postgres';                    // Имя пользователя
-// $password = 'KalODFtzEMVpNfunTSziOygJjQpyhGzv';  // Пароль
-// $dbname = 'railway';                  // Имя базы данных
-$host = 'localhost';
-$user = 'postgres';
-$port = '5432';
-$password = '123';
-$dbname = 'meet';
+$host = 'roundhouse.proxy.rlwy.net';  // Хост для внешнего подключения
+$port = '55214';                      // Порт для внешнего подключения
+$user = 'postgres';                    // Имя пользователя
+$password = 'KalODFtzEMVpNfunTSziOygJjQpyhGzv';  // Пароль
+$dbname = 'railway';                  // Имя базы данных
+// $host = 'localhost';
+// $user = 'postgres';
+// $port = '5432';
+// $password = '123';
+// $dbname = 'meet';
 
 try {
     // Строка подключения с использованием PDO
