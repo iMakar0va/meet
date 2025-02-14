@@ -4,7 +4,7 @@ require './php/conn.php';
 
 $client_id = "9736370e-6438-4d5c-bbe8-b2e9252fd0d5";
 $client_secret = "tqGScc3gssZ4W3lGOTqi2cvF1mHCSKTO";
-$redirect_uri = "http://localhost/wow/leaderid_callback.php";
+$redirect_uri = "hhttps://meet-production-3c0b.up.railway.app/leaderid_callback.php";
 
 if (!isset($_GET['code'])) {
     die("Ошибка авторизации!");
