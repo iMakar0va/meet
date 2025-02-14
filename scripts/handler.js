@@ -7,15 +7,18 @@ $(document).ready(function () {
             const res = JSON.parse(response);
             if (res.success) {
                 const data = res.data;
+                // Заполняем поля формы значениями из базы данных
                 $('#first_name').val(data.first_name);
                 $('#last_name').val(data.last_name);
 
+                // Устанавливаем выбранный пол
                 if (data.gender === 'мужской') {
                     $('#male').prop('checked', true);
                 } else if (data.gender === 'женский') {
                     $('#female').prop('checked', true);
                 }
 
+                // Форматируем и отображаем дату рождения
                 const birthDate = new Date(data.birth_date);
                 const day = String(birthDate.getDate()).padStart(2, '0');
                 const month = String(birthDate.getMonth() + 1).padStart(2, '0');
@@ -23,6 +26,12 @@ $(document).ready(function () {
 
                 const formattedDate = `${day}/${month}/${year}`;
                 $('#birthDateInput').val(formattedDate);
+
+                // Отображаем картинку, если она есть
+                if (data.image) {
+                    const imageSrc = 'data:image/jpeg;base64,' + btoa(String.fromCharCode.apply(null, new Uint8Array(data.image.data)));
+                    $('#profileImage').attr('src', imageSrc);
+                }
             } else {
                 alert(res.message);
             }
@@ -36,16 +45,20 @@ $(document).ready(function () {
     $('form').on('submit', function (e) {
         e.preventDefault();
 
-        const formData = $(this).serialize();
+        const formData = new FormData(this);
 
         $.ajax({
             url: 'php/update_user.php',
             type: 'POST',
             data: formData,
+            processData: false,  // Чтобы jQuery не пытался преобразовать FormData
+            contentType: false,  // Чтобы браузер сам определял правильный content-type
             success: function (response) {
                 const res = JSON.parse(response);
                 if (res.success) {
                     alert(res.message);
+                    // Обновляем страницу для применения изменений
+                    window.location.reload();
                 } else {
                     alert(res.message);
                 }
@@ -56,51 +69,26 @@ $(document).ready(function () {
         });
     });
 
+    // Обработчик для выбора фото профиля
     $('#profilePictureInput').on('change', function (e) {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = function (e) {
-                $('#profileImage').attr('src', e.target.result);
+                $('#profileImage').attr('src', e.target.result);  // Показываем выбранное изображение
             };
             reader.readAsDataURL(file);
         }
     });
 
-    $('#saveProfilePicture').on('click', function () {
-        const fileInput = $('#profilePictureInput')[0];
-
-        const formData = new FormData();
-        formData.append('profile_picture', fileInput.files[0]);
-
-        $.ajax({
-            url: 'php/update_user.php',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                const res = JSON.parse(response);
-                if (res.success) {
-                    alert('Фото успешно обновлено.');
-                } else {
-                    alert(res.message);
-                }
-            },
-            error: function () {
-                alert('Ошибка загрузки изображения.');
-            }
-        });
-    });
-
+    // Обработчик для отображения имени выбранного файла
     $('.input-file input[type=file]').on('change', function () {
         let file = this.files[0];
         $(this).closest('.input-file').find('.input-file-text').html(file.name);
     });
 });
 
-
-// Формат даты
+// Формат даты в поле ввода
 document.addEventListener('DOMContentLoaded', () => {
     const birthDateInput = document.getElementById('birthDateInput');
 

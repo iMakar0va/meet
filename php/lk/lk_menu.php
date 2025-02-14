@@ -2,6 +2,8 @@
     <?php
     // Получение данных пользователя о статусе
     $userId = $_SESSION['user_id'];
+
+    // Запрос для получения статуса пользователя
     $userStatusQuery = "
         SELECT
             users.isadmin,
@@ -11,10 +13,13 @@
         LEFT JOIN
             organizators ON users.user_id = organizators.organizator_id
         WHERE
-            users.user_id = $1;
+            users.user_id = :userId;
     ";
-    $result = pg_query_params($conn, $userStatusQuery, array($userId));
-    $userStatus = pg_fetch_assoc($result);
+
+    // Подготовка и выполнение запроса с использованием PDO
+    $stmt = $conn->prepare($userStatusQuery);
+    $stmt->execute([':userId' => $userId]);
+    $userStatus = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // Функция для рендеринга элементов меню
     function renderMenuItems($title, $links) {
@@ -36,7 +41,7 @@
     ]);
 
     // Проверка, если пользователь является организатором
-    if ($userStatus['isorganizator'] === 't') { // Проверка на true для isorganizator
+    if ($userStatus['isorganizator'] === true) { // Проверка на true для isorganizator
         renderMenuItems('Организатор', [
             'nowEvent_organizer.php' => 'Предстоящие события',
             'pastEvent_organizer.php' => 'История',
@@ -45,7 +50,7 @@
     }
 
     // Проверка, если пользователь является администратором
-    if ($userStatus['isadmin'] === 't') { // Проверка на true для isadmin
+    if ($userStatus['isadmin'] === true) { // Проверка на true для isadmin
         renderMenuItems('Администратор', [
             'listPastEvent_admin.php' => 'Список прошедших мероприятий',
             'listUser_admin.php' => 'Список пользователей',
@@ -62,4 +67,3 @@
     </div>
 </div>
 <!-- /lk__menu -->
-

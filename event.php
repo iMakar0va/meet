@@ -17,120 +17,125 @@
     if (isset($_GET['event_id'])) {
         $eventId = intval($_GET['event_id']);
 
-        // Используем подготовленные запросы для безопасных операций
-        $eventQuery = pg_prepare($conn, "get_event", "SELECT * FROM events WHERE event_id = $1;");
-        $resultGetEvents = pg_execute($conn, "get_event", [$eventId]);
+        // Получаем данные о мероприятии
+        $stmt = $conn->prepare("SELECT * FROM events WHERE event_id = :event_id");
+        $stmt->execute(['event_id' => $eventId]);
+        $event = $stmt->fetch();
 
-        $organizerQuery = pg_prepare($conn, "get_organizer", "SELECT o.name FROM organizators_events oe
-                                                              JOIN organizators o ON o.organizator_id = oe.organizator_id
-                                                              WHERE oe.event_id = $1;");
-        $resultGetOrganizator = pg_execute($conn, "get_organizer", [$eventId]);
-        $resGetOrganizator = pg_fetch_assoc($resultGetOrganizator);
+        // Получаем организатора мероприятия
+        $stmt = $conn->prepare("SELECT o.name FROM organizators_events oe
+                                JOIN organizators o ON o.organizator_id = oe.organizator_id
+                                WHERE oe.event_id = :event_id");
+        $stmt->execute(['event_id' => $eventId]);
+        $organizer = $stmt->fetchColumn();
 
-        $countQuery = pg_prepare($conn, "count_people", "SELECT count(*) FROM user_events WHERE event_id = $1;");
-        $resultCountPeople = pg_execute($conn, "count_people", [$eventId]);
-        $countPeople = pg_fetch_result($resultCountPeople, 0, 0);
+        // Получаем количество участников
+        $stmt = $conn->prepare("SELECT COUNT(*) FROM user_events WHERE event_id = :event_id");
+        $stmt->execute(['event_id' => $eventId]);
+        $countPeople = $stmt->fetchColumn();
 
-        $checkEventQuery = pg_prepare($conn, "check_event", "SELECT EXISTS (SELECT 1 FROM events WHERE event_id = $1 AND event_date > CURRENT_DATE);");
-        $resultCheckEvent = pg_execute($conn, "check_event", [$eventId]);
-        $isFutureEvent = pg_fetch_result($resultCheckEvent, 0, 0) === 't';
+        // Проверяем, является ли мероприятие будущим
+        $stmt = $conn->prepare("SELECT EXISTS (SELECT 1 FROM events WHERE event_id = :event_id AND event_date > CURRENT_DATE)");
+        $stmt->execute(['event_id' => $eventId]);
+        $isFutureEvent = $stmt->fetchColumn();
 
         $isAuthed = isset($_SESSION['user_id']);
+        $isRegistered = false;
+
         if ($isAuthed) {
-            $userId = $_SESSION['user_id']; // используем $_SESSION для идентификатора пользователя
-            $registrationQuery = pg_prepare($conn, "check_registration", "SELECT EXISTS(SELECT 1 FROM user_events WHERE user_id = $1 AND event_id = $2);");
-            $resultCheckRegistration = pg_execute($conn, "check_registration", [$userId, $eventId]);
-            $isRegistered = pg_fetch_result($resultCheckRegistration, 0) === 't';
-        } else {
-            $isRegistered = false;
+            $userId = $_SESSION['user_id'];
+            $stmt = $conn->prepare("SELECT EXISTS (SELECT 1 FROM user_events WHERE user_id = :user_id AND event_id = :event_id)");
+            $stmt->execute(['user_id' => $userId, 'event_id' => $eventId]);
+            $isRegistered = $stmt->fetchColumn();
         }
 
-        if ($resultGetEvents) {
-            $event = pg_fetch_assoc($resultGetEvents);
-            if ($event) {
-                $months = [
-                    1 => 'января',
-                    'февраля',
-                    'марта',
-                    'апреля',
-                    'мая',
-                    'июня',
-                    'июля',
-                    'августа',
-                    'сентября',
-                    'октября',
-                    'ноября',
-                    'декабря'
-                ];
-                $dateParts = explode('-', $event['event_date']);
-                $formattedDate = intval($dateParts[2]) . ' ' . $months[intval($dateParts[1])];
+        if ($event) {
+            $months = [
+                1 => 'января',
+                'февраля',
+                'марта',
+                'апреля',
+                'мая',
+                'июня',
+                'июля',
+                'августа',
+                'сентября',
+                'октября',
+                'ноября',
+                'декабря'
+            ];
+            $dateParts = explode('-', $event['event_date']);
+            $formattedDate = intval($dateParts[2]) . ' ' . $months[intval($dateParts[1])];
 
-                $imageSrc = !empty($event["image"])
-                    ? "data:image/jpeg;base64," . base64_encode(pg_unescape_bytea($event["image"]))
-                    : "img/profile.jpg";
+            $imageSrc = "img/profile.jpg"; // Значение по умолчанию
+
+            if (!empty($event["image"])) {
+                $imageData = stream_get_contents($event["image"]); // Преобразуем ресурс в строку
+                if ($imageData !== false) {
+                    $imageSrc = "data:image/jpeg;base64," . base64_encode($imageData);
+                }
+            }
+
     ?>
-                <section class="event-top" style="background-image: url(<?= $imageSrc ?>);">
-                    <div class="container">
-                        <div class="event__banner">
-                            <div class="event__banner-block">
-                                <div class="event-date title0"><?= htmlspecialchars($formattedDate) ?></div>
-                                <div class="event-time title1">
-                                    <?= substr($event['start_time'], 0, 5) . "-" . substr($event['end_time'], 0, 5) ?>
-                                </div>
-                                <div class="event-title title"><?= htmlspecialchars($event['title']) ?></div>
-                                <div class="event-type title1">Тип мероприятия: <?= " " . htmlspecialchars($event['type']) ?></div>
-                                <div class="event-topic title1">Направление мероприятия: <?= " " . htmlspecialchars($event['topic']) ?></div>
-                                <button class="btn1 title2" id="registerButton" style="<?= $isRegistered ? 'background-color: var(--brown-color);' : 'background-color: var(--yellow-color);'  ?><?= $isFutureEvent ? 'display: block;' : 'display: none;'; ?>">
-                                    <?= $isRegistered ? "Отписаться" : "Записаться"; ?>
-                                </button>
-                            </div>
-                            <div class="event__banner-block title2">
-                                <div class="event-place">
-                                    <div class="_1 title1">Место проведения</div>
-                                    <div class="_2 title2"><?= htmlspecialchars($event['place']) ?></div>
-                                </div>
-                                <div class="event-people">
-                                    <img src="img/icons/people-event.svg" alt="people">
-                                    <span id="participantsCount"><?= htmlspecialchars($countPeople) ?></span> человек(а)
-                                </div>
-                                <div class="event-organisator">
-                                    <div class="_1 title1">Организатор</div>
-                                    <div class="_2 title2"><?= htmlspecialchars($resGetOrganizator['name']) ?></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
+            <section class="event-top" style="background-image: url(<?= $imageSrc ?>);">
                 <div class="container">
-                    <div class="event-bottom">
-                        <div class="title1">Описание мероприятия</div>
-                        <p class="title2">
-                            <?= htmlspecialchars($event['description']) ?>
-                        </p>
-                        <div class="title1">Контакты</div>
-                        <div class="contact">
-                            <div class="contact__item title2">
-                                <img src="img/icons/phone.svg" alt="phone">
-                                <?= htmlspecialchars($event['phone']) ?>
+                    <div class="event__banner">
+                        <div class="event__banner-block">
+                            <div class="event-date title0"><?= htmlspecialchars($formattedDate) ?></div>
+                            <div class="event-time title1">
+                                <?= substr($event['start_time'], 0, 5) . "-" . substr($event['end_time'], 0, 5) ?>
                             </div>
-                            <div class="contact__item title2">
-                                <img src="img/icons/email-event.svg" alt="email">
-                                <?= htmlspecialchars($event['email']) ?>
+                            <div class="event-title title"><?= htmlspecialchars($event['title']) ?></div>
+                            <div class="event-type title1">Тип мероприятия: <?= htmlspecialchars($event['type']) ?></div>
+                            <div class="event-topic title1">Направление мероприятия: <?= htmlspecialchars($event['topic']) ?></div>
+                            <button class="btn1 title2" id="registerButton"
+                                style="<?= $isRegistered ? 'background-color: var(--brown-color);' : 'background-color: var(--yellow-color);' ?>
+                                <?= $isFutureEvent ? 'display: block;' : 'display: none;'; ?>">
+                                <?= $isRegistered ? "Отписаться" : "Записаться"; ?>
+                            </button>
+                        </div>
+                        <div class="event__banner-block title2">
+                            <div class="event-place">
+                                <div class="_1 title1">Место проведения</div>
+                                <div class="_2 title2"><?= htmlspecialchars($event['place']) ?></div>
                             </div>
-                            <div class="contact__item title2">
-                                <img src="img/icons/place.svg" alt="place">
-                                <?= htmlspecialchars($event['address']) ?>
+                            <div class="event-people">
+                                <img src="img/icons/people-event.svg" alt="people">
+                                <span id="participantsCount"><?= htmlspecialchars($countPeople) ?></span> человек(а)
+                            </div>
+                            <div class="event-organisator">
+                                <div class="_1 title1">Организатор</div>
+                                <div class="_2 title2"><?= htmlspecialchars($organizer) ?></div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </section>
+
+            <div class="container">
+                <div class="event-bottom">
+                    <div class="title1">Описание мероприятия</div>
+                    <p class="title2"><?= htmlspecialchars($event['description']) ?></p>
+                    <div class="title1">Контакты</div>
+                    <div class="contact">
+                        <div class="contact__item title2">
+                            <img src="img/icons/phone.svg" alt="phone">
+                            <?= htmlspecialchars($event['phone']) ?>
+                        </div>
+                        <div class="contact__item title2">
+                            <img src="img/icons/email-event.svg" alt="email">
+                            <?= htmlspecialchars($event['email']) ?>
+                        </div>
+                        <div class="contact__item title2">
+                            <img src="img/icons/place.svg" alt="place">
+                            <?= htmlspecialchars($event['address']) ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
     <?php
-            } else {
-                echo "Мероприятие не найдено.";
-            }
         } else {
-            echo "Ошибка при получении данных: " . pg_last_error();
+            echo "Мероприятие не найдено.";
         }
     } else {
         echo "ID мероприятия не указан.";
@@ -163,18 +168,12 @@
                         })
                         .then(response => response.json())
                         .then(data => {
-                            alert(data.message); // Показываем сообщение от сервера
+                            alert(data.message);
 
                             if (data.success) {
-                                if (data.action === "registered") {
-                                    registerButton.textContent = "Отписаться";
-                                    registerButton.style.backgroundColor = "var(--brown-color)";
-                                    participantsCount.textContent = parseInt(participantsCount.textContent) + 1;
-                                } else if (data.action === "unregistered") {
-                                    registerButton.textContent = "Записаться";
-                                    registerButton.style.backgroundColor = "var(--yellow-color)";
-                                    participantsCount.textContent = parseInt(participantsCount.textContent) - 1;
-                                }
+                                registerButton.textContent = data.action === "registered" ? "Отписаться" : "Записаться";
+                                registerButton.style.backgroundColor = data.action === "registered" ? "var(--brown-color)" : "var(--yellow-color)";
+                                participantsCount.textContent = parseInt(participantsCount.textContent) + (data.action === "registered" ? 1 : -1);
                             }
                         })
                         .catch(error => console.error("Ошибка:", error));

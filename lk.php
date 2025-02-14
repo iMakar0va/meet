@@ -10,10 +10,12 @@
     <link rel="stylesheet" href="styles/media/media_lk.css">
     <title>Личный кабинет</title>
     <script src="scripts/handler.js" defer></script>
+    <script src="scripts/lk_script.js" defer></script>
 </head>
 
 <body>
     <?php
+    session_start();
     require './php/header.php';
     require './php/conn.php';
     ?>
@@ -29,18 +31,18 @@
         </div>
         <!-- /lk -->
         <?php
-        pg_close($conn);
+        // Закрытие подключения к базе данных
+        $conn = null;
         ?>
     </div>
     <!-- /container -->
-
 
     <?php
     require './php/footer.php';
     ?>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="scripts/lk_script.js"></script>
+    <!-- <script src="scripts/lk_script.js"></script> -->
     <script>
         // отображение/удаление фото профиля
         var dt = new DataTransfer();
