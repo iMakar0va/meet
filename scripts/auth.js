@@ -23,7 +23,7 @@ document.getElementById('authForm').addEventListener('submit', function (e) {
         })
         .catch((error) => {
             console.error('Ошибка:', error);
-            errorBlock.textContent = 'Произошла ошибка. Попробуйте снова.';
+            errorBlock.textContent = error.message || 'Произошла ошибка. Попробуйте снова.';
             errorBlock.style.display = 'block';
         });
 });

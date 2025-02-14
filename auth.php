@@ -11,6 +11,7 @@
 
 <body>
     <?php
+
     require './php/header.php';
     ?>
 

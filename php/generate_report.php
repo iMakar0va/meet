@@ -1,4 +1,5 @@
 <?php
+session_start();
 require 'conn.php';
 require_once('../tcpdf/tcpdf.php');
 

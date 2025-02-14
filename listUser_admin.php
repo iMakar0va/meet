@@ -13,6 +13,7 @@
 
 <body>
     <?php
+    session_start();
     require './php/header.php';
     require './php/conn.php';
     ?>

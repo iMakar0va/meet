@@ -10,6 +10,7 @@
 
 <body>
     <?php
+    session_start();
     require './php/header.php';
     ?>
     <div class="form">

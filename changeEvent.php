@@ -1,6 +1,6 @@
 <?php
+session_start();
 require 'php/conn.php';
-// session_start();
 
 if (!isset($_GET['event_id'])) {
     die("Ошибка: мероприятие не найдено.");

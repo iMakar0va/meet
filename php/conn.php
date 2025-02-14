@@ -11,6 +11,6 @@ $conn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$pa
 if (!$conn) {
     die("Ошибка подключения к базе данных: " . pg_last_error());
 } else {
-    echo "Успешное подключение к базе данных!";
+    // echo "Успешное подключение к базе данных!";
 }
 ?>
