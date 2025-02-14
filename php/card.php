@@ -20,9 +20,16 @@ $dateParts = explode('-', $row['event_date']);
 $formattedDate = intval($dateParts[2]) . ' ' . $months[intval($dateParts[1])];
 
 // Обработка изображения (если оно существует)
-$imageSrc = !empty($row["image"])
-    ? "data:image/jpeg;base64," . base64_encode($row["image"]) // Здесь уже не нужно использовать pg_unescape_bytea, так как с PDO это не нужно
-    : "img/profile.jpg";
+$imageSrc = "img/profile.jpg"; // Значение по умолчанию
+
+if (!empty($row["image"])) {
+    // Убедимся, что изображение — это бинарные данные
+    $imageData = stream_get_contents($row["image"]);
+    if ($imageData !== false) {
+        $imageSrc = "data:image/jpeg;base64," . base64_encode($imageData);
+    }
+}
+
 ?>
 
 <div class="card">
