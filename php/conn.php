@@ -1,35 +1,16 @@
 <?php
-// $host = 'localhost';
-// $user = 'postgres';
-// $password = '123';
-// $dbname = 'meet2';
-
-// $conn = pg_connect("host=$host dbname=$dbname user=$user password=$password");
-// if (!$conn) {
-//     die("Ошибка подключения к базе данных: " . pg_last_error());
-// }
 $host = 'roundhouse.proxy.rlwy.net';  // Хост для внешнего подключения
 $port = '55214';                      // Порт для внешнего подключения
 $user = 'postgres';                    // Имя пользователя
 $password = 'KalODFtzEMVpNfunTSziOygJjQpyhGzv';  // Пароль
 $dbname = 'railway';                  // Имя базы данных
-// $host = 'localhost';
-// $user = 'postgres';
-// $port = '5432';
-// $password = '123';
-// $dbname = 'meet';
 
-try {
-    // Строка подключения с использованием PDO
-    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
-    $conn = new PDO($dsn, $user, $password);
+// Добавляем порт в строку подключения
+$conn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$password");
 
-    // Устанавливаем атрибут для исключений
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // echo "Подключение успешно!";
-} catch (PDOException $e) {
-    echo "Ошибка подключения: " . $e->getMessage();
+if (!$conn) {
+    die("Ошибка подключения к базе данных: " . pg_last_error());
+} else {
+    echo "Успешное подключение к базе данных!";
 }
 ?>
-

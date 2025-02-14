@@ -18,7 +18,7 @@
             <div class="header__icons">
                 <a href="php/auth_or_lk.php" id="lk_person"><img src="img/icons/person.svg" alt="person"></a>
                 <?php
-                // session_start();
+                session_start();
                 if (isset($_SESSION['user_id'])) { ?>
                     <a href="#!" onclick="logout()"><img src="img/icons/exit.svg" alt="exit"></a>
                 <?php

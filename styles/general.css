@@ -101,6 +101,20 @@ body {
     background-color: #02494C;
     border-radius: 10px;
     color: #fff;
+
+    width: 100%;
+    margin: 15px 35px 50px 35px;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    text-align: center;
+}
+.no-results img{
+    width: 240px;
+
 }
 
 /* =============Header============= */

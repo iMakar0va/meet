@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="styles/auth.css">
     <link rel="stylesheet" href="styles/lk.css">
+    <link rel="stylesheet" href="styles/forma.css">
     <link rel="stylesheet" href="styles/media/media_auth.css">
     <link rel="stylesheet" href="styles/media/media_lk.css">
     <title>Личный кабинет</title>
@@ -31,6 +32,12 @@
                     </div>
                     <div class="text-field__icon">
                         <input id="email" name="email" class="text-field__input title2" type="email" placeholder="Эл.почта" required>
+                    </div>
+                    <div class="text-field__icon">
+                        <input id="date_start_work" name="date_start_work" class="text-field__input title2" type="text" placeholder="Дата начала деятельности" required>
+                    </div>
+                    <div class="form__group">
+                        <textarea class="input textarea title2" id="description" name="description" rows="4" placeholder="Описание деятельности организации"></textarea>
                     </div>
                     <div id="error" class="error title2" style="display: none;">Пользователь с такой почтой уже зарегистрирован!</div>
                     <button class="btn1 title2" type="submit">Отправить заявку</button>

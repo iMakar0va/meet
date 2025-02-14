@@ -18,7 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $organizerData = [
     'name' => $_POST["name_organizer"] ?? '',
     'phone' => $_POST["phone"] ?? '',
-    'email' => $_POST["email"] ?? ''
+    'email' => $_POST["email"] ?? '',
+    'date_start_work' => $_POST["date_start_work"] ?? '',
+    'description' => $_POST["description"] ?? ''
 ];
 
 // Валидация данных
@@ -37,8 +39,8 @@ if (!filter_var($organizerData['email'], FILTER_VALIDATE_EMAIL)) {
 try {
     // Вставка организатора
     $insertOrganizerQuery = "
-        INSERT INTO organizators(organizator_id, name, phone_number, email)
-        VALUES($1, $2, $3, $4);
+        INSERT INTO organizators(organizator_id, name, phone_number, email, date_start_work, description)
+        VALUES($1, $2, $3, $4, $5, $6);
     ";
 
     $organizerStmt = pg_prepare($conn, "insert_organizer", $insertOrganizerQuery);
@@ -46,7 +48,9 @@ try {
         $_SESSION['user_id'],  // организатор из сессии
         $organizerData['name'],
         $organizerData['phone'],
-        $organizerData['email']
+        $organizerData['email'],
+        $organizerData['date_start_work'],
+        $organizerData['description'],
     ]);
 
     // Проверка успешности выполнения запроса

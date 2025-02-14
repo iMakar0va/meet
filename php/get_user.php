@@ -12,24 +12,19 @@ if (!$userId) {
     exit();
 }
 
-try {
-    $sql = "SELECT * FROM users WHERE user_id = :user_id";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([':user_id' => $userId]);
+$sql = "SELECT * FROM users WHERE user_id = $1";
+$queryResult = pg_query_params($conn, $sql, [$userId]);
 
-    if ($userData = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        echo json_encode([
-            'success' => true,
-            'data' => $userData
-        ]);
-    } else {
-        echo json_encode([
-            'success' => false,
-            'message' => 'Не удалось получить данные пользователя.'
-        ]);
-    }
-} catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => 'Ошибка: ' . $e->getMessage()]);
+if ($userData = pg_fetch_assoc($queryResult)) {
+    echo json_encode([
+        'success' => true,
+        'data' => $userData
+    ]);
+} else {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Не удалось получить данные пользователя.'
+    ]);
 }
 
 exit();
