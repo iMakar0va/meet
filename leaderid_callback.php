@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'conn.php';
+require '../php/conn.php';
 
 $client_id = "9736370e-6438-4d5c-bbe8-b2e9252fd0d5";
 $client_secret = "tqGScc3gssZ4W3lGOTqi2cvF1mHCSKTO";
