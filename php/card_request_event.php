@@ -1,5 +1,5 @@
 <?php
-// Массив месяцев
+
 $months = [
     1 => 'января',
     'февраля',
@@ -14,35 +14,31 @@ $months = [
     'ноября',
     'декабря'
 ];
+$dateParts = explode('-', $row['event_date']);
+$formattedDate = intval($dateParts[2]) . ' ' . $months[intval($dateParts[1])];
 
-// Используем DateTime для парсинга и форматирования даты
-$date = new DateTime($row['event_date']);
-$formattedDate = $date->format('j') . ' ' . $months[intval($date->format('n'))]; // Форматирование даты
-
-// Работа с изображением (если оно есть, то возвращаем base64, иначе — путь к изображению)
-$imageSrc = !empty($row['image'])
-    ? 'data:image/jpeg;base64,' . base64_encode(pg_unescape_bytea($row['image']))
-    : 'img/profile.jpg';
-
-?>
+$imageSrc = !empty($row["image"])
+    ? "data:image/jpeg;base64," . base64_encode(pg_unescape_bytea($row["image"]))
+    : "img/profile.jpg"; ?>
 <div class="card">
-    <div class="card__img" style="background-image: url(<?= htmlspecialchars($imageSrc) ?>)"></div>
+    <div class="card__img" style="background-image: url(<?= $imageSrc ?>)"></div>
     <div class="card__content">
         <div class="card__type"><?= htmlspecialchars($row["type"]) ?></div>
         <div class="card__date"><?= htmlspecialchars($formattedDate) ?></div>
         <div class="card__time">
-            <?php
-            // Форматируем время с помощью DateTime
-            $startTime = new DateTime($row["start_time"]);
-            $endTime = new DateTime($row["end_time"]);
-            echo $startTime->format('H:i') . '-' . $endTime->format('H:i');
-            ?>
+            <?= substr($row["start_time"], 0, 5) . "-" . substr($row["end_time"], 0, 5) ?>
         </div>
         <div class="card__city"><?= htmlspecialchars($row["city"]) ?></div>
         <div class="card__title"><?= htmlspecialchars($row["title"]) ?></div>
+        <div class="card__status status" data-id="<?= htmlspecialchars($row['event_id']) ?>">
+            <?= htmlspecialchars($row["is_active"]) === 't' ? '✅ Одобрено' : '❌ Ожидает подтверждения' ?>
+        </div>
     </div>
     <a href="event.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Подробнее</a>
-    <button class="btn1 approve-button" data-id="<?= htmlspecialchars($row['event_id']) ?>">Одобрить</button>
-    <button class="btn1 delete-button" data-id="<?= htmlspecialchars($row['event_id']) ?>">Отклонить</button>
+    <button class="btn1 toggle-event-button"
+        data-id="<?= htmlspecialchars($row['event_id']) ?>"
+        data-status="<?= htmlspecialchars($row["is_active"]) ?>">
+        <?= htmlspecialchars($row["is_active"]) === 't' ? 'Отклонить' : 'Одобрить' ?>
+    </button>
 </div>
 <!-- /card -->

@@ -22,10 +22,10 @@
         <div class="lk">
             <?php require 'php/lk/lk_menu.php'; ?>
             <div class="lk__profile">
-                <div class="title1">Список заявок мероприятий</div>
-                <div class="cards">
+                <div class="title1">Список заявок организаторов</div>
+                <div class="cards_line">
                     <?php
-                    $getOrganizators = "select * from events where is_active = false;";
+                    $getOrganizators = "select * from events ORDER BY is_active ASC;";
 
                     $resultGetOrganizators = pg_query($conn, $getOrganizators);
 
@@ -54,72 +54,46 @@
     ?>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const approveButtons = document.querySelectorAll('.approve-button');
+            const toggleButtons = document.querySelectorAll('.toggle-event-button');
 
-            approveButtons.forEach(button => {
+            toggleButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    const organizatorId = this.getAttribute('data-id');
-                    const card = this.closest('.card'); // Находим карточку
+                    const eventId = button.getAttribute('data-id');
+                    const statusElement = document.querySelector(`.status[data-id="${eventId}"]`);
 
-                    fetch('./php/approve_organizator.php', {
+                    fetch('./php/toggle_event.php', {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded', // Заголовок для обычных POST-форм
+                                'Content-Type': 'application/x-www-form-urlencoded',
                             },
-                            body: `organizator_id=${organizatorId}`
+                            body: `event_id=${eventId}`
                         })
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                if (card) {
-                                    card.remove(); // Если все ок - удаляем карточку
+                                // Обновляем текст статуса и кнопки на странице
+                                if (data.newStatus === 'true') {
+                                    statusElement.textContent = '✅ Одобрено';
+                                    button.textContent = 'Отклонить';
+                                    button.setAttribute('data-status', 't');
+                                } else {
+                                    statusElement.textContent = '❌ Ожидает подтверждения';
+                                    button.textContent = 'Одобрить';
+                                    button.setAttribute('data-status', 'f');
                                 }
                             } else {
-                                alert(data.message || 'Ошибка при одобрении заявки.');
+                                alert(data.message || 'Ошибка при изменении статуса.');
                             }
                         })
                         .catch(error => {
                             console.error('Ошибка сети:', error);
-                            alert('Произошла ошибка сети. Попробуйте позже.');
-                        });
-                });
-            });
-        });
-
-        ///////////////////////////////
-        document.addEventListener('DOMContentLoaded', function() {
-            const deleteButtons = document.querySelectorAll('.delete-button');
-
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const organizatorId = this.getAttribute('data-id');
-                    const card = this.closest('.card'); // Находим карточку
-
-                    fetch('./php/delete_organizator.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded', // Заголовок для обычных POST-форм
-                            },
-                            body: `organizator_id=${organizatorId}`
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                if (card) {
-                                    card.remove();
-                                }
-                            } else {
-                                alert(data.message || 'Ошибка при удалении заявки.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Ошибка сети:', error);
-                            alert('Произошла ошибка сети. Попробуйте позже.');
+                            alert('Ошибка сети. Попробуйте позже.');
                         });
                 });
             });
         });
     </script>
+
 </body>
 
 </html>
