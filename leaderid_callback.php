@@ -1,5 +1,4 @@
 <?php
-// Включаем сессию и подключаем необходимые файлы
 session_start();
 require './php/conn.php';
 
@@ -49,6 +48,9 @@ if (!isset($token_data['access_token'])) {
 
 $access_token = $token_data['access_token'];
 
+// Удаляем токен из сессии (если он был сохранен ранее)
+$_SESSION['access_token'] = null;
+
 // Запрос данных о пользователе через /users/link-app
 $user_url = "https://apps.leader-id.ru/api/v1/users/link-app";
 $link_data_response = @file_get_contents($user_url, false, stream_context_create([
@@ -91,3 +93,4 @@ if ($result && pg_num_rows($result) > 0) {
     header("Location: reg.php");
 }
 exit();
+?>

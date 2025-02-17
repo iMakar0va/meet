@@ -32,7 +32,7 @@
         $resultCountPeople = pg_execute($conn, "count_people", [$eventId]);
         $countPeople = pg_fetch_result($resultCountPeople, 0, 0);
 
-        $checkEventQuery = pg_prepare($conn, "check_event", "SELECT EXISTS (SELECT 1 FROM events WHERE event_id = $1 AND event_date > CURRENT_DATE);");
+        $checkEventQuery = pg_prepare($conn, "check_event", "SELECT EXISTS (SELECT 1 FROM events WHERE event_id = $1 AND event_date > CURRENT_DATE and is_active=true);");
         $resultCheckEvent = pg_execute($conn, "check_event", [$eventId]);
         $isFutureEvent = pg_fetch_result($resultCheckEvent, 0, 0) === 't';
 

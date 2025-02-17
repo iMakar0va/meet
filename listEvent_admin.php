@@ -23,7 +23,7 @@
             <?php require 'php/lk/lk_menu.php'; ?>
             <div class="lk__profile">
                 <div class="title1">Список заявок организаторов</div>
-                <div class="cards_line">
+                <div class="cards">
                     <?php
                     $getOrganizators = "select * from events ORDER BY is_active ASC;";
 

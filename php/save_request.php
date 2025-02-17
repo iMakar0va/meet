@@ -14,17 +14,34 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
+// Проверяем, есть ли user_id в сессии
+if (!isset($_SESSION['user_id'])) {
+    $response['message'] = 'Пользователь не авторизован.';
+    echo json_encode($response);
+    exit();
+}
+
+// Получаем email организатора из таблицы users по user_id из сессии
+$userId = $_SESSION['user_id'];
+$getEmailQuery = "SELECT email FROM users WHERE user_id = $1";
+$emailResult = pg_query_params($conn, $getEmailQuery, [$userId]);
+
+if ($emailResult && $userData = pg_fetch_assoc($emailResult)) {
+    $organizerData['email'] = $userData['email']; // Извлекаем email из базы данных
+} else {
+    $response['message'] = 'Ошибка получения email пользователя.';
+    echo json_encode($response);
+    exit();
+}
+
 // Получаем данные из формы
-$organizerData = [
-    'name' => $_POST["name_organizer"] ?? '',
-    'phone' => $_POST["phone"] ?? '',
-    'email' => $_POST["email"] ?? '',
-    'date_start_work' => $_POST["date_start_work"] ?? '',
-    'description' => $_POST["description"] ?? ''
-];
+$organizerData['name'] = $_POST["name_organizer"] ?? '';
+$organizerData['phone'] = $_POST["phone"] ?? '';
+$organizerData['date_start_work'] = $_POST["date_start_work"] ?? '';
+$organizerData['description'] = $_POST["description"] ?? '';
 
 // Валидация данных
-if (empty($organizerData['name']) || empty($organizerData['phone']) || empty($organizerData['email'])) {
+if (empty($organizerData['name']) || empty($organizerData['phone'])) {
     $response['message'] = 'Все поля должны быть заполнены.';
     echo json_encode($response);
     exit();
@@ -48,7 +65,7 @@ try {
         $_SESSION['user_id'],  // организатор из сессии
         $organizerData['name'],
         $organizerData['phone'],
-        $organizerData['email'],
+        $organizerData['email'], // Используем email, полученный из таблицы users
         $organizerData['date_start_work'],
         $organizerData['description'],
     ]);
@@ -67,3 +84,4 @@ try {
     echo json_encode($response);
     pg_close($conn);  // Закрываем соединение с базой данных
 }
+?>

@@ -32,9 +32,6 @@
                         <input id="phone" name="phone" class="text-field__input title2" type="text" placeholder="Номер телефона" required>
                     </div>
                     <div class="text-field__icon">
-                        <input id="email" name="email" class="text-field__input title2" type="email" placeholder="Эл.почта" required>
-                    </div>
-                    <div class="text-field__icon">
                         <input id="date_start_work" name="date_start_work" class="text-field__input title2" type="text" placeholder="Дата начала деятельности" required>
                     </div>
                     <div class="form__group">

@@ -11,6 +11,7 @@
 
 <body>
     <?php
+    session_start();
     require './php/header.php';
     require './php/conn.php';
     ?>
@@ -79,7 +80,7 @@
             }
 
             $whereClause =  count($whereClauses) > 0 ? " AND " . implode(" AND ", $whereClauses) : "";
-            $getEvents = "SELECT * FROM events WHERE event_date >= CURRENT_DATE" . $whereClause;
+            $getEvents = "SELECT * FROM events WHERE event_date >= CURRENT_DATE and is_active = true"  . $whereClause;
 
             $resultGetEvents = pg_query_params($conn, $getEvents, $params);
 

@@ -29,7 +29,7 @@
                     $getEventUser = "SELECT * FROM organizators o
                                      JOIN organizators_events oe ON o.organizator_id = oe.organizator_id
                                      JOIN events e ON oe.event_id = e.event_id
-                                     WHERE o.organizator_id = $1 and e.event_date > CURRENT_DATE;";
+                                     WHERE o.organizator_id = $1 and e.event_date > CURRENT_DATE and is_active = true;";
 
                     $resultGetEventUser = pg_query_params($conn, $getEventUser, [$userId]);
 
