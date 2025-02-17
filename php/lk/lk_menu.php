@@ -50,7 +50,8 @@
             'listPastEvent_admin.php' => 'Список прошедших мероприятий',
             'listUser_admin.php' => 'Список пользователей',
             'listOrganizator_admin.php' => 'Список организаторов',
-            'listRequest_admin.php' => 'Заявки'
+            'listRequest_admin.php' => 'Заявки организатров',
+            'listEvent_admin.php' => 'Заявки мероприятий'
         ]);
     }
     ?>

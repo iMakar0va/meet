@@ -22,16 +22,16 @@
         <div class="lk">
             <?php require 'php/lk/lk_menu.php'; ?>
             <div class="lk__profile">
-                <div class="title1">Список заявок организаторов</div>
-                <div class="cards_line">
+                <div class="title1">Список заявок мероприятий</div>
+                <div class="cards">
                     <?php
-                    $getOrganizators = "select * from organizators where isOrganizator = false;";
+                    $getOrganizators = "select * from events where is_active = false;";
 
                     $resultGetOrganizators = pg_query($conn, $getOrganizators);
 
                     if ($resultGetOrganizators) {
                         while ($row = pg_fetch_assoc($resultGetOrganizators)) {
-                            require './php/card_request.php';
+                            require './php/card_request_event.php';
                         }
                     } else {
                         echo "Ошибка при получении данных: " . pg_last_error();

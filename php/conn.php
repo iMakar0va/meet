@@ -1,9 +1,14 @@
 <?php
-$host = 'roundhouse.proxy.rlwy.net';  // Хост для внешнего подключения
-$port = '55214';                      // Порт для внешнего подключения
+$host = 'localhost';  // Хост для внешнего подключения
+$port = '5432';                      // Порт для внешнего подключения
 $user = 'postgres';                    // Имя пользователя
-$password = 'KalODFtzEMVpNfunTSziOygJjQpyhGzv';  // Пароль
-$dbname = 'railway';                  // Имя базы данных
+$password = '123';  // Пароль
+$dbname = 'meet';                  // Имя базы данных
+// $host = 'roundhouse.proxy.rlwy.net';  // Хост для внешнего подключения
+// $port = '55214';                      // Порт для внешнего подключения
+// $user = 'postgres';                    // Имя пользователя
+// $password = 'KalODFtzEMVpNfunTSziOygJjQpyhGzv';  // Пароль
+// $dbname = 'railway';                  // Имя базы данных
 
 // Добавляем порт в строку подключения
 $conn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$password");

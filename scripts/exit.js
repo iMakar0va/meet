@@ -3,6 +3,6 @@ function logout() {
         document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
     });
 
-    window.location.href = '/wow/auth.php';
+    window.location.href = '/wow2/meet/auth.php';
 }
 
