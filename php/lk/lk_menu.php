@@ -51,7 +51,8 @@
             'listUser_admin.php' => 'Список пользователей',
             'listOrganizator_admin.php' => 'Список организаторов',
             'listRequest_admin.php' => 'Заявки организатров',
-            'listEvent_admin.php' => 'Заявки мероприятий'
+            'listEventActive_admin.php' => 'Список всех мероприятий',
+            'listRequestEvent_admin.php' => 'Заявки мероприятий'
         ]);
     }
     ?>

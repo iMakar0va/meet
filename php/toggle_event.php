@@ -11,6 +11,7 @@ $response = ['success' => false];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $eventId = $_POST['event_id'] ?? null;
+    $reason = trim($_POST['reason'] ?? ''); // Получаем причину отмены
 
     if (!$eventId) {
         $response['message'] = 'Отсутствует ID мероприятия';
@@ -18,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Переключаем статус мероприятия
+    // Обновляем статус мероприятия
     $toggleQuery = "UPDATE events
                     SET is_active = NOT is_active
                     WHERE event_id = $1
@@ -27,77 +28,79 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($result && $row = pg_fetch_assoc($result)) {
         $newStatus = $row['is_active'] === 't';
-        $eventName = $row['title']; // Название мероприятия
-        $eventDate = $row['event_date']; // Дата мероприятия
+        $eventName = $row['title'];
+        $eventDate = $row['event_date'];
 
-        // Получаем ID организатора из таблицы organizators_events
-        $organizerQuery = "SELECT organizator_id FROM organizators_events WHERE event_id = $1";
-        $organizerResult = pg_query_params($conn, $organizerQuery, [$eventId]);
+        // Получаем email организатора
+        $emailQuery = "SELECT u.email FROM users u
+                       JOIN organizators_events oe ON u.user_id = oe.organizator_id
+                       WHERE oe.event_id = $1";
+        $emailResult = pg_query_params($conn, $emailQuery, [$eventId]);
+        $organizerEmail = ($emailResult && $userData = pg_fetch_assoc($emailResult)) ? $userData['email'] : null;
 
-        if ($organizerResult && $organizerData = pg_fetch_assoc($organizerResult)) {
-            $organizerId = $organizerData['organizator_id'];
+        // Получаем email всех зарегистрированных участников
+        $participantsQuery = "SELECT u.email FROM users u
+                              JOIN user_events ue ON u.user_id = ue.user_id
+                              WHERE ue.event_id = $1";
+        $participantsResult = pg_query_params($conn, $participantsQuery, [$eventId]);
+        $participantsEmails = [];
+        while ($participant = pg_fetch_assoc($participantsResult)) {
+            $participantsEmails[] = $participant['email'];
+        }
 
-            // Получаем email организатора
-            $emailQuery = "SELECT email FROM users WHERE user_id = $1";
-            $emailResult = pg_query_params($conn, $emailQuery, [$organizerId]);
+        $mail = new PHPMailer(true);
+        try {
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.yandex.ru';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'eno7i@yandex.ru';
+            $mail->Password   = 'clzyppxymjxvnmbt';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port       = 465;
+            $mail->setFrom('eno7i@yandex.ru', 'MEET');
+            $mail->CharSet = 'UTF-8';
+            $mail->isHTML(true);
 
-            if (!$emailResult) {
-                $response['message'] = 'Ошибка при получении email организатора: ' . pg_last_error($conn);
-                echo json_encode($response);
-                exit;
-            }
-
-            $userData = pg_fetch_assoc($emailResult);
-            $userEmail = $userData['email'] ?? null;
-
-            if ($userEmail) {
-                // Отправляем уведомление по email
-                $mail = new PHPMailer(true);
-                try {
-                    $mail->isSMTP();
-                    $mail->Host       = 'smtp.yandex.ru';
-                    $mail->SMTPAuth   = true;
-                    $mail->Username   = 'eno7i@yandex.ru';
-                    $mail->Password   = 'clzyppxymjxvnmbt'; // Лучше хранить эти данные в переменных окружения для безопасности
-                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-                    $mail->Port       = 465;
-                    $mail->setFrom('eno7i@yandex.ru', 'MEET');
-                    $mail->addAddress($userEmail, 'Организатор');
-                    $mail->CharSet = 'UTF-8';
-                    $mail->isHTML(true);
-
-                    if ($newStatus) {
-                        // Одобрение мероприятия
-                        $mail->Subject = 'Ваше мероприятие одобрено';
-                        $mail->Body    = '<b>Поздравляем! Ваше мероприятие "' . htmlspecialchars($eventName) . '" одобрено и теперь доступно для участников.</b><br><br>Дата мероприятия: ' . htmlspecialchars($eventDate);
-                        $mail->AltBody = 'Поздравляем! Ваше мероприятие "' . $eventName . '" одобрено. Дата мероприятия: ' . $eventDate;
-                    } else {
-                        // Отклонение мероприятия
-                        $mail->Subject = 'Ваше мероприятие отклонено';
-                        $mail->Body    = '<b>К сожалению, ваше мероприятие "' . htmlspecialchars($eventName) . '" было отклонено.</b><br><br>Дата мероприятия: ' . htmlspecialchars($eventDate);
-                        $mail->AltBody = 'К сожалению, ваше мероприятие "' . $eventName . '" было отклонено. Дата мероприятия: ' . $eventDate;
-                    }
-
+            if ($newStatus) {
+                // Уведомление об одобрении мероприятия
+                if ($organizerEmail) {
+                    $mail->clearAddresses();
+                    $mail->addAddress($organizerEmail, 'Организатор');
+                    $mail->Subject = 'Ваше мероприятие одобрено';
+                    $mail->Body = "<b>Ваше мероприятие \"{$eventName}\" одобрено.</b><br>Дата: {$eventDate}";
                     $mail->send();
-                    $response['success'] = true;
-                    $response['newStatus'] = $newStatus ? 'true' : 'false';
-                    $response['message'] = $newStatus
-                        ? 'Мероприятие одобрено, уведомление отправлено'
-                        : 'Мероприятие отклонено, уведомление отправлено';
-
-                } catch (Exception $e) {
-                    $response['success'] = false;
-                    $response['message'] = 'Ошибка отправки email: ' . $e->getMessage();
                 }
             } else {
-                $response['success'] = true;
-                $response['message'] = 'Статус мероприятия изменен, но email организатора не найден.';
+                // Уведомление об отмене мероприятия
+                if ($organizerEmail) {
+                    $mail->clearAddresses();
+                    $mail->addAddress($organizerEmail, 'Организатор');
+                    $mail->Subject = 'Ваше мероприятие отменено';
+                    $mail->Body = "<b>Ваше мероприятие \"{$eventName}\" отменено по решению администратора платформы.</b><br>Причина: <i>{$reason}</i><br>Дата: {$eventDate}";
+                    $mail->send();
+                }
+
+                // Уведомление участникам без указания причины
+                foreach ($participantsEmails as $participantEmail) {
+                    $mail->clearAddresses();
+                    $mail->addAddress($participantEmail);
+                    $mail->Subject = 'Мероприятие отменено';
+                    $mail->Body = "<b>Мероприятие \"{$eventName}\" было отменено по решению администратора платформы.</b><br>Дата: {$eventDate}";
+                    $mail->send();
+                }
             }
-        } else {
-            $response['message'] = 'Ошибка при получении ID организатора из таблицы organizators_events';
+
+            $response['success'] = true;
+            $response['newStatus'] = $newStatus ? 'true' : 'false';
+            $response['message'] = $newStatus
+                ? 'Мероприятие одобрено, уведомления отправлены'
+                : 'Мероприятие отменено, уведомления отправлены';
+
+        } catch (Exception $e) {
+            $response['message'] = 'Ошибка отправки email: ' . $e->getMessage();
         }
     } else {
-        $response['message'] = 'Ошибка при изменении статуса: ' . pg_last_error($conn);
+        $response['message'] = 'Ошибка при изменении статуса';
     }
 } else {
     $response['message'] = 'Недопустимый метод запроса.';
@@ -105,4 +108,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 pg_close($conn);
 echo json_encode($response);
-?>

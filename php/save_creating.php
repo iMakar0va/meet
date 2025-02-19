@@ -27,11 +27,46 @@ $eventData = [
     'address' => $_POST["address_event"] ?? '',
     'place' => $_POST["place_event"] ?? '',
     'phone' => $_POST["phone"] ?? '',
-    'email' => $_POST["email"] ?? '',
 ];
 
-// Заглушка для организатора
-$organizer = "ООО Сатурн";
+// Получаем данные организатора из базы данных на основе user_id из сессии
+$userId = $_SESSION['user_id'] ?? null;
+
+if ($userId) {
+    $getOrganizerQuery = "
+        SELECT name, email
+        FROM organizators
+        WHERE organizator_id = $1
+    ";
+
+    $organizerStmt = pg_prepare($conn, "get_organizer", $getOrganizerQuery);
+    $organizerResult = pg_execute($conn, "get_organizer", [$userId]);
+
+    if ($organizerResult) {
+        $organizerData = pg_fetch_assoc($organizerResult);
+
+        // Если данные организатора найдены, присваиваем их переменным
+        if ($organizerData) {
+            $organizer = $organizerData['name'];
+            $organizerEmail = $organizerData['email'];
+        } else {
+            $response['message'] = 'Организатор не найден.';
+            echo json_encode($response);
+            exit();
+        }
+    } else {
+        $response['message'] = 'Ошибка при получении данных организатора.';
+        echo json_encode($response);
+        exit();
+    }
+} else {
+    $response['message'] = 'Пользователь не авторизован.';
+    echo json_encode($response);
+    exit();
+}
+
+// Заглушка для email, если данные организатора не найдены
+$email = $organizerEmail ?? $_POST["email"] ?? '';
 
 // Проверка изображения
 $imageContent = handleImageUpload();
@@ -64,7 +99,7 @@ try {
         $organizer,
         $eventData['place'],
         $eventData['phone'],
-        $eventData['email']
+        $email
     ]);
 
     // Получаем ID вставленного события
@@ -80,7 +115,7 @@ try {
     $organizerStmt = pg_prepare($conn, "insert_organizator_event", $insertOrganizerEventQuery);
     $organizerResult = pg_execute($conn, "insert_organizator_event", [
         $eventId,
-        $_SESSION['user_id'] // организатор из сессии
+        $userId // организатор из сессии
     ]);
 
     if ($eventResult && $organizerResult) {

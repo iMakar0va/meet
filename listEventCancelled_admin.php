@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
@@ -10,7 +9,6 @@
     <link rel="stylesheet" href="styles/media/media_lk.css">
     <title>Личный кабинет</title>
 </head>
-
 <body>
     <?php
     session_start();
@@ -22,36 +20,27 @@
         <div class="lk">
             <?php require 'php/lk/lk_menu.php'; ?>
             <div class="lk__profile">
-                <div class="title1">Список заявок организаторов</div>
+                <div class="title1">Список одобренных мероприятий</div>
+                <a href="./listEventActive_admin.php">Активные мероприятия</a>
+                <a href="./listEventCancelled_admin.php">Отмененные мероприятия</a>
                 <div class="cards">
                     <?php
-                    $getOrganizators = "select * from events ORDER BY is_active ASC;";
-
+                    $getOrganizators = "select * from events where is_active = false and event_date > CURRENT_DATE ORDER BY event_date;";
                     $resultGetOrganizators = pg_query($conn, $getOrganizators);
-
                     if ($resultGetOrganizators) {
                         while ($row = pg_fetch_assoc($resultGetOrganizators)) {
-                            require './php/card_request_event.php';
+                            require './php/card_active_event.php';
                         }
                     } else {
                         echo "Ошибка при получении данных: " . pg_last_error();
                     } ?>
                 </div>
-                <!-- /cards -->
             </div>
-            <!-- /lk__profile -->
         </div>
-        <!-- /lk -->
-        <?php
-        pg_close($conn);
-        ?>
+        <?php pg_close($conn); ?>
     </div>
-    <!-- /container -->
 
-
-    <?php
-    require './php/footer.php';
-    ?>
+    <?php require './php/footer.php'; ?>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const toggleButtons = document.querySelectorAll('.toggle-event-button');
@@ -71,15 +60,18 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                // Обновляем текст статуса и кнопки на странице
                                 if (data.newStatus === 'true') {
                                     statusElement.textContent = '✅ Одобрено';
                                     button.textContent = 'Отклонить';
                                     button.setAttribute('data-status', 't');
                                 } else {
-                                    statusElement.textContent = '❌ Ожидает подтверждения';
+                                    statusElement.textContent = '❌ Отменено';
                                     button.textContent = 'Одобрить';
                                     button.setAttribute('data-status', 'f');
+                                }
+                                // Удаление мероприятия с интерфейса
+                                if (data.newStatus === 'true') {
+                                    button.closest('.card').remove();
                                 }
                             } else {
                                 alert(data.message || 'Ошибка при изменении статуса.');
@@ -93,7 +85,5 @@
             });
         });
     </script>
-
 </body>
-
 </html>

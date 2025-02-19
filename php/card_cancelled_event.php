@@ -20,7 +20,7 @@ $formattedDate = intval($dateParts[2]) . ' ' . $months[intval($dateParts[1])];
 $imageSrc = !empty($row["image"])
     ? "data:image/jpeg;base64," . base64_encode(pg_unescape_bytea($row["image"]))
     : "img/profile.jpg"; ?>
-<div class="card" id="event-<?= htmlspecialchars($row['event_id']) ?>">
+<div class="card">
     <div class="card__img" style="background-image: url(<?= $imageSrc ?>)"></div>
     <div class="card__content">
         <div class="card__type"><?= htmlspecialchars($row["type"]) ?></div>
@@ -30,9 +30,15 @@ $imageSrc = !empty($row["image"])
         </div>
         <div class="card__city"><?= htmlspecialchars($row["city"]) ?></div>
         <div class="card__title"><?= htmlspecialchars($row["title"]) ?></div>
+        <div class="card__status status" data-id="<?= htmlspecialchars($row['event_id']) ?>">
+            <?= htmlspecialchars($row["is_active"]) === 't' ? '✅ Одобрено' : '❌ Отменено' ?>
+        </div>
     </div>
     <a href="event.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Подробнее</a>
-    <button class="btn1" onclick="approveEvent(<?= $row['event_id'] ?>, '<?= addslashes($row['title']) ?>')">Одобрить</button>
-    <button class="btn1" onclick="rejectEvent(<?= $row['event_id'] ?>, '<?= addslashes($row['title']) ?>')">Отклонить</button>
+    <button class="btn1 toggle-event-button"
+        data-id="<?= htmlspecialchars($row['event_id']) ?>"
+        data-status="<?= htmlspecialchars($row["is_active"]) ?>">
+        <?= htmlspecialchars($row["is_active"]) === 't' ? 'Отклонить' : 'Одобрить' ?>
+    </button>
 </div>
 <!-- /card -->

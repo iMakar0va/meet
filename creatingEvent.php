@@ -99,10 +99,6 @@
                         <input id="phone" name="phone" class="input title2" type="text" placeholder="+7 XXX XXX XX XX" required>
                         <label class="label title2" for="">Номер телефона</label>
                     </div>
-                    <div class="form__group">
-                        <input id="email" name="email" class="input title2" type="email" placeholder=" " required>
-                        <label class="label title2" for="">Эл.почта</label>
-                    </div>
                     <div id="error" class="error title2" style="display: none;">Пользователь с такой почтой уже зарегистрирован!</div>
                     <button class="btn1 title2" type="submit">Создать</button>
                 </form>
