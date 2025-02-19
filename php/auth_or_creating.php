@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 $userId = $_SESSION['user_id'];
 
 // Проверяем, является ли пользователь организатором, учитывая, что статус имеет тип boolean
-$sql = "SELECT * FROM organizators WHERE organizator_id = $1 AND isorganizator = true";
+$sql = "SELECT * FROM organizators WHERE organizator_id = $1 AND is_organizator = true";
 $result = pg_query_params($conn, $sql, [$userId]);
 
 // Если запрос вернул хотя бы одну строку, значит пользователь - организатор

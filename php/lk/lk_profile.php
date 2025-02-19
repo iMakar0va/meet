@@ -110,7 +110,7 @@ $organizerDataResult = fetchOrganizerData($conn, $userId);
 $organizerData = pg_fetch_assoc($organizerDataResult);
 
 if ($organizerData) {
-    $organizerApplicationQuery = pg_prepare($conn, "get_application_status", "SELECT o.* FROM organizators o WHERE o.organizator_id = $1 and isorganizator = false;");
+    $organizerApplicationQuery = pg_prepare($conn, "get_application_status", "SELECT o.* FROM organizators o WHERE o.organizator_id = $1 and is_organizator = false;");
     $applicationStatusResult = pg_execute($conn, "get_application_status", [$userId]);
     $applicationStatus = pg_fetch_assoc($applicationStatusResult);
     if ($applicationStatus) { ?>

@@ -20,13 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Переключаем статус на противоположный
     $toggleQuery = "UPDATE organizators
-                    SET isOrganizator = NOT isOrganizator
+                    SET is_organizator = NOT is_organizator
                     WHERE organizator_id = $1
-                    RETURNING isOrganizator";
+                    RETURNING is_organizator";
     $result = pg_query_params($conn, $toggleQuery, [$organizatorId]);
 
     if ($result && $row = pg_fetch_assoc($result)) {
-        $newStatus = $row['isorganizator'] === 't';
+        $newStatus = $row['is_organizator'] === 't';
 
         // Получаем email пользователя
         $emailQuery = "SELECT email FROM users WHERE user_id = $1";

@@ -5,7 +5,7 @@
     $userStatusQuery = "
         SELECT
             users.isadmin,
-            organizators.isorganizator
+            organizators.is_organizator
         FROM
             users
         LEFT JOIN
@@ -36,7 +36,7 @@
     ]);
 
     // Проверка, если пользователь является организатором
-    if ($userStatus['isorganizator'] === 't') { // Проверка на true для isorganizator
+    if ($userStatus['is_organizator'] === 't') { // Проверка на true для is_organizator
         renderMenuItems('Организатор', [
             'nowEvent_organizer.php' => 'Предстоящие события',
             'pastEvent_organizer.php' => 'История',

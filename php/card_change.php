@@ -41,7 +41,6 @@ $imageSrc = !empty($row['image'])
         <div class="card__city"><?= htmlspecialchars($row["city"]) ?></div>
         <div class="card__title"><?= htmlspecialchars($row["title"]) ?></div>
     </div>
-    <a href="changeEvent.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Изменить данные</a>
     <a href="event.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Подробнее</a>
     <a href="#" class="btn1" onclick="confirmCancelEvent(<?= htmlspecialchars($row['event_id']) ?>, '<?= addslashes(htmlspecialchars($row['title'])) ?>')">Отменить мероприятие</a>
 

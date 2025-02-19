@@ -25,7 +25,7 @@
                 <div class="title1">Список заявок организаторов</div>
                 <div class="cards_line">
                     <?php
-                    $getOrganizators = "select * from organizators ORDER BY isOrganizator ASC;";
+                    $getOrganizators = "select * from organizators ORDER BY is_organizator ASC;";
 
                     $resultGetOrganizators = pg_query($conn, $getOrganizators);
 
