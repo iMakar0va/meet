@@ -49,8 +49,8 @@
         renderMenuItems('Администратор', [
             'listPastEvent_admin.php' => 'Список прошедших мероприятий',
             'listUser_admin.php' => 'Список пользователей',
-            'listOrganizator_admin.php' => 'Список организаторов',
-            'listRequest_admin.php' => 'Заявки организатров',
+            'listOrganizatorActive_admin.php' => 'Список организаторов',
+            'listRequestOrganizator_admin.php' => 'Заявки организатров',
             'listEventActive_admin.php' => 'Список всех мероприятий',
             'listRequestEvent_admin.php' => 'Заявки мероприятий'
         ]);

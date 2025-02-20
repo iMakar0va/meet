@@ -22,16 +22,18 @@
         <div class="lk">
             <?php require 'php/lk/lk_menu.php'; ?>
             <div class="lk__profile">
-                <div class="title1">Список заявок организаторов</div>
+                <div class="title1">Список одобренных организаторов</div>
+                <a href="./listOrganizatorActive_admin.php">Активные организаторы</a>
+                <a href="./listOrganizatorCancelled_admin.php">Отмененные орагнизаторы</a>
                 <div class="cards_line">
                     <?php
-                    $getOrganizators = "select * from organizators ORDER BY is_organizator ASC;";
+                    $getOrganizators = "select * from organizators where is_organizator = true;";
 
                     $resultGetOrganizators = pg_query($conn, $getOrganizators);
 
                     if ($resultGetOrganizators) {
                         while ($row = pg_fetch_assoc($resultGetOrganizators)) {
-                            require './php/card_request.php';
+                            require './php/card_organizator.php';
                         }
                     } else {
                         echo "Ошибка при получении данных: " . pg_last_error();
@@ -54,34 +56,31 @@
     ?>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const toggleButtons = document.querySelectorAll('.toggle-button');
-
-            toggleButtons.forEach(button => {
+            document.querySelectorAll('.toggle-button').forEach(button => {
                 button.addEventListener('click', function() {
                     const organizatorId = button.getAttribute('data-id');
-                    const currentStatus = button.getAttribute('data-status');
-                    const statusElement = document.querySelector(`.status[data-id="${organizatorId}"]`);
+                    const isApproved = button.getAttribute('data-status') === 'true';
+                    let reason = '';
+
+                    if (isApproved) {
+                        reason = prompt('Укажите причину отмены статуса организатора:');
+                        if (!reason || reason.trim() === '') {
+                            alert('Причина обязательна.');
+                            return;
+                        }
+                    }
 
                     fetch('./php/toggle_organizator.php', {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'Content-Type': 'application/x-www-form-urlencoded'
                             },
-                            body: `organizator_id=${organizatorId}`
+                            body: `organizator_id=${organizatorId}&action=${isApproved ? 'cancel' : 'approve'}&reason=${encodeURIComponent(reason)}`
                         })
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                // Меняем текст статуса и кнопки на странице
-                                if (data.newStatus === 'true') {
-                                    statusElement.textContent = '✅ Организатор';
-                                    button.textContent = 'Снять права';
-                                    button.setAttribute('data-status', 't');
-                                } else {
-                                    statusElement.textContent = '❌ Не организатор';
-                                    button.textContent = 'Назначить организатором';
-                                    button.setAttribute('data-status', 'f');
-                                }
+                                document.querySelector(`.card[data-id="${organizatorId}"]`).remove();
                             } else {
                                 alert(data.message || 'Ошибка при изменении статуса.');
                             }
@@ -94,6 +93,7 @@
             });
         });
     </script>
+
 
 </body>
 

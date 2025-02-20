@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="styles/media/media_lk.css">
     <title>Личный кабинет</title>
 </head>
+
 <body>
     <?php
     session_start();
@@ -20,59 +22,56 @@
         <div class="lk">
             <?php require 'php/lk/lk_menu.php'; ?>
             <div class="lk__profile">
-                <div class="title1">Список одобренных мероприятий</div>
-                <a href="./listEventActive_admin.php">Активные мероприятия</a>
-                <a href="./listEventCancelled_admin.php">Отмененные мероприятия</a>
-                <div class="cards">
+                <div class="title1">Список одобренных организаторов</div>
+                <a href="./listOrganizatorActive_admin.php">Активные организаторы</a>
+                <a href="./listOrganizatorCancelled_admin.php">Отмененные орагнизаторы</a>
+                <div class="cards_line">
                     <?php
-                    $getOrganizators = "select * from events where is_active = false and event_date > CURRENT_DATE ORDER BY event_date;";
+                    $getOrganizators = "select * from organizators where is_organizator = false;";
+
                     $resultGetOrganizators = pg_query($conn, $getOrganizators);
+
                     if ($resultGetOrganizators) {
                         while ($row = pg_fetch_assoc($resultGetOrganizators)) {
-                            require './php/card_active_event.php';
+                            require './php/card_organizator.php';
                         }
                     } else {
                         echo "Ошибка при получении данных: " . pg_last_error();
                     } ?>
                 </div>
+                <!-- /cards -->
             </div>
+            <!-- /lk__profile -->
         </div>
-        <?php pg_close($conn); ?>
+        <!-- /lk -->
+        <?php
+        pg_close($conn);
+        ?>
     </div>
+    <!-- /container -->
 
-    <?php require './php/footer.php'; ?>
+
+    <?php
+    require './php/footer.php';
+    ?>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const toggleButtons = document.querySelectorAll('.toggle-event-button');
-
-            toggleButtons.forEach(button => {
+            document.querySelectorAll('.toggle-button').forEach(button => {
                 button.addEventListener('click', function() {
-                    const eventId = button.getAttribute('data-id');
-                    const statusElement = document.querySelector(`.status[data-id="${eventId}"]`);
+                    const organizatorId = button.getAttribute('data-id');
 
-                    fetch('./php/toggle_event.php', {
+                    fetch('./php/toggle_organizator.php', {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'Content-Type': 'application/x-www-form-urlencoded'
                             },
-                            body: `event_id=${eventId}`
+                            body: `organizator_id=${organizatorId}&action=approve`
                         })
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                // if (data.newStatus === 'true') {
-                                //     statusElement.textContent = '✅ Одобрено';
-                                //     button.textContent = 'Отклонить';
-                                //     button.setAttribute('data-status', 't');
-                                // } else {
-                                //     statusElement.textContent = '❌ Отменено';
-                                //     button.textContent = 'Одобрить';
-                                //     button.setAttribute('data-status', 'f');
-                                // }
-                                // Удаление мероприятия с интерфейса
-                                if (data.newStatus === 'true') {
-                                    button.closest('.card').remove();
-                                }
+                                document.querySelector(`.card[data-id="${organizatorId}"]`).remove();
                             } else {
                                 alert(data.message || 'Ошибка при изменении статуса.');
                             }
@@ -85,5 +84,8 @@
             });
         });
     </script>
+
+
 </body>
+
 </html>
