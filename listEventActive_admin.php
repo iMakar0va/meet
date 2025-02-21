@@ -23,8 +23,10 @@
             <?php require 'php/lk/lk_menu.php'; ?>
             <div class="lk__profile">
                 <div class="title1">Список одобренных мероприятий</div>
-                <a href="./listEventActive_admin.php">Активные мероприятия</a>
-                <a href="./listEventCancelled_admin.php">Отмененные мероприятия</a>
+                <div class="links">
+                    <a href="./listEventActive_admin.php" class="active">Активные мероприятия</a>
+                    <a href="./listEventCancelled_admin.php" class="no_active">Отмененные мероприятия</a>
+                </div>
                 <div class="cards">
                     <?php
                     $getOrganizators = "select * from events where is_active = true and event_date > CURRENT_DATE ORDER BY event_date;";

@@ -34,12 +34,15 @@ $imageSrc = !empty($row["image"])
             <?= htmlspecialchars($row["is_active"]) === 't' ? '✅ Одобрено' : '❌ Отменено' ?>
         </div>
     </div>
-    <a href="changeEvent.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Изменить данные</a>
-    <a href="event.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Подробнее</a>
-    <button class="btn1 toggle-event-button"
-        data-id="<?= htmlspecialchars($row['event_id']) ?>"
-        data-status="<?= htmlspecialchars($row["is_active"]) ?>">
-        <?= htmlspecialchars($row["is_active"]) === 't' ? 'Отменить' : 'Одобрить' ?>
-    </button>
+    <div class="card__btns">
+        <a href="changeEvent.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Изменить данные</a>
+        <a href="event.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Подробнее</a>
+        <button class="btn1 toggle-event-button"
+            data-id="<?= htmlspecialchars($row['event_id']) ?>"
+            data-status="<?= htmlspecialchars($row["is_active"]) ?>">
+            <?= htmlspecialchars($row["is_active"]) === 't' ? 'Отменить' : 'Одобрить' ?>
+        </button>
+    </div>
+
 </div>
 <!-- /card -->

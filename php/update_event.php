@@ -25,7 +25,7 @@ $phone = $_POST['phone'] ?? '';
 $email = $_POST['email'] ?? '';
 
 // Проверка обязательных полей
-if (empty($title) || empty($type) || empty($description) || empty($eventDate) || empty($city)) {
+if (empty($title) || empty($type) || empty($topic) || empty($description) || empty($eventDate) || empty($startTime) || empty($endTime) || empty($city) || empty($place) || empty($address) || empty($phone) || empty($email)) {
     echo json_encode(['success' => false, 'message' => 'Ошибка: все поля должны быть заполнены.']);
     exit();
 }

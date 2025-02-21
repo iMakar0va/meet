@@ -68,7 +68,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        button.closest('.card').remove();
+                        button.closest('.card_organizator').remove();
                     } else {
                         alert(data.message || 'Ошибка при обработке запроса.');
                     }

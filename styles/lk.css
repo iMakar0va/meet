@@ -30,6 +30,7 @@
 .lk__menu a {
     color: white;
 }
+
 .lk__menu a:hover {
     color: #02494C;
 }
@@ -53,9 +54,11 @@
 .lk__menu-title div {
     font-weight: 200;
 }
-.lk__menu-items{
+
+.lk__menu-items {
     margin-left: 10px;
 }
+
 .lk__menu-items a {
     display: block;
     margin-bottom: 8px;
@@ -179,46 +182,90 @@
     display: block;
 }
 
-
-/* Card new */
-
-/* .cards {
-    margin-right: -15px;
+.links {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-around;
 }
 
-.card {
+/* Переключатель активный/неактивный */
+.links a {
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.active {
+    background: var(--blue-color);
+    border: 3px solid var(--blue-color);
+    /* border-radius: 7px 0px 0px 7px; */
+    color: white;
+}
+
+.no_active {
+    color: var(--blue-color);
+    border: 3px solid var(--blue-color);
+    /* border-radius: 0px 7px 7px 0px; */
+}
+
+/* Карточка организатора в лк */
+
+.card_organizator {
     display: flex;
     flex-direction: column;
 
-    margin-right: 15px;
     margin-bottom: 20px;
 
     border: 3px solid var(--green-color);
-    border-radius: 25px;
-    width: 300px;
+    border-radius: 10px;
+
     background-color: var(--green-color);
     transition: box-shadow .2s ease-in;
 }
 
-.card__photo {
-    position: relative;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-
-    width: 25px;
-    height: 25px;
+.card_organizator .card_blocks {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
 }
 
-.card__photo::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1;
-} */
+.card_organizator .card_blocks_right {
+    display: flex;
+}
+
+.card_organizator .card__item {
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.card_organizator .item__title {
+    /* font-weight: bold; */
+    font-style: italic;
+    border: 3px solid var(--white-color);
+    text-align: center;
+}
+
+.card_organizator .status {}
+
+.card_blocks_left {
+    margin-top: 15px;
+    margin-right: 10px;
+    text-align: right;
+
+}
+
+.card__bottom {
+    margin-left: 10px;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.toggle-button {}
+
+/* Карточка мероприятий */
+.card .card__btns .btn1 {
+    width: 100%;
+}
+
+.card__btns {
+    padding: 0 10px;
+}

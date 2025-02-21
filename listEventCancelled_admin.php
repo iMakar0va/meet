@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="styles/media/media_lk.css">
     <title>Личный кабинет</title>
 </head>
+
 <body>
     <?php
     session_start();
@@ -21,8 +23,10 @@
             <?php require 'php/lk/lk_menu.php'; ?>
             <div class="lk__profile">
                 <div class="title1">Список одобренных мероприятий</div>
-                <a href="./listEventActive_admin.php">Активные мероприятия</a>
-                <a href="./listEventCancelled_admin.php">Отмененные мероприятия</a>
+                <div class="links">
+                    <a href="./listEventActive_admin.php" class="no_active">Активные мероприятия</a>
+                    <a href="./listEventCancelled_admin.php" class="active">Отмененные мероприятия</a>
+                </div>
                 <div class="cards">
                     <?php
                     $getOrganizators = "select * from events where is_active = false and event_date > CURRENT_DATE ORDER BY event_date;";
@@ -86,4 +90,5 @@
         });
     </script>
 </body>
+
 </html>

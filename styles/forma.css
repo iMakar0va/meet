@@ -28,7 +28,6 @@ form {
     /* padding: 0 20px; */
     flex: 1;
     position: relative;
-
 }
 
 .input {
@@ -50,7 +49,10 @@ form {
 }
 
 .input:focus+.label {
-    transform: translateY(-25px);
+    transform: translateY(-30px);
+    background-color: #fff;
+    padding: 3px;
+    border-radius: 3px 7px;
     font-size: 12px;
 }
 
@@ -66,7 +68,10 @@ form {
 } */
 
 .input:not(:placeholder-shown)+.label {
-    transform: translateY(-25px);
+    transform: translateY(-30px);
+    background-color: #fff;
+    padding: 3px;
+    border-radius: 3px 7px;
     font-size: 12px;
 }
 

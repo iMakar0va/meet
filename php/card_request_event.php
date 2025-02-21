@@ -31,8 +31,10 @@ $imageSrc = !empty($row["image"])
         <div class="card__city"><?= htmlspecialchars($row["city"]) ?></div>
         <div class="card__title"><?= htmlspecialchars($row["title"]) ?></div>
     </div>
-    <a href="event.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Подробнее</a>
-    <button class="btn1" onclick="approveEvent(<?= $row['event_id'] ?>, '<?= addslashes($row['title']) ?>')">Одобрить</button>
-    <button class="btn1" onclick="rejectEvent(<?= $row['event_id'] ?>, '<?= addslashes($row['title']) ?>')">Отклонить</button>
+    <div class="card__btns">
+        <a href="event.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Подробнее</a>
+        <button class="btn1" onclick="approveEvent(<?= $row['event_id'] ?>, '<?= addslashes($row['title']) ?>')">Одобрить</button>
+        <button class="btn1" onclick="rejectEvent(<?= $row['event_id'] ?>, '<?= addslashes($row['title']) ?>')">Отклонить</button>
+    </div>
 </div>
 <!-- /card -->

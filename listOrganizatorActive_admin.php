@@ -23,8 +23,11 @@
             <?php require 'php/lk/lk_menu.php'; ?>
             <div class="lk__profile">
                 <div class="title1">Список одобренных организаторов</div>
-                <a href="./listOrganizatorActive_admin.php">Активные организаторы</a>
-                <a href="./listOrganizatorCancelled_admin.php">Отмененные орагнизаторы</a>
+                <div class="links">
+                    <a href="./listOrganizatorActive_admin.php" class="active">Активные организаторы</a>
+                    <a href="./listOrganizatorCancelled_admin.php" class="no_active">Отмененные организаторы</a>
+                </div>
+
                 <div class="cards_line">
                     <?php
                     $getOrganizators = "select * from organizators where is_organizator = true;";
@@ -80,14 +83,15 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                document.querySelector(`.card[data-id="${organizatorId}"]`).remove();
+                                alert("Статус организатора снят!");
+                                document.querySelector(`.card_organizator[data-id="${organizatorId}"]`).remove();
                             } else {
                                 alert(data.message || 'Ошибка при изменении статуса.');
                             }
                         })
                         .catch(error => {
                             console.error('Ошибка сети:', error);
-                            alert('Ошибка сети. Попробуйте позже.');
+                            // alert('Ошибка сети. Попробуйте позже.');
                         });
                 });
             });

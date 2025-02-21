@@ -21,7 +21,7 @@
         <div class="lk">
             <?php require 'php/lk/lk_menu.php'; ?>
             <div class="lk__profile">
-                <div class="title1">Создать мероприятие</div>
+                <div class="title1">Создание событий</div>
                 <form id="createForm">
                     <div class="input-file-row">
                         <label class="input-file">
@@ -100,7 +100,7 @@
                         <label class="label title2" for="">Номер телефона</label>
                     </div>
                     <div id="error" class="error title2" style="display: none;">Пользователь с такой почтой уже зарегистрирован!</div>
-                    <button class="btn1 title2" type="submit">Создать</button>
+                    <button class="btn1 title2" type="submit">Создать мероприятие</button>
                 </form>
             </div>
             <!-- /lk__profile -->

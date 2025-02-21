@@ -1,8 +1,18 @@
 <?php
 // Массив месяцев
 $months = [
-    1 => 'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
-    'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
+    1 => 'января',
+    'февраля',
+    'марта',
+    'апреля',
+    'мая',
+    'июня',
+    'июля',
+    'августа',
+    'сентября',
+    'октября',
+    'ноября',
+    'декабря'
 ];
 
 // Используем DateTime для парсинга и форматирования даты
@@ -32,7 +42,9 @@ $imageSrc = !empty($row["image"])
         <div class="card__city"><?= htmlspecialchars($row["city"]) ?></div>
         <div class="card__title"><?= htmlspecialchars($row["title"]) ?></div>
     </div>
-    <button class="btn1" onclick="window.location.href='./php/generate_report.php?event_id=<?= $row['event_id'] ?>'">Получить отчет</button>
-    <a href="event.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Подробнее</a>
+    <div class="card__btns">
+        <button class="btn1" onclick="window.location.href='./php/generate_report.php?event_id=<?= $row['event_id'] ?>'">Получить отчет</button>
+        <a href="event.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Подробнее</a>
+    </div>
 </div>
 <!-- /card -->

@@ -5,7 +5,7 @@ require './php/conn.php';  // Подключение к базе данных
 // Конфигурация
 $client_id = "9736370e-6438-4d5c-bbe8-b2e9252fd0d5";
 $client_secret = "tqGScc3gssZ4W3lGOTqi2cvF1mHCSKTO";
-$redirect_uri = "https://localhost/wow2/meet/leaderid_callback.php"; // Ваш правильный URI
+$redirect_uri = "https://localhost/wow2/meet/leaderid_callback.php";
 
 // Получение кода авторизации
 if (!isset($_GET['code'])) {
@@ -66,7 +66,6 @@ if ($link_data_response === FALSE) {
 $link_data = json_decode($link_data_response, true);
 error_log("Ответ от /users/link-app: " . json_encode($link_data));
 
-// ----- ИСПРАВЛЕННЫЙ БЛОК -----
 $user_id = null;
 
 if (!empty($link_data['items']) && isset($link_data['items'][0]['id'])) {
