@@ -29,6 +29,7 @@
                 <div id="error" class="error title2" style="display:none;">Неверный пароль или логин</div>
                 <button class="btn1 title2">Войти</button>
                 <a href="./leaderid_login.php" class="btn1 title2">Войти через Leader-ID</a>
+                <a href="./google_login.php" class="btn1 title2">Войти через Google</a>
                 <a href="./reg.php" class="title3" id="link-reg">Зарегистрироваться</a>
             </form>
         </div>

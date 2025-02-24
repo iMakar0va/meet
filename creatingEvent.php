@@ -32,11 +32,11 @@
                     </div>
                     <div class="form__group">
                         <input id="title_event" name="title_event" class="input title2" type="text" placeholder=" " required>
-                        <label class="label title2" for="">Название мероприятия</label>
+                        <label class="label title2" for="">Название мероприятия*</label>
                     </div>
                     <div class="text-field__icon">
                         <select class="text-field__input title2" id="type_event" name="type_event" required>
-                            <option value="" disabled selected hidden>Выберите тип мероприятия:</option>
+                            <option value="" disabled selected hidden>Выберите тип мероприятия:*</option>
                             <option value="Конференция">Конференция</option>
                             <option value="Выставка">Выставка</option>
                             <option value="Презентация">Презентация</option>
@@ -56,7 +56,7 @@
                     </div>
                     <div class="text-field__icon">
                         <select class="text-field__input title2" id="topic_event" name="topic_event" required>
-                            <option value="" disabled selected hidden>Выберите направление мероприятия:</option>
+                            <option value="" disabled selected hidden>Выберите направление мероприятия:*</option>
                             <option value="технологии и инновации">технологии и инновации</option>
                             <option value="бизнес и финансы">бизнес и финансы</option>
                             <option value="здоровье и фитнес">здоровье и фитнес</option>
@@ -69,36 +69,37 @@
                         </select>
                     </div>
                     <div class="form__group">
-                        <textarea class="input textarea title2" id="desc_event" name="desc_event" rows="4" placeholder="Описание мероприятия"></textarea>
+                        <textarea class="input textarea title2" id="desc_event" name="desc_event" rows="4" placeholder="Описание мероприятия*"></textarea>
                     </div>
                     <div class="form__group">
                         <input id="date_event" name="date_event" class="input title2" type="text" placeholder="ЧЧ/ММ/ГГ" required>
-                        <label class="label title2" for="">Дата мероприятия</label>
+                        <label class="label title2" for="">Дата мероприятия*</label>
                     </div>
                     <div class="form__group">
                         <input id="start_time" name="start_time" class="input title2" type="text" placeholder="ЧЧ:ММ" required>
-                        <label class="label title2" for="">Время начала</label>
+                        <label class="label title2" for="">Время начала*</label>
                     </div>
                     <div class="form__group">
                         <input id="end_time" name="end_time" class="input title2" type="text" placeholder="ЧЧ:ММ" required>
-                        <label class="label title2" for="">Время окончания</label>
+                        <label class="label title2" for="">Время окончания*</label>
                     </div>
                     <div class="form__group">
                         <input id="city_event" name="city_event" class="input title2" type="text" placeholder=" " required>
-                        <label class="label title2" for="">Город</label>
+                        <label class="label title2" for="">Город*</label>
                     </div>
                     <div class="form__group">
                         <input id="place_event" name="place_event" class="input title2" type="text" placeholder=" " required>
-                        <label class="label title2" for="">Место проведения</label>
+                        <label class="label title2" for="">Место проведения*</label>
                     </div>
                     <div class="form__group">
                         <input id="address_event" name="address_event" class="input title2" type="text" placeholder=" " required>
-                        <label class="label title2" for="">Адрес</label>
+                        <label class="label title2" for="">Адрес*</label>
                     </div>
                     <div class="form__group">
                         <input id="phone" name="phone" class="input title2" type="text" placeholder="+7 XXX XXX XX XX" required>
-                        <label class="label title2" for="">Номер телефона</label>
+                        <label class="label title2" for="">Номер телефона*</label>
                     </div>
+                    <div class="" style="color: black;">*-поля для обязательного заполения</div>
                     <div id="error" class="error title2" style="display: none;">Пользователь с такой почтой уже зарегистрирован!</div>
                     <button class="btn1 title2" type="submit">Создать мероприятие</button>
                 </form>

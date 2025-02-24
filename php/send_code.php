@@ -110,7 +110,8 @@ try {
     $mail->SMTPAuth   = true;
     $mail->Username   = 'eno7i@yandex.ru';
     $mail->Password   = 'clzyppxymjxvnmbt';
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+    // $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+    $mail->SMTPSecure = 'ssl';
     $mail->Port       = 465;
 
     $mail->setFrom('eno7i@yandex.ru', 'MEET');

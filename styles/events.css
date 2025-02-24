@@ -1,95 +1,7 @@
 @import url(general.css);
-/*
-.city-selector {
-    margin: 48px 0px 56px 0px;
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-} */
-/*
-label {}
-
-select {
-    all: unset;
-} */
-
-/* select { */
-    /* position: relative;
-    padding-right: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 290px;
-    border: none; */
-    /* width: 250px; */
-    /* padding: 10px;
-    border-radius: 15px; */
-    /* height: 90px; */
-    /* background-color: #C2E4E6;
-    color: #0C949C;
-    font-weight: bold;
-    font-size: 20px; */
-
-    /* display: none; */
-/* } */
-
-/* select::after {
-    color: #0C949C;
-    content: '\2716';
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 14;
-}
-
-select {
-    position: relative;
-    padding-right: 20px;
-    outline: none;
-}
-
-select:focus {
-    border: 1px solid blue;
-} */
-
-/* Псевдоэлемент для выпадающего меню */
-/* select+div {
-    position: absolute;
-    top: calc(100% + 10px);
-    /* Дополнительное смещение сверху */
-    /* left: 0; */
-    /* width: 100%; */
-    /* max-height: 200px; */
-    /* overflow-y: auto; */
-    /* background-color: white; */
-    /* border: 1px solid black; */
-    /* z-index: 999; */
-    /* opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease; */
-/* } */
-
-/* Переопределение стиля псевдоэлемента при фокусе на select */
-/* select:focus+div {
-    opacity: 1;
-    visibility: visible;
-} */
-
-/* Контент для выпадающего меню */
-/* select+div ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-select+div ul li {
-    padding: 5px 10px;
-    cursor: pointer;
-} */
 .search-form form{
     padding: 20px 20px;
-    margin: 35px;
+    margin: 35px auto;
     background: var(--green-color);
     border-radius: 7px;
     display: flex;
@@ -97,6 +9,7 @@ select+div ul li {
     gap: 10px;
 }
 input, select{
+    width: 300px;
     padding: 7px 5px;
     border-radius: 5px;
     background-color: var(--white-color);

@@ -1,10 +1,13 @@
 <?php
 session_start();
 require './php/conn.php';  // Подключение к базе данных
+require './PHPMailer/src/Exception.php';
+require './PHPMailer/src/PHPMailer.php';
+require './PHPMailer/src/SMTP.php';
 
 // Конфигурация
-$client_id = "9736370e-6438-4d5c-bbe8-b2e9252fd0d5";
-$client_secret = "tqGScc3gssZ4W3lGOTqi2cvF1mHCSKTO";
+$leader_id_client_id = "9736370e-6438-4d5c-bbe8-b2e9252fd0d5";
+$leader_id_client_secret = "tqGScc3gssZ4W3lGOTqi2cvF1mHCSKTO";
 $redirect_uri = "https://localhost/wow2/meet/leaderid_callback.php";
 
 // Получение кода авторизации
@@ -12,16 +15,16 @@ if (!isset($_GET['code'])) {
     error_log("Ошибка: отсутствует параметр code.");
     die("Ошибка авторизации: код отсутствует.");
 }
-$code = $_GET['code'];
-error_log("Получен код авторизации: $code");
+$authorization_code = $_GET['code'];
+error_log("Получен код авторизации: $authorization_code");
 
 // Получаем access_token
 $token_url = "https://apps.leader-id.ru/api/v1/oauth/token";
-$data = json_encode([
-    'client_id' => $client_id,
-    'client_secret' => $client_secret,
+$token_request_data = json_encode([
+    'client_id' => $leader_id_client_id,
+    'client_secret' => $leader_id_client_secret,
     'grant_type' => 'authorization_code',
-    'code' => $code,
+    'code' => $authorization_code,
     'redirect_uri' => $redirect_uri
 ]);
 
@@ -29,7 +32,7 @@ $options = [
     'http' => [
         'header' => "Content-type: application/json",
         'method' => 'POST',
-        'content' => $data
+        'content' => $token_request_data
     ]
 ];
 
@@ -50,8 +53,8 @@ if (!isset($token_data['access_token'])) {
 $access_token = $token_data['access_token'];
 
 // --- Запрос данных через /users/link-app ---
-$user_url = "https://apps.leader-id.ru/api/v1/users/link-app";
-$link_data_response = @file_get_contents($user_url, false, stream_context_create([
+$user_data_url = "https://apps.leader-id.ru/api/v1/users/link-app";
+$link_data_response = @file_get_contents($user_data_url, false, stream_context_create([
     'http' => [
         'header' => "Authorization: Bearer $access_token",
         'method' => 'GET'
@@ -66,31 +69,31 @@ if ($link_data_response === FALSE) {
 $link_data = json_decode($link_data_response, true);
 error_log("Ответ от /users/link-app: " . json_encode($link_data));
 
-$user_id = null;
+$leader_id = null;
 
 if (!empty($link_data['items']) && isset($link_data['items'][0]['id'])) {
     // Если есть профили, берем первый ID
-    $user_id = $link_data['items'][0]['id'];
-    error_log("Получен user_id из профилей: $user_id");
+    $leader_id = $link_data['items'][0]['id'];
+    error_log("Получен leader_id из профилей: $leader_id");
 } elseif (isset($link_data['id'])) {
     // Если нет профилей, но есть просто id
-    $user_id = $link_data['id'];
-    error_log("Получен user_id напрямую: $user_id");
+    $leader_id = $link_data['id'];
+    error_log("Получен leader_id напрямую: $leader_id");
 } elseif (preg_match('/\[(\d+)\]/', json_encode($link_data), $matches)) {
     // Если ID пришел как [6749818] в ответе
-    $user_id = $matches[1];
-    error_log("Получен user_id из текста ошибки: $user_id");
+    $leader_id = $matches[1];
+    error_log("Получен leader_id из текста ошибки: $leader_id");
 } else {
-    error_log("Ошибка: нет профилей и user_id.");
-    die("Ошибка: нет профилей и отсутствует user_id.");
+    error_log("Ошибка: нет профилей и leader_id.");
+    die("Ошибка: нет профилей и отсутствует leader_id.");
 }
 
-if (!$user_id) {
-    die("Ошибка: не удалось получить user_id.");
+if (!$leader_id) {
+    die("Ошибка: не удалось получить leader_id.");
 }
 
-// --- Получаем данные пользователя по user_id ---
-$user_url = "https://apps.leader-id.ru/api/v1/users/$user_id";
+// --- Получаем данные пользователя по leader_id ---
+$user_data_url = "https://apps.leader-id.ru/api/v1/users/$leader_id";
 $options_user = [
     'http' => [
         'header' => "Authorization: Bearer $access_token",
@@ -98,7 +101,7 @@ $options_user = [
     ]
 ];
 
-$user_data_response = @file_get_contents($user_url, false, stream_context_create($options_user));
+$user_data_response = @file_get_contents($user_data_url, false, stream_context_create($options_user));
 
 if ($user_data_response === FALSE) {
     error_log("Ошибка запроса данных о пользователе: " . json_encode(error_get_last()));
@@ -119,15 +122,55 @@ if (!$user_email) {
 error_log("Найден профиль пользователя с email: $user_email");
 
 // --- Проверяем наличие пользователя в базе ---
-$result = pg_query_params($conn, "SELECT user_id FROM users WHERE email = $1", [$user_email]);
-if ($result && pg_num_rows($result) > 0) {
+$user_check_result = pg_query_params($conn, "SELECT user_id FROM users WHERE email = $1", [$user_email]);
+if ($user_check_result && pg_num_rows($user_check_result) > 0) {
     // Пользователь найден
-    $_SESSION['user_id'] = pg_fetch_result($result, 0, 'user_id');
+    $_SESSION['user_id'] = pg_fetch_result($user_check_result, 0, 'user_id');
     setcookie("user_id", $_SESSION['user_id'], time() + 3600 * 24 * 30, "/");
     header("Location: lk.php");
 } else {
-    // Новый пользователь — перенаправляем на регистрацию
-    $_SESSION['leader_email'] = $user_email;
-    header("Location: reg.php");
+    $first_name = $user_data['firstName'] ?? '';
+    $last_name = $user_data['lastName'] ?? '';
+    $birth_date = substr($user_data['birthday'], 0, 10);
+    $gender = $user_data['gender'] == 'male' ? 'мужской' : 'женский';
+
+    $generated_password = rand(100000, 999999); // Генерация 8-значного пароля
+    $hashed_password = password_hash($generated_password, PASSWORD_DEFAULT);
+
+    // Вставка данных о пользователе в базу данных
+    $insert_user_query = pg_query_params(
+        $conn,
+        "INSERT INTO users (last_name, first_name, email, password, birth_date, gender) VALUES ($1, $2, $3, $4, $5, $6)",
+        [$last_name, $first_name, $user_email, $hashed_password, $birth_date, $gender]
+    );
+
+    // Отправка письма с новым паролем
+    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+    $mail->isSMTP();
+    $mail->Host = 'smtp.yandex.ru';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'eno7i@yandex.ru';
+    $mail->Password = 'clzyppxymjxvnmbt';
+    $mail->SMTPSecure = 'ssl';
+    $mail->Port = 465;
+    $mail->CharSet = 'UTF-8';
+    $mail->setFrom('eno7i@yandex.ru', 'MEET');
+    $mail->addAddress($user_email);
+    $mail->Subject = 'Ваш новый пароль';
+    $mail->Body = "Здравствуйте, $first_name!\n\nВаш пароль для входа: $generated_password\n\nПожалуйста, измените его после входа.";
+    $mail->send();
+    if (!$mail->send()) {
+        error_log("Ошибка отправки письма: " . $mail->ErrorInfo);
+        die("Ошибка отправки письма.");
+    } else {
+        error_log("Письмо успешно отправлено.");
+    }
+
+    // Получаем ID пользователя и создаем сессию
+    $user_id_query = pg_query_params($conn, "SELECT user_id FROM users WHERE email = $1", [$user_email]);
+    $_SESSION['user_id'] = pg_fetch_result($user_id_query, 0, 'user_id');
+    setcookie("user_id", $_SESSION['user_id'], time() + 3600 * 24 * 30, "/");
+    header("Location: lk.php");
 }
+
 exit();
