@@ -42,7 +42,7 @@
     width: 50%;
 }
 
-.banner__block:last-child{
+.banner__block:last-child {
     position: relative;
 }
 
@@ -173,7 +173,17 @@
     padding: 32px;
     background-color: #3E626C;
     border-radius: 10px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
+
+/* .creation__block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+} */
 
 .creation-title {
     font-size: 32px;

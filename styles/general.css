@@ -1,13 +1,15 @@
 @import url(reset.css);
 /* @import url(https://fonts.googleapis.com/css?family=Inter:100,200,300,regular,500,600,700,800,900,100italic,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic); */
-/* @import url(https://fonts.googleapis.com/css?family=Roboto:100,200,300,regular,500,600,700,800,900,100italic,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic); */
+@import url(https://fonts.googleapis.com/css?family=Roboto:100,200,300,regular,500,600,700,800,900,100italic,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic);
 
-@import url(https://fonts.googleapis.com/css?family=Poppins:100,100italic,200,200italic,300,300italic,regular,italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic);
+/* @import url(https://fonts.googleapis.com/css?family=Poppins:100,100italic,200,200italic,300,300italic,regular,italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic); */
+
 /* @import url(media/media_general.css); */
 /* @import url(https://fonts.googleapis.com/css?family=Lato:100,100italic,300,300italic,regular,italic,700,700italic,900,900italic); */
 /* =============Общие настройки============= */
 :root {
-    --blue-color: #0C949C;
+    /* --blue-color: #0C949C; */
+    --blue-color: #44969a;
     --light-blue-color: #69E5EB;
     --very-light-blue-color: #c2e4e6;
     --green-color: #02494C;
@@ -20,7 +22,7 @@
 }
 
 body {
-    font-family: "Poppins", sans-serif;
+    font-family: "Roboto", sans-serif;
     color: #fff;
 }
 
@@ -233,6 +235,32 @@ footer {
     max-width: 734px;
 }
 
+/* Показать/скрыть пароль */
+/* Скрыть дефолтную иконку глазика, появляющуюся в некоторых браузерах */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+    display: none;
+}
+
+.password {
+    position: relative;
+}
+
+.password-control {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    background: url(../img/icons/no-view.svg) 0 0 no-repeat;
+}
+
+.password-control.view {
+    background: url(../img/icons/view.svg) 0 0 no-repeat;
+}
+
+
 /* =============Cards============= */
 
 .cards {
@@ -253,7 +281,7 @@ footer {
     border-radius: 15px;
     width: 300px;
     background-color: var(--green-color);
-    transition: box-shadow .2s ease-in;
+    transition: box-shadow 0.3s ease;
 }
 
 .card:hover {

@@ -35,7 +35,7 @@
 
                     if ($resultGetOrganizators) {
                         while ($row = pg_fetch_assoc($resultGetOrganizators)) {
-                            require './php/card_organizator.php';
+                            require './php/card_organizator_admin.php';
                         }
                     } else {
                         echo "Ошибка при получении данных: " . pg_last_error();

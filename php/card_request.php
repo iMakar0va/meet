@@ -12,9 +12,9 @@
             </div>
         </div>
         <div class="card_blocks_left">
-            <button class="btn1 approve-button" data-id="<?= htmlspecialchars($row['organizator_id']) ?>">Одобрить</button>
-            <button class="btn1 delete-button" data-id="<?= htmlspecialchars($row['organizator_id']) ?>">Отклонить</button>
+
         </div>
     </div>
     <div class="card__bottom">Описание деятельности: <?= htmlspecialchars($row["description"]) ?></div>
 </div>
+

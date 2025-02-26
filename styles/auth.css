@@ -64,13 +64,13 @@ form button {
     content: '';
     position: absolute;
     bottom: 0;
-    left: 23px;
+    left: 10px;
     top: 50%;
     transform: translateY(-50%);
 }
 
 .text-field__icon input {
-    padding: 0 50px 0 82px;
+    padding: 0 50px 0 56px;
 }
 
 .text-field__icon::before {
@@ -202,4 +202,12 @@ form button {
     width: 16px;
     line-height: 15px;
     border-radius: 50%;
+}
+
+input[type="password"] {
+    -webkit-text-security: square;
+}
+
+form.show-passwords input[type="password"] {
+    -webkit-text-security: none;
 }

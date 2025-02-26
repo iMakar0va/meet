@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="styles/auth.css">
     <link rel="stylesheet" href="styles/media/media_auth.css">
     <title>Регистрация</title>
+    <style>
+        .error-border {
+            border: 3px solid rgb(202, 32, 17);
+        }
+    </style>
 </head>
 
 <body>
@@ -44,11 +49,13 @@
                 <div class="text-field__icon text-field__icon_email">
                     <input id="email" name="email" class="text-field__input title2" type="email" placeholder="Почта*" required>
                 </div>
-                <div class="text-field__icon text-field__icon_password">
+                <div class="text-field__icon text-field__icon_password password">
                     <input id="password_reg" name="password" class="text-field__input title2" type="password" placeholder="Пароль*" required>
+                    <a href="#" class="password-control" onclick="return show_hide_password(this, 'password_reg');"></a>
                 </div>
-                <div class="text-field__icon text-field__icon_password">
+                <div class="text-field__icon text-field__icon_password password">
                     <input id="repeat_password" name="repeat_password" class="text-field__input title2" type="password" placeholder="Повторите пароль*" required>
+                    <a href="#" class="password-control" onclick="return show_hide_password(this, 'repeat_password');"></a>
                 </div>
                 <div class="text-field__icon text-field__icon_calendar">
                     <input
@@ -83,13 +90,6 @@
                 if (value.length > 2) value = value.slice(0, 2) + '/' + value.slice(2);
                 if (value.length > 5) value = value.slice(0, 5) + '/' + value.slice(5);
                 birthDateInput.value = value.slice(0, 10);
-            });
-
-            birthDateInput.addEventListener('blur', () => {
-                const regex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
-                if (!regex.test(birthDateInput.value)) {
-                    birthDateInput.value = '';
-                }
             });
         });
 
@@ -127,6 +127,19 @@
                 }
             }
             input[0].files = dt.files;
+        }
+
+
+        function show_hide_password(target, inputId) {
+            var input = document.getElementById(inputId);
+            if (input.getAttribute('type') == 'password') {
+                target.classList.add('view');
+                input.setAttribute('type', 'text');
+            } else {
+                target.classList.remove('view');
+                input.setAttribute('type', 'password');
+            }
+            return false;
         }
     </script>
     <script src="./scripts/reg.js"></script>

@@ -7,7 +7,7 @@
             <div class="menu title2">
                 <a href="main.php">Главная</a>
                 <a href="events.php">Афиша</a>
-                <a href="#!">Курсы</a>
+                <a href="#!">Статьи</a>
                 <a href="organizators.php">Организаторы</a>
                 <a href="php/auth_or_lk.php" id="lk">Личный кабинет</a>
             </div>

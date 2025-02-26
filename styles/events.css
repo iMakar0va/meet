@@ -1,21 +1,87 @@
 @import url(general.css);
-.search-form form{
+
+.search-form form {
     padding: 20px 20px;
     margin: 35px auto;
-    background: var(--green-color);
+    background: #3E626C;
     border-radius: 7px;
     display: flex;
     justify-content: space-between;
     gap: 10px;
 }
-input, select{
-    width: 300px;
-    padding: 7px 5px;
+
+input,
+select {
+    padding: 7px 10px;
     border-radius: 5px;
     background-color: var(--white-color);
     color: var(--black-color);
 }
-form img{
+
+form img {
     height: 38px;
 }
 
+input {
+    width: 210px;
+}
+
+input[type="date"] {
+    width: 150px;
+}
+
+select {
+    width: 300px;
+}
+
+/* Стили для пагинации */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+}
+
+.pagination a {
+    text-decoration: none;
+    color: #3E626C;
+    padding: 10px 15px;
+    margin: 0 5px;
+    border-radius: 5px;
+    background-color: #f1f1f1;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.pagination a:hover {
+    background-color: #3E626C;
+    color: #fff;
+}
+
+.pagination a:disabled {
+    color: #ccc;
+    cursor: not-allowed;
+    background-color: #c5c7ca;
+}
+
+.pagination span {
+    padding: 10px 15px;
+    margin: 0 5px;
+    font-size: 16px;
+    color: #333;
+}
+
+.pagination a:first-child {
+    /* border-top-left-radius: 5px; */
+    /* border-bottom-left-radius: 5px; */
+}
+
+.pagination a:last-child {
+    /* border-top-right-radius: 5px; */
+    /* border-bottom-right-radius: 5px; */
+}
+
+.pagination a[disabled] {
+    cursor: not-allowed;
+    opacity: 0.6;
+}

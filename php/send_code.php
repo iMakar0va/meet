@@ -28,7 +28,6 @@ $userData = [
     'birth_date' => $_POST["birth_date"] ?? '',
     'gender' => $_POST["gender"] ?? ''
 ];
-
 // Валидация данных
 if (empty($userData['last_name']) || empty($userData['first_name']) || empty($userData['email']) || empty($userData['password']) || empty($userData['repeat_password']) || empty($userData['birth_date']) || empty($userData['gender'])) {
     echo json_encode(['success' => false, 'message' => 'Все поля должны быть заполнены.']);
@@ -37,11 +36,6 @@ if (empty($userData['last_name']) || empty($userData['first_name']) || empty($us
 
 if (!filter_var($userData['email'], FILTER_VALIDATE_EMAIL)) {
     echo json_encode(['success' => false, 'message' => 'Некорректный формат email.']);
-    exit();
-}
-
-if ($userData['password'] !== $userData['repeat_password']) {
-    echo json_encode(['success' => false, 'message' => 'Пароли не совпадают.']);
     exit();
 }
 
@@ -110,7 +104,6 @@ try {
     $mail->SMTPAuth   = true;
     $mail->Username   = 'eno7i@yandex.ru';
     $mail->Password   = 'clzyppxymjxvnmbt';
-    // $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
     $mail->SMTPSecure = 'ssl';
     $mail->Port       = 465;
 

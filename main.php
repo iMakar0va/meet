@@ -131,12 +131,15 @@
         <!-- /cards -->
 
         <div class="creation">
-            <div class="creation-title">Создайте своё мероприятие</div>
-            <div class="creation-text">
-                Создавайте уникальные события, наполненные знаниями, творчеством и общением. Приглашайте друзей и
-                единомышленников, делитесь своими идеями и воплощайте их в жизнь вместе с нами!
+            <div class="creation__block">
+                <div class="creation-title">Создайте своё мероприятие</div>
+                <div class="creation-text">
+                    Создавайте уникальные события, наполненные знаниями, творчеством и общением. Приглашайте друзей и
+                    единомышленников, делитесь своими идеями и воплощайте их в жизнь вместе с нами!
+                </div>
+                <a href="php/auth_or_creating.php" class="btn1">Создать мероприятие</a>
             </div>
-            <a href="php/auth_or_creating.php" class="btn1">Создать мероприятие</a>
+            <img src="img/create.svg" alt="create" style="width: 250px;">
         </div>
         <!-- /creation -->
     </div>
@@ -146,6 +149,11 @@
     ?>
 
     <script src="scripts/carousel.js"></script>
+
+
+
+
+
 </body>
 
 </html>
