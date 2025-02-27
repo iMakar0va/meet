@@ -87,8 +87,6 @@
                 .catch(error => console.error('Ошибка:', error));
         }
     </script>
-
-
 </body>
 
 </html>

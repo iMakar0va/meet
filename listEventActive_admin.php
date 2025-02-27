@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="styles/auth.css">
     <link rel="stylesheet" href="styles/lk.css">
+    <!-- <link rel="stylesheet" href="styles/events.css"> -->
     <link rel="stylesheet" href="styles/media/media_auth.css">
     <link rel="stylesheet" href="styles/media/media_lk.css">
     <title>Личный кабинет</title>
@@ -16,6 +17,20 @@
     session_start();
     require './php/header.php';
     require './php/conn.php';
+
+    $limit = 6; // Количество мероприятий на страницу
+    $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+    $offset = ($page - 1) * $limit;
+
+    // Запрос на получение мероприятий с пагинацией
+    $getEvents = "SELECT * FROM events WHERE is_active = true AND event_date > CURRENT_DATE ORDER BY event_date LIMIT $limit OFFSET $offset";
+    $resultGetEvents = pg_query($conn, $getEvents);
+
+    // Запрос для подсчёта всех записей (без лимита и оффсета)
+    $countQuery = "SELECT COUNT(*) FROM events WHERE is_active = true AND event_date > CURRENT_DATE";
+    $countResult = pg_query($conn, $countQuery);
+    $totalRows = pg_fetch_result($countResult, 0, 0);
+    $totalPages = ceil($totalRows / $limit);
     ?>
 
     <div class="container">
@@ -29,16 +44,30 @@
                 </div>
                 <div class="cards">
                     <?php
-                    $getOrganizators = "select * from events where is_active = true and event_date > CURRENT_DATE ORDER BY event_date;";
-                    $resultGetOrganizators = pg_query($conn, $getOrganizators);
-                    if ($resultGetOrganizators) {
-                        while ($row = pg_fetch_assoc($resultGetOrganizators)) {
+                    if ($resultGetEvents) {
+                        while ($row = pg_fetch_assoc($resultGetEvents)) {
                             require './php/card_active_event.php';
                         }
                     } else {
                         echo "Ошибка при получении данных: " . pg_last_error();
-                    } ?>
+                    }
+                    ?>
                 </div>
+
+                <!-- Пагинация -->
+                <?php if ($totalPages > 1): ?>
+                    <div class="pagination">
+                        <?php if ($page > 1): ?>
+                            <a href="?<?= http_build_query(array_merge($_GET, ['page' => $page - 1])) ?>">Назад</a>
+                        <?php endif; ?>
+
+                        <span>Страница <?= $page ?> из <?= $totalPages ?></span>
+
+                        <?php if ($page < $totalPages): ?>
+                            <a href="?<?= http_build_query(array_merge($_GET, ['page' => $page + 1])) ?>">Вперед</a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
         <?php pg_close($conn); ?>
@@ -55,10 +84,8 @@
                     const isActive = button.getAttribute('data-status') === 't';
 
                     if (!isActive) {
-                        // Если мероприятие уже отменено, просто одобряем его без причины
                         updateEventStatus(eventId, null);
                     } else {
-                        // Если мероприятие активно, запрашиваем причину отмены
                         const reason = prompt('Укажите причину отмены мероприятия:');
                         if (reason !== null && reason.trim() !== '') {
                             updateEventStatus(eventId, reason);

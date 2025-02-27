@@ -67,7 +67,7 @@
     <button class="btn1 toggle-button"
         data-id="<?= htmlspecialchars($row['organizator_id']) ?>"
         data-status="<?= $row["is_organizator"] === 't' ? 'true' : 'false' ?>">
-        <?= $row["is_organizator"] === 't' ? 'Снять права' : 'Назначить организатором' ?>
+        <?= $row["is_organizator"] === 't' ? 'Снять права' : 'Дать права' ?>
     </button>
 </div> -->
 
@@ -92,7 +92,7 @@ $organizerId = htmlspecialchars($row['organizator_id']);
         <button class="btn1 toggle-button"
             data-id="<?= htmlspecialchars($row['organizator_id']) ?>"
             data-status="<?= $row["is_organizator"] === 't' ? 'true' : 'false' ?>">
-            <?= $row["is_organizator"] === 't' ? 'Снять права' : 'Назначить организатором' ?>
+            <?= $row["is_organizator"] === 't' ? 'Снять права' : 'Дать права' ?>
         </button>
     </div>
 </div>

@@ -1,3 +1,23 @@
+<?php
+session_start();
+require './php/header.php';
+require './php/conn.php';
+
+$limit = 6; // Количество мероприятий на страницу
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
+
+// Получение общего количества записей
+$countQuery = "SELECT COUNT(*) as total FROM events WHERE is_active = false AND event_date > CURRENT_DATE";
+$countResult = pg_query($conn, $countQuery);
+$totalRows = pg_fetch_assoc($countResult)['total'];
+$totalPages = ceil($totalRows / $limit);
+
+// Получение мероприятий с учетом пагинации
+$getOrganizators = "SELECT * FROM events WHERE is_active = false AND event_date > CURRENT_DATE ORDER BY event_date LIMIT $limit OFFSET $offset";
+$resultGetOrganizators = pg_query($conn, $getOrganizators);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,18 +26,13 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="styles/auth.css">
     <link rel="stylesheet" href="styles/lk.css">
+    <!-- <link rel="stylesheet" href="styles/events.css"> -->
     <link rel="stylesheet" href="styles/media/media_auth.css">
     <link rel="stylesheet" href="styles/media/media_lk.css">
     <title>Личный кабинет</title>
 </head>
 
 <body>
-    <?php
-    session_start();
-    require './php/header.php';
-    require './php/conn.php';
-    ?>
-
     <div class="container">
         <div class="lk">
             <?php require 'php/lk/lk_menu.php'; ?>
@@ -29,15 +44,27 @@
                 </div>
                 <div class="cards">
                     <?php
-                    $getOrganizators = "select * from events where is_active = false and event_date > CURRENT_DATE ORDER BY event_date;";
-                    $resultGetOrganizators = pg_query($conn, $getOrganizators);
                     if ($resultGetOrganizators) {
                         while ($row = pg_fetch_assoc($resultGetOrganizators)) {
                             require './php/card_active_event.php';
                         }
                     } else {
                         echo "Ошибка при получении данных: " . pg_last_error();
-                    } ?>
+                    }
+                    ?>
+                </div>
+
+                <!-- Пагинация -->
+                <div class="pagination">
+                    <?php if ($page > 1): ?>
+                        <a href="?page=<?php echo $page - 1; ?>">Назад</a>
+                    <?php endif; ?>
+
+                    <span>Страница <?php echo $page; ?> из <?php echo $totalPages; ?></span>
+
+                    <?php if ($page < $totalPages): ?>
+                        <a href="?page=<?php echo $page + 1; ?>">Вперед</a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -64,16 +91,6 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                // if (data.newStatus === 'true') {
-                                //     statusElement.textContent = '✅ Одобрено';
-                                //     button.textContent = 'Отклонить';
-                                //     button.setAttribute('data-status', 't');
-                                // } else {
-                                //     statusElement.textContent = '❌ Отменено';
-                                //     button.textContent = 'Одобрить';
-                                //     button.setAttribute('data-status', 'f');
-                                // }
-                                // Удаление мероприятия с интерфейса
                                 if (data.newStatus === 'true') {
                                     button.closest('.card').remove();
                                 }

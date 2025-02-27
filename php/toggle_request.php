@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($action === 'approve') {
             // Одобрение заявки
-            $query = "UPDATE organizators SET is_approved = true WHERE organizator_id = $1";
+            $query = "UPDATE organizators SET is_approved = true, is_organizator = true WHERE organizator_id = $1";
             pg_query_params($conn, $query, [$organizatorId]);
 
             $mail->Subject = 'Ваша заявка одобрена';

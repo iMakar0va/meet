@@ -16,6 +16,35 @@
     session_start();
     require './php/header.php';
     require './php/conn.php';
+
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: auth.php");
+        exit();
+    }
+
+    // Настройки пагинации
+    $limit = 6; // Количество мероприятий на страницу
+    $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+    $offset = ($page - 1) * $limit;
+
+    // Запрос на получение текущих мероприятий с пагинацией
+    $userId = $_SESSION['user_id'];
+    $getEventUser = "SELECT * FROM organizators o
+                     JOIN organizators_events oe ON o.organizator_id = oe.organizator_id
+                     JOIN events e ON oe.event_id = e.event_id
+                     WHERE o.organizator_id = $1 AND e.event_date > CURRENT_DATE AND is_active = true
+                     LIMIT $limit OFFSET $offset;";
+
+    $resultGetEventUser = pg_query_params($conn, $getEventUser, [$userId]);
+
+    // Запрос для подсчёта всех записей (без лимита и оффсета)
+    $countQuery = "SELECT COUNT(*) FROM organizators o
+                   JOIN organizators_events oe ON o.organizator_id = oe.organizator_id
+                   JOIN events e ON oe.event_id = e.event_id
+                   WHERE o.organizator_id = $1 AND e.event_date > CURRENT_DATE AND is_active = true;";
+    $countResult = pg_query_params($conn, $countQuery, [$userId]);
+    $totalRows = pg_fetch_result($countResult, 0, 0);
+    $totalPages = ceil($totalRows / $limit);
     ?>
 
     <div class="container">
@@ -25,23 +54,30 @@
                 <div class="title1">Текущие мероприятия</div>
                 <div class="cards">
                     <?php
-                    $userId = $_SESSION['user_id'];
-                    $getEventUser = "SELECT * FROM organizators o
-                                     JOIN organizators_events oe ON o.organizator_id = oe.organizator_id
-                                     JOIN events e ON oe.event_id = e.event_id
-                                     WHERE o.organizator_id = $1 and e.event_date > CURRENT_DATE and is_active = true;";
-
-                    $resultGetEventUser = pg_query_params($conn, $getEventUser, [$userId]);
-
                     if ($resultGetEventUser && pg_num_rows($resultGetEventUser) > 0) {
                         while ($row = pg_fetch_assoc($resultGetEventUser)) {
                             require './php/card_change.php';
                         }
                     } else {
                         echo "<p>Нет текущих мероприятий для отображения.</p>";
-                    } ?>
+                    }
+                    ?>
                 </div>
                 <!-- /cards -->
+                <!-- Пагинация -->
+                <?php if ($totalPages > 1): ?>
+                    <div class="pagination">
+                        <?php if ($page > 1): ?>
+                            <a href="?<?= http_build_query(array_merge($_GET, ['page' => $page - 1])) ?>">Назад</a>
+                        <?php endif; ?>
+
+                        <span>Страница <?= $page ?> из <?= $totalPages ?></span>
+
+                        <?php if ($page < $totalPages): ?>
+                            <a href="?<?= http_build_query(array_merge($_GET, ['page' => $page + 1])) ?>">Вперед</a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
             </div>
             <!-- /lk__profile -->
         </div>
@@ -51,7 +87,6 @@
         ?>
     </div>
     <!-- /container -->
-
 
     <?php
     require './php/footer.php';
