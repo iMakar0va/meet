@@ -66,7 +66,7 @@ if ($userId) {
 }
 
 // Заглушка для email, если данные организатора не найдены
-$email = $organizerEmail ?? $_POST["email"] ?? '';
+// $email = $organizerEmail ?? $_POST["email"] ?? '';
 
 // Проверка изображения
 $imageContent = handleImageUpload();

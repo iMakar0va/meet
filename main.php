@@ -142,6 +142,29 @@
             <img src="img/create.svg" alt="create" style="width: 250px;">
         </div>
         <!-- /creation -->
+
+        <div class="faq-container">
+            <div class="faq-title">Часто задаваемые вопросы</div>
+            <div class="faq-content">
+                <div class="faq-item">
+                    <div class="faq-question">Как стать организатором? <span class="faq-icon">+</span></div>
+                    <div class="faq-answer">Чтобы стать организатором, сначала зарегистрируйтесь на сайте как участник. Затем в личном кабинете нажмите кнопку "Стать организатором", заполните необходимые данные формы и отправьте заявку. После этого останется только дождаться решения администратора.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Как создать мероприятие? <span class="faq-icon">+</span></div>
+                    <div class="faq-answer">Став организатором, вы сможете создавать мероприятия прямо в личном кабинете. Просто выберите "Создать мероприятие" в меню и заполните все необходимые данные. Учтите, что перед публикацией каждое мероприятие проходит проверку администратора.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Как изменить данные организатора или мероприятия? <span class="faq-icon">+</span></div>
+                    <div class="faq-answer">Редактирование данных организатора и мероприятий доступно только администратору. Если вам необходимо внести изменения, свяжитесь с нами по электронной почте: <b>eno7i@yandex.com</b> .</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Я был организатором, но теперь функции недоступны. Почему? <span class="faq-icon">+</span></div>
+                    <div class="faq-answer">Если доступ к функциям организатора был ограничен, это могло произойти по решению администрации. В таком случае вам должно прийти уведомление с объяснением причины. Если у вас остались вопросы, свяжитесь с нами.</div>
+                </div>
+            </div>
+        </div>
+
     </div>
     <!-- /container -->
     <?php
@@ -149,11 +172,16 @@
     ?>
 
     <script src="scripts/carousel.js"></script>
-
-
-
-
-
+    <script>
+        document.querySelectorAll('.faq-question').forEach(item => {
+            item.addEventListener('click', () => {
+                let parent = item.parentNode;
+                parent.classList.toggle('active');
+                let icon = item.querySelector('.faq-icon');
+                icon.textContent = parent.classList.contains('active') ? '-' : '+';
+            });
+        });
+    </script>
 </body>
 
 </html>

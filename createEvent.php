@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="styles/forma.css">
     <link rel="stylesheet" href="styles/media/media_lk.css">
     <title>Личный кабинет</title>
+    <style>
+        .error-border {
+            border: 3px solid rgb(202, 32, 17);
+        }
+    </style>
 </head>
 
 <body>
@@ -69,7 +74,7 @@
                         </select>
                     </div>
                     <div class="form__group">
-                        <textarea class="input textarea title2" id="desc_event" name="desc_event" rows="4" placeholder="Описание мероприятия*"></textarea>
+                        <textarea class="input textarea title2" id="desc_event" name="desc_event" rows="4" placeholder="Описание мероприятия*" required></textarea>
                     </div>
                     <div class="form__group">
                         <input id="date_event" name="date_event" class="input title2" type="text" placeholder="ЧЧ/ММ/ГГ" required>
@@ -96,7 +101,7 @@
                         <label class="label title2" for="">Адрес*</label>
                     </div>
                     <div class="form__group">
-                        <input id="phone" name="phone" class="input title2" type="text" placeholder="+7 XXX XXX XX XX" required>
+                        <input id="phone" name="phone" class="input title2" type="text" placeholder="+7 (XXX) XXX-XX-XX" required>
                         <label class="label title2" for="">Номер телефона*</label>
                     </div>
                     <div class="" style="color: black;">*-поля для обязательного заполения</div>
@@ -145,6 +150,7 @@
             this.files = dt.files;
         });
 
+        // Удаление фото
         function removeFilesItem(target) {
             let name = $(target).prev().text();
             let input = $(target).closest('.input-file-row').find('input[type=file]');
@@ -156,6 +162,51 @@
             }
             input[0].files = dt.files;
         }
+        // Формат даты ДД/ММ/ГГ
+        document.addEventListener('DOMContentLoaded', () => {
+            const date = document.getElementById('date_event');
+
+            date.addEventListener('input', (e) => {
+                let value = date.value.replace(/[^0-9]/g, '');
+                if (value.length > 2) value = value.slice(0, 2) + '/' + value.slice(2);
+                if (value.length > 5) value = value.slice(0, 5) + '/' + value.slice(5);
+                date.value = value.slice(0, 10);
+            });
+        });
+
+        // Формат время ЧЧ:ММ
+        document.addEventListener('DOMContentLoaded', () => {
+            const time = document.getElementById('start_time');
+            time.addEventListener('input', (e) => {
+                let value = time.value.replace(/[^0-9]/g, '');
+                if (value.length > 2) value = value.slice(0, 2) + ':' + value.slice(2);
+                if (value.length > 5) value = value.slice(0, 5);
+                time.value = value;
+            });
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            const time = document.getElementById('end_time');
+            time.addEventListener('input', (e) => {
+                let value = time.value.replace(/[^0-9]/g, '');
+                if (value.length > 2) value = value.slice(0, 2) + ':' + value.slice(2);
+                if (value.length > 5) value = value.slice(0, 5);
+                time.value = value;
+            });
+        });
+
+        //Формат телефона
+        document.addEventListener('DOMContentLoaded', () => {
+            const phone = document.getElementById('phone');
+            phone.addEventListener('input', (e) => {
+                let value = phone.value.replace(/[^0-9]/g, '');
+                if (value.length > 1) value = '+7 (' + value.slice(1);
+                if (value.length > 7) value = value.slice(0, 7) + ') ' + value.slice(7);
+                if (value.length > 12) value = value.slice(0, 12) + '-' + value.slice(12);
+                if (value.length > 15) value = value.slice(0, 15) + '-' + value.slice(15);
+                if (value.length > 18) value = value.slice(0, 18);
+                phone.value = value;
+            });
+        });
     </script>
 </body>
 

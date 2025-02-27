@@ -22,7 +22,7 @@
         $eventQuery = pg_prepare($conn, "get_event", "SELECT * FROM events WHERE event_id = $1;");
         $resultGetEvents = pg_execute($conn, "get_event", [$eventId]);
 
-        $organizerQuery = pg_prepare($conn, "get_organizer", "SELECT o.name FROM organizators_events oe
+        $organizerQuery = pg_prepare($conn, "get_organizer", "SELECT o.name, o.email, o.phone_number FROM organizators_events oe
                                                               JOIN organizators o ON o.organizator_id = oe.organizator_id
                                                               WHERE oe.event_id = $1;");
         $resultGetOrganizator = pg_execute($conn, "get_organizer", [$eventId]);
@@ -117,7 +117,7 @@
                             </div>
                             <div class="contact__item title2">
                                 <img src="img/icons/email-event.svg" alt="email">
-                                <?= htmlspecialchars($event['email']) ?>
+                                <?= htmlspecialchars($resGetOrganizator['email']) ?>
                             </div>
                             <div class="contact__item title2">
                                 <img src="img/icons/place.svg" alt="place">

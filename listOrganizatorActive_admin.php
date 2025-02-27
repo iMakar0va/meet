@@ -28,18 +28,18 @@
                     <a href="./listOrganizatorCancelled_admin.php" class="no_active">Отмененные организаторы</a>
                 </div>
 
-                <div class="cards_line">
+                <div class="cards">
                     <?php
                     $getOrganizators = "select * from organizators where is_organizator = true;";
 
                     $resultGetOrganizators = pg_query($conn, $getOrganizators);
 
-                    if ($resultGetOrganizators) {
+                    if ($resultGetOrganizators && pg_num_rows($resultGetOrganizators) > 0) {
                         while ($row = pg_fetch_assoc($resultGetOrganizators)) {
                             require './php/card_organizator_admin.php';
                         }
                     } else {
-                        echo "Ошибка при получении данных: " . pg_last_error();
+                        echo "<p>Нет отмененных мероприятий для отображения.</p>";
                     } ?>
                 </div>
                 <!-- /cards -->

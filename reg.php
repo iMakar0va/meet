@@ -117,6 +117,7 @@
             this.files = dt.files;
         });
 
+        // Удаление фото
         function removeFilesItem(target) {
             let name = $(target).prev().text();
             let input = $(target).closest('.input-file-row').find('input[type=file]');
@@ -129,7 +130,7 @@
             input[0].files = dt.files;
         }
 
-
+        // Скрыть/показать пароль
         function show_hide_password(target, inputId) {
             var input = document.getElementById(inputId);
             if (input.getAttribute('type') == 'password') {

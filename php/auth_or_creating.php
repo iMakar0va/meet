@@ -16,7 +16,7 @@ $result = pg_query_params($conn, $sql, [$userId]);
 
 // Если запрос вернул хотя бы одну строку, значит пользователь - организатор
 if ($result && pg_num_rows($result) > 0) {
-    header("Location: ../creatingEvent.php");
+    header("Location: ../createEvent.php");
     exit;
 }
 

@@ -33,12 +33,12 @@
 
                     $resultGetOrganizators = pg_query($conn, $getOrganizators);
 
-                    if ($resultGetOrganizators) {
+                    if ($resultGetOrganizators && pg_num_rows($resultGetOrganizators) > 0) {
                         while ($row = pg_fetch_assoc($resultGetOrganizators)) {
                             require './php/card_organizator_admin.php';
                         }
                     } else {
-                        echo "Ошибка при получении данных: " . pg_last_error();
+                        echo "<p>Нет отмененных мероприятий для отображения.</p>";
                     } ?>
                 </div>
                 <!-- /cards -->

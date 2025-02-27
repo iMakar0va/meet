@@ -40,6 +40,10 @@ body {
     text-align: center;
 }
 
+p {
+    color: var(--black-color);
+}
+
 .title {
     font-size: 54px;
 }
@@ -100,12 +104,13 @@ body {
 }
 
 .no-results {
-    background-color: #02494C;
+    background-color: #3E626C;
     border-radius: 10px;
     color: #fff;
 
     width: 100%;
-    margin: 15px 35px 50px 35px;
+    margin: 15px 0px 50px 0px;
+    /* margin: 15px 35px 50px 35px; */
     padding: 50px;
     display: flex;
     flex-direction: column;

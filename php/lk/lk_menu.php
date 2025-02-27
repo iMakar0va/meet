@@ -56,7 +56,7 @@
         renderMenuItemsWithCount('Организатор', [
             'nowEvent_organizer.php' => 'Предстоящие события',
             'pastEvent_organizer.php' => 'История',
-            'creatingEvent.php' => 'Создать мероприятие'
+            'createEvent.php' => 'Создать мероприятие'
         ], []);
     }
 

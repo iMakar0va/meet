@@ -44,6 +44,11 @@ form {
     transition: opacity 0.3s ease-in-out;
 }
 
+.textarea::placeholder {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
 .input:focus::placeholder {
     opacity: 1;
 }

@@ -169,6 +169,7 @@
 
 /* =============Creation============= */
 .creation {
+    margin-top: 15px;
     margin-bottom: 35px;
     padding: 32px;
     background-color: #3E626C;
@@ -176,7 +177,7 @@
 
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
 }
 
 /* .creation__block {
@@ -194,5 +195,72 @@
     margin: 15px 0px 31px;
     max-width: 800px;
     font-size: 20px;
-    font-weight: lighter;
+    font-weight: 300;
+}
+
+/* Часто задаваемые вопросы */
+.faq-container {
+    margin-bottom: 35px;
+    padding: 32px;
+    display: flex;
+    gap: 10px;
+    background: var(--green-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.faq-title {
+    width: 30%;
+    /* padding: 32px; */
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.faq-content {
+    width: 70%;
+    /* padding: 20px; */
+}
+
+.faq-item {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.faq-answer {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding: 0 10px;
+    border-left: 3px solid var(--green-color);
+    font-size: 18px;
+    font-weight: 300;
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, padding 0.3s ease-in-out;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 200px;
+    /* Достаточно для длинного ответа */
+    opacity: 1;
+    padding: 10px;
+    /* Восстанавливаем padding */
+}
+
+
+.faq-icon {
+    font-size: 1.2em;
+    transition: transform 0.3s;
+}
+
+.faq-item.active .faq-icon {
+    transform: rotate(180deg);
 }

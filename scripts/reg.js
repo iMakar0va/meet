@@ -68,6 +68,33 @@ document.getElementById('regForm').addEventListener('submit', function (e) {
         errorMessage += 'Пароли не совпадают.\n';
     }
 
+    // Пароль меньше 6 символов
+    if (password.value.length < 6) {
+        isValid = false;
+        password.classList.add('error-border');
+        errorMessage += 'Длина пароля должна быть больше 6 символов.\n';
+    }
+    // Проверка на наличие хотя бы одной буквы
+    if (!/[a-zA-Z]/.test(password.value)) {
+        isValid = false;
+        password.classList.add('error-border');
+        errorMessage += 'Пароль должен содержать хотя бы одну букву.\n';
+    }
+
+    // Проверка на наличие хотя бы одной цифры
+    if (!/[0-9]/.test(password.value)) {
+        isValid = false;
+        password.classList.add('error-border');
+        errorMessage += 'Пароль должен содержать хотя бы одну цифру.\n';
+    }
+
+    // Проверка на наличие специальных символов
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password.value)) {
+        isValid = false;
+        password.classList.add('error-border');
+        errorMessage += 'Пароль должен содержать хотя бы один специальный символ.\n';
+    }
+
     // Проверка формата даты ДД/ММ/ГГГГ
     const datePattern = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
     if (birthDate.value.trim() && !datePattern.test(birthDate.value)) {
