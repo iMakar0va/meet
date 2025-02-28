@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="styles/media/media_auth.css">
     <link rel="stylesheet" href="styles/media/media_lk.css">
     <title>Личный кабинет</title>
-    <script src="scripts/handler.js" defer></script>
+    <script src="scripts/setting.js" defer></script>
 </head>
 
 <body>
@@ -75,32 +75,6 @@
             input[0].files = dt.files;
 
             $('#removeImageField').val('1');
-        }
-    </script>
-    <script>
-        // удаление профиля
-        function deleteAccount() {
-            if (confirm("Вы уверены, что хотите удалить свой аккаунт? Это действие необратимо!")) {
-                fetch('./php/delete_user.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json', // Заголовок для обычных POST-форм
-                        },
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert(data.message);
-                            window.location.href = './reg.php'; // Перенаправляем пользователя
-                        } else {
-                            alert(data.message || 'Ошибка при удалении аккаунта.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Ошибка сети:', error);
-                        alert(error.message + 'Произошла ошибка сети. Попробуйте позже.');
-                    });
-            }
         }
     </script>
 </body>

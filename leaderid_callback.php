@@ -1,6 +1,6 @@
 <?php
 session_start();
-require './php/conn.php';  // Подключение к базе данных
+require './php/conn.php';
 require './PHPMailer/src/Exception.php';
 require './PHPMailer/src/PHPMailer.php';
 require './PHPMailer/src/SMTP.php';

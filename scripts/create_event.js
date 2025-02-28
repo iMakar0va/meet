@@ -1,4 +1,87 @@
-// Сохранение формы мероприятия
+// Сохранение фото мероприятия
+var dt = new DataTransfer();
+
+$('.input-file input[type=file]').on('change', function () {
+    let $files_list = $(this).closest('.input-file').next();
+    $files_list.empty();
+
+    for (var i = 0; i < this.files.length; i++) {
+        let file = this.files.item(i);
+        dt.items.add(file);
+
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = function () {
+            let new_file_input = '<div class="input-file-list-item">' +
+                '<img class="input-file-list-img" src="' + reader.result + '">' +
+                '<a href="#" onclick="removeFilesItem(this); return false;" class="input-file-list-remove">x</a>' +
+                '</div>';
+            $files_list.append(new_file_input);
+        }
+    };
+    this.files = dt.files;
+});
+
+// Удаление фото мероприятия
+function removeFilesItem(target) {
+    let name = $(target).prev().text();
+    let input = $(target).closest('.input-file-row').find('input[type=file]');
+    $(target).closest('.input-file-list-item').remove();
+    for (let i = 0; i < dt.items.length; i++) {
+        if (name === dt.items[i].getAsFile().name) {
+            dt.items.remove(i);
+        }
+    }
+    input[0].files = dt.files;
+}
+
+// Формат даты ДД/ММ/ГГ
+document.addEventListener('DOMContentLoaded', () => {
+    const date = document.getElementById('date_event');
+
+    date.addEventListener('input', (e) => {
+        let value = date.value.replace(/[^0-9]/g, '');
+        if (value.length > 2) value = value.slice(0, 2) + '/' + value.slice(2);
+        if (value.length > 5) value = value.slice(0, 5) + '/' + value.slice(5);
+        date.value = value.slice(0, 10);
+    });
+});
+
+// Формат время ЧЧ:ММ
+document.addEventListener('DOMContentLoaded', () => {
+    const time = document.getElementById('start_time');
+    time.addEventListener('input', (e) => {
+        let value = time.value.replace(/[^0-9]/g, '');
+        if (value.length > 2) value = value.slice(0, 2) + ':' + value.slice(2);
+        if (value.length > 5) value = value.slice(0, 5);
+        time.value = value;
+    });
+});
+document.addEventListener('DOMContentLoaded', () => {
+    const time = document.getElementById('end_time');
+    time.addEventListener('input', (e) => {
+        let value = time.value.replace(/[^0-9]/g, '');
+        if (value.length > 2) value = value.slice(0, 2) + ':' + value.slice(2);
+        if (value.length > 5) value = value.slice(0, 5);
+        time.value = value;
+    });
+});
+
+//Формат телефона
+document.addEventListener('DOMContentLoaded', () => {
+    const phone = document.getElementById('phone');
+    phone.addEventListener('input', (e) => {
+        let value = phone.value.replace(/[^0-9]/g, '');
+        if (value.length > 1) value = '+7 (' + value.slice(1);
+        if (value.length > 7) value = value.slice(0, 7) + ') ' + value.slice(7);
+        if (value.length > 12) value = value.slice(0, 12) + '-' + value.slice(12);
+        if (value.length > 15) value = value.slice(0, 15) + '-' + value.slice(15);
+        if (value.length > 18) value = value.slice(0, 18);
+        phone.value = value;
+    });
+});
+
+// Обработчик сохранения формы
 document.getElementById('createForm').addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -17,15 +100,6 @@ document.getElementById('createForm').addEventListener('submit', function (e) {
     });
     errorBlock.style.display = 'none';
     errorBlock.textContent = '';
-
-    // Проверка на пустые поля
-    // [lastName, firstName, email, password, repeatPassword, dateEvent].forEach(input => {
-    //     if (!input.value.trim()) {
-    //         isValid = false;
-    //         input.classList.add('error-border');
-    //         errorMessage += `Поле "${input.placeholder || input.name}" не должно быть пустым.\n`;
-    //     }
-    // });
 
     // Проверка формата даты ДД/ММ/ГГГГ
     const datePattern = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
@@ -79,6 +153,7 @@ document.getElementById('createForm').addEventListener('submit', function (e) {
         return;
     }
 
+    // Создание мероприятия
     fetch('./php/save_creating.php', {
         method: 'POST',
         body: formData
@@ -94,6 +169,6 @@ document.getElementById('createForm').addEventListener('submit', function (e) {
         })
         .catch(error => {
             errorBlock.style.display = 'block';
-            errorBlock.textContent = error.message + 'Произошла ошибка. Проверьте подключение к интернету.';
+            errorBlock.textContent = error.message + 'Произошла ошибка.';
         });
 });

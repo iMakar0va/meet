@@ -127,26 +127,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
     <script>
+        // Сброс пароля
         const $inp = $(".ap-otp-input");
 
         $inp.on({
-            paste(ev) { // Handle Pasting
-
+            paste(ev) {
                 const clip = ev.originalEvent.clipboardData.getData('text').trim();
-                // Allow numbers only
-                if (!/\d{6}/.test(clip)) return ev.preventDefault(); // Invalid. Exit here
-                // Split string to Array or characters
+
+                if (!/\d{6}/.test(clip)) return ev.preventDefault();
+
                 const s = [...clip];
-                // Populate inputs. Focus last input.
+
                 $inp.val(i => s[i]).eq(5).focus();
             },
-            input(ev) { // Handle typing
+            input(ev) {
 
                 const i = $inp.index(this);
                 if (this.value) $inp.eq(i + 1).focus();
             },
-            keydown(ev) { // Handle Deleting
-
+            keydown(ev) {
                 const i = $inp.index(this);
                 if (!this.value && ev.key === "Backspace" && i) $inp.eq(i - 1).focus();
             }

@@ -76,13 +76,18 @@ $totalPages = ceil($totalRows / $limit);
     <?php require './php/footer.php'; ?>
 
     <script>
+        // Обработчик одобрения активных организаторов
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.toggle-button').forEach(button => {
                 button.addEventListener('click', function() {
                     const organizatorId = button.getAttribute('data-id');
+
+                    // Одобрение активных организаторов
                     fetch('./php/toggle_organizator.php', {
                             method: 'POST',
-                            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
                             body: `organizator_id=${organizatorId}&action=approve`
                         })
                         .then(response => response.json())
@@ -102,4 +107,5 @@ $totalPages = ceil($totalRows / $limit);
         });
     </script>
 </body>
+
 </html>

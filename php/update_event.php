@@ -2,6 +2,11 @@
 session_start();
 require 'conn.php';
 
+require 'autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 // Получаем event_id
 $eventId = $_POST['event_id'] ?? $_SESSION['event_id'] ?? null;
 
@@ -102,5 +107,82 @@ if (isset($_POST['remove_image']) && $_POST['remove_image'] === '1') {
     }
 }
 
-echo json_encode(['success' => true, 'message' => 'Данные успешно обновлены.']);
-pg_close($conn);  // Закрытие соединения с базой данных
+
+// Получаем email всех участников мероприятия
+$queryParticipants = "SELECT users.email FROM user_events
+                      JOIN users ON user_events.user_id = users.user_id
+                      WHERE user_events.event_id = $1";
+$resultParticipants = pg_query_params($conn, $queryParticipants, [$eventId]);
+
+$emails = [];
+while ($row = pg_fetch_assoc($resultParticipants)) {
+    if (filter_var($row['email'], FILTER_VALIDATE_EMAIL)) {
+        $emails[] = $row['email'];
+    }
+}
+
+// Получаем email организатора
+$queryOrganizer = "SELECT organizators.email FROM organizators_events
+                   JOIN organizators ON organizators_events.organizator_id = organizators.organizator_id
+                   WHERE organizators_events.event_id = $1 LIMIT 1";
+$resultOrganizer = pg_query_params($conn, $queryOrganizer, [$eventId]);
+
+if ($resultOrganizer && pg_num_rows($resultOrganizer) > 0) {
+    $organizerEmail = pg_fetch_result($resultOrganizer, 0, 0);
+    if (filter_var($organizerEmail, FILTER_VALIDATE_EMAIL)) {
+        $emails[] = $organizerEmail;
+    }
+} else {
+    echo json_encode(['success' => false, 'message' => 'Ошибка: организатор не найден.']);
+    exit();
+}
+
+// Проверяем, есть ли кому отправлять
+if (empty($emails)) {
+    echo json_encode(['success' => false, 'message' => 'Нет валидных email для отправки.']);
+    exit();
+}
+
+// Формируем текст письма
+$mailBody = "<h2>Изменения в мероприятии</h2>
+<p><b>Тема:</b> $title</p>
+<p><b>Направление:</b> $type</p>
+<p><b>Тип:</b> $topic</p>
+<p><b>Описание:</b> $description</p>
+<p><b>Дата:</b> $eventDate</p>
+<p><b>Время:</b> $startTime - $endTime</p>
+<p><b>Город:</b> $city</p>
+<p><b>Место:</b> $place</p>
+<p><b>Адрес:</b> $address</p>
+<p><b>Контактный телефон:</b> $phone</p>
+<p><b>Email:</b> $email</p>
+<p>Пожалуйста, ознакомьтесь с новыми данными.</p>";
+
+$mail = new PHPMailer(true);
+try {
+    $mail->isSMTP();
+    $mail->Host = 'smtp.yandex.ru';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'eno7i@yandex.ru';
+    $mail->Password = 'clzyppxymjxvnmbt';
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+    $mail->Port = 465;
+    $mail->setFrom('eno7i@yandex.ru', 'MEET');
+    $mail->CharSet = 'UTF-8';
+    $mail->isHTML(true);
+    $mail->Subject = 'Мероприятие изменено';
+
+    foreach ($emails as $userEmail) {
+        $mail->clearAddresses();
+        $mail->addAddress($userEmail);
+        $mail->Body = $mailBody;
+        $mail->AltBody = strip_tags($mailBody);
+        $mail->send();
+    }
+
+    echo json_encode(['success' => true, 'message' => 'Данные успешно обновлены.']);
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => 'Ошибка отправки email: ' . $e->getMessage()]);
+}
+
+pg_close($conn);

@@ -27,7 +27,7 @@
                     <a href="#" class="password-control" onclick="return show_hide_password(this);"></a>
                 </div>
                 <a href="#!" id="resetPasswordLink" class="title3">Восстановить пароль</a>
-                <div id="error" class="error title2" style="display:none;">Неверный пароль или логин</div>
+                <div id="error" class="error title2" style="display:none;"></div>
                 <button class="btn1 title2">Войти</button>
                 <a href="./leaderid_login.php" class="btn1 title2">Войти через Leader-ID</a>
                 <a href="./reg.php" class="title3" id="link-reg">Зарегистрироваться</a>
@@ -43,24 +43,6 @@
     require './php/footer.php';
     ?>
     <script src="./scripts/auth.js"></script>
-    <script>
-        document.getElementById('resetPasswordLink').addEventListener('click', function(e) {
-            e.preventDefault();
-            window.location.href = './reset_password.php';
-        });
-
-        function show_hide_password(target) {
-            var input = document.getElementById('password');
-            if (input.getAttribute('type') == 'password') {
-                target.classList.add('view');
-                input.setAttribute('type', 'text');
-            } else {
-                target.classList.remove('view');
-                input.setAttribute('type', 'password');
-            }
-            return false;
-        }
-    </script>
 </body>
 
 </html>

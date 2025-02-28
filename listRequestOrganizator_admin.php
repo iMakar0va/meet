@@ -45,42 +45,45 @@
     <?php require './php/footer.php'; ?>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.approve-button, .delete-button').forEach(button => {
-            button.addEventListener('click', function() {
-                const organizatorId = button.getAttribute('data-id');
-                const action = button.classList.contains('approve-button') ? 'approve' : 'delete';
-                let reason = '';
+        // Обработчик запросов организаторов
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.approve-button, .delete-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const organizatorId = button.getAttribute('data-id');
+                    const action = button.classList.contains('approve-button') ? 'approve' : 'delete';
+                    let reason = '';
 
-                if (action === 'delete') {
-                    reason = prompt('Укажите причину отклонения заявки:');
-                    if (!reason || reason.trim() === '') {
-                        alert('Причина отклонения обязательна.');
-                        return;
+                    if (action === 'delete') {
+                        reason = prompt('Укажите причину отклонения заявки:');
+                        if (!reason || reason.trim() === '') {
+                            alert('Причина отклонения обязательна.');
+                            return;
+                        }
                     }
-                }
 
-                fetch('./php/toggle_request.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `organizator_id=${organizatorId}&action=${action}&reason=${encodeURIComponent(reason)}`
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        button.closest('.card_organizator').remove();
-                    } else {
-                        alert(data.message || 'Ошибка при обработке запроса.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Ошибка сети:', error);
-                    alert('Ошибка сети. Попробуйте позже.');
+                    fetch('./php/toggle_request.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: `organizator_id=${organizatorId}&action=${action}&reason=${encodeURIComponent(reason)}`
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                button.closest('.card_organizator').remove();
+                            } else {
+                                alert(data.message || 'Ошибка при обработке запроса.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Ошибка сети:', error);
+                            alert('Ошибка сети. Попробуйте позже.');
+                        });
                 });
             });
         });
-    });
-</script>
+    </script>
 
 </body>
 

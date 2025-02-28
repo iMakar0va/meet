@@ -117,6 +117,7 @@ $totalPages = ceil($totalRows / $limit);
     </div>
     <?php
     require './php/footer.php';
+    pg_close($conn);
     ?>
 
     <script>
@@ -128,5 +129,3 @@ $totalPages = ceil($totalRows / $limit);
 </body>
 
 </html>
-
-<?php pg_close($conn); ?>

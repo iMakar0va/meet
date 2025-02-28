@@ -44,6 +44,7 @@
 
     <?php require './php/footer.php'; ?>
     <script>
+        // Обработчик запросов мероприятия
         function approveEvent(eventId, eventTitle) {
             if (confirm(`Одобрить мероприятие "${eventTitle}"?`)) {
                 fetch('php/process_event_request.php', {
@@ -65,6 +66,7 @@
             }
         }
 
+        // Указание причины откза
         function rejectEvent(eventId, eventTitle) {
             let reason = prompt(`Укажите причину отклонения мероприятия "${eventTitle}":`);
             if (!reason) return;

@@ -75,9 +75,11 @@
 
     <?php require './php/footer.php'; ?>
     <script>
+        // Обработчик отмены активных мероприятий
         document.addEventListener('DOMContentLoaded', function() {
             const toggleButtons = document.querySelectorAll('.toggle-event-button');
 
+            // Указание причины отмены
             toggleButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const eventId = button.getAttribute('data-id');
@@ -94,6 +96,7 @@
                 });
             });
 
+            // Отмена мероприятия
             function updateEventStatus(eventId, reason) {
                 fetch('./php/toggle_event.php', {
                         method: 'POST',

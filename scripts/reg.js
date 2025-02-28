@@ -1,28 +1,66 @@
-// document.getElementById('regForm').addEventListener('submit', function (e) {
-//     e.preventDefault();
+// Формат даты ДД/ММ/ГГ
+document.addEventListener('DOMContentLoaded', () => {
+    const birthDateInput = document.getElementById('birthDateInput');
 
-//     const formData = new FormData(this);
-//     const errorBlock = document.getElementById('error');
+    birthDateInput.addEventListener('input', (e) => {
+        let value = birthDateInput.value.replace(/[^0-9]/g, '');
+        if (value.length > 2) value = value.slice(0, 2) + '/' + value.slice(2);
+        if (value.length > 5) value = value.slice(0, 5) + '/' + value.slice(5);
+        birthDateInput.value = value.slice(0, 10);
+    });
+});
 
-//     fetch('./php/send_code.php', {
-//         method: 'POST',
-//         body: formData
-//     })
-//         .then(response => response.json())
-//         .then(data => {
-//             if (data.success) {
-//                 window.location.href = './verify.php';
-//             } else {
-//                 errorBlock.style.display = 'block';
-//                 errorBlock.textContent = data.message || 'Ошибка регистрации. Попробуйте снова.';
-//             }
-//         })
-//         .catch(error => {
-//             errorBlock.style.display = 'block';
-//             errorBlock.textContent = error.message || 'Произошла ошибка. Проверьте подключение к интернету.';
-//         });
-// });
-// // ...............
+// Сохранение фото пользователя
+var dt = new DataTransfer();
+
+$('.input-file input[type=file]').on('change', function () {
+    let $files_list = $(this).closest('.input-file').next();
+    $files_list.empty();
+
+    for (var i = 0; i < this.files.length; i++) {
+        let file = this.files.item(i);
+        dt.items.add(file);
+
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = function () {
+            let new_file_input = '<div class="input-file-list-item">' +
+                '<img class="input-file-list-img" src="' + reader.result + '">' +
+                '<a href="#" onclick="removeFilesItem(this); return false;" class="input-file-list-remove">x</a>' +
+                '</div>';
+            $files_list.append(new_file_input);
+        }
+    };
+    this.files = dt.files;
+});
+
+// Удаление фото
+function removeFilesItem(target) {
+    let name = $(target).prev().text();
+    let input = $(target).closest('.input-file-row').find('input[type=file]');
+    $(target).closest('.input-file-list-item').remove();
+    for (let i = 0; i < dt.items.length; i++) {
+        if (name === dt.items[i].getAsFile().name) {
+            dt.items.remove(i);
+        }
+    }
+    input[0].files = dt.files;
+}
+
+// Скрыть/показать пароль
+function show_hide_password(target, inputId) {
+    var input = document.getElementById(inputId);
+    if (input.getAttribute('type') == 'password') {
+        target.classList.add('view');
+        input.setAttribute('type', 'text');
+    } else {
+        target.classList.remove('view');
+        input.setAttribute('type', 'password');
+    }
+    return false;
+}
+
+// Обработчик регистрации
 document.getElementById('regForm').addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -104,7 +142,7 @@ document.getElementById('regForm').addEventListener('submit', function (e) {
     }
 
     if (!isValid) {
-        errorBlock.innerHTML = errorMessage.trim().replace(/\n/g, '<br>'); // Заменяем \n на <br>
+        errorBlock.innerHTML = errorMessage.trim().replace(/\n/g, '<br>');
         errorBlock.style.display = 'block';
         return;
     }

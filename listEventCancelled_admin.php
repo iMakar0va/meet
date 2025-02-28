@@ -75,9 +75,11 @@ $resultGetOrganizators = pg_query($conn, $getOrganizators);
 
     <?php require './php/footer.php'; ?>
     <script>
+        // Обработчик одобрения активных мероприятий
         document.addEventListener('DOMContentLoaded', function() {
             const toggleButtons = document.querySelectorAll('.toggle-event-button');
 
+            // Одобрение мероприятия
             toggleButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const eventId = button.getAttribute('data-id');

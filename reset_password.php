@@ -29,6 +29,7 @@
     require './php/footer.php';
     ?>
     <script>
+        // Обработчик сброса пароля
         document.getElementById('resetPasswordForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('email').value;

@@ -171,17 +171,7 @@
     require './php/footer.php';
     ?>
 
-    <script src="scripts/carousel.js"></script>
-    <script>
-        document.querySelectorAll('.faq-question').forEach(item => {
-            item.addEventListener('click', () => {
-                let parent = item.parentNode;
-                parent.classList.toggle('active');
-                let icon = item.querySelector('.faq-icon');
-                icon.textContent = parent.classList.contains('active') ? '-' : '+';
-            });
-        });
-    </script>
+    <script src="scripts/main.js"></script>
 </body>
 
 </html>

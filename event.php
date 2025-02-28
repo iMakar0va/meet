@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/event.css">
     <link rel="stylesheet" href="styles/media/media_event.css">
-    <title>Мероприятие</title>
+    <title>Афиша</title>
 </head>
 
 <body>
@@ -139,8 +139,8 @@
     ?>
 
     <?php require './php/footer.php'; ?>
-
     <script>
+        // Обработчик записи на мероприятие
         document.addEventListener("DOMContentLoaded", function() {
             const registerButton = document.getElementById("registerButton");
             const participantsCount = document.getElementById("participantsCount");
@@ -155,6 +155,7 @@
                         return;
                     }
 
+                    // Запись на мероприятие
                     fetch("php/register_for_event.php", {
                             method: "POST",
                             headers: {
@@ -164,7 +165,7 @@
                         })
                         .then(response => response.json())
                         .then(data => {
-                            alert(data.message); // Показываем сообщение от сервера
+                            alert(data.message);
 
                             if (data.success) {
                                 if (data.action === "registered") {

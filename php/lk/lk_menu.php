@@ -4,7 +4,7 @@
     $userId = $_SESSION['user_id'];
     $userStatusQuery = "
         SELECT
-            users.isadmin,
+            users.is_admin,
             organizators.is_approved
         FROM
             users
@@ -61,7 +61,7 @@
     }
 
     // Проверка, если пользователь является администратором
-    if ($userStatus['isadmin'] === 't') {
+    if ($userStatus['is_admin'] === 't') {
         renderMenuItemsWithCount('Администратор', [
             'listUser_admin.php' => 'Список пользователей',
             'listOrganizatorActive_admin.php' => 'Список организаторов',

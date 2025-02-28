@@ -7,7 +7,6 @@ require 'conn.php';
 require 'autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 $response = ['success' => false];
