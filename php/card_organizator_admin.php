@@ -88,6 +88,7 @@ $organizerId = htmlspecialchars($row['organizator_id']);
     </div>
     <div class="card__item long" style="font-weight: 300;"><b>Описание деятельности: </b><?= htmlspecialchars($row["description"]) ?></div>
     <div class="card__btns">
+        <a href="changeOrganizator.php?organizator_id=<?= htmlspecialchars($row['organizator_id']) ?>" class="btn1">Изменить данные</a>
         <a href="organizatorEventNow.php?organizator_id=<?= htmlspecialchars($row['organizator_id']) ?>" class="btn1">Подробнее</a>
         <button class="btn1 toggle-button"
             data-id="<?= htmlspecialchars($row['organizator_id']) ?>"

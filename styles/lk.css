@@ -222,7 +222,7 @@
 
     margin-right: 15px;
     margin-bottom: 20px;
-    padding: 20px;
+    padding: 10px;
 
     border: 3px solid var(--green-color);
     border-radius: 5px;
@@ -312,9 +312,16 @@
 .card__btns {
     padding: 0 10px;
 }
-.card_organizator .card__btns{
+
+/* Карточка организатора */
+.card_organizator .card__btns .btn1 {
+    width: 100%;
+}
+
+.card_organizator .card__btns {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 10px;
     padding: 0px;
 }
 
@@ -328,6 +335,7 @@
     border-radius: 50%;
     margin-left: 5px;
 }
+
 /* Стили для пагинации */
 .pagination {
     display: flex;

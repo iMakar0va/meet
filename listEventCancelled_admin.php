@@ -8,13 +8,13 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
 // Получение общего количества записей
-$countQuery = "SELECT COUNT(*) as total FROM events WHERE is_active = false AND event_date > CURRENT_DATE";
+$countQuery = "SELECT COUNT(*) as total FROM events WHERE is_active = false AND event_date >= CURRENT_DATE";
 $countResult = pg_query($conn, $countQuery);
 $totalRows = pg_fetch_assoc($countResult)['total'];
 $totalPages = ceil($totalRows / $limit);
 
 // Получение мероприятий с учетом пагинации
-$getOrganizators = "SELECT * FROM events WHERE is_active = false AND event_date > CURRENT_DATE ORDER BY event_date LIMIT $limit OFFSET $offset";
+$getOrganizators = "SELECT * FROM events WHERE is_active = false AND event_date >= CURRENT_DATE ORDER BY event_date LIMIT $limit OFFSET $offset";
 $resultGetOrganizators = pg_query($conn, $getOrganizators);
 ?>
 
@@ -55,17 +55,19 @@ $resultGetOrganizators = pg_query($conn, $getOrganizators);
                 </div>
 
                 <!-- Пагинация -->
-                <div class="pagination">
-                    <?php if ($page > 1): ?>
-                        <a href="?page=<?php echo $page - 1; ?>">Назад</a>
-                    <?php endif; ?>
+                <?php if ($totalPages > 1): ?>
+                    <div class="pagination">
+                        <?php if ($page > 1): ?>
+                            <a href="?page=<?php echo $page - 1; ?>">Назад</a>
+                        <?php endif; ?>
 
-                    <span>Страница <?php echo $page; ?> из <?php echo $totalPages; ?></span>
+                        <span>Страница <?php echo $page; ?> из <?php echo $totalPages; ?></span>
 
-                    <?php if ($page < $totalPages): ?>
-                        <a href="?page=<?php echo $page + 1; ?>">Вперед</a>
-                    <?php endif; ?>
-                </div>
+                        <?php if ($page < $totalPages): ?>
+                            <a href="?page=<?php echo $page + 1; ?>">Вперед</a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
         <?php pg_close($conn); ?>

@@ -23,11 +23,11 @@
     $offset = ($page - 1) * $limit;
 
     // Запрос на получение мероприятий с пагинацией
-    $getEvents = "SELECT * FROM events WHERE is_active = true AND event_date > CURRENT_DATE ORDER BY event_date LIMIT $limit OFFSET $offset";
+    $getEvents = "SELECT * FROM events WHERE is_active = true AND event_date >= CURRENT_DATE ORDER BY event_date LIMIT $limit OFFSET $offset";
     $resultGetEvents = pg_query($conn, $getEvents);
 
     // Запрос для подсчёта всех записей (без лимита и оффсета)
-    $countQuery = "SELECT COUNT(*) FROM events WHERE is_active = true AND event_date > CURRENT_DATE";
+    $countQuery = "SELECT COUNT(*) FROM events WHERE is_active = true AND event_date >= CURRENT_DATE";
     $countResult = pg_query($conn, $countQuery);
     $totalRows = pg_fetch_result($countResult, 0, 0);
     $totalPages = ceil($totalRows / $limit);
