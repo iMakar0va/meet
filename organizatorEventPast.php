@@ -79,7 +79,7 @@
                     <div class="card__block">
                         <div class="card__item">Email: <?= htmlspecialchars($row["email"]) ?></div>
                         <div class="card__item">Телефон: <?= htmlspecialchars($row["phone_number"]) ?></div>
-                        <div class="card__item">Дата регистрации: <?= htmlspecialchars($row["date_start_work"]) ?></div>
+                        <div class="card__item">Дата основания: <?= htmlspecialchars($row["date_start_work"]) ?></div>
                         <div class="card__item">Статус: <?= $row["is_organizator"] === 't' ? 'Организатор' : 'Не организатор' ?></div>
                     </div>
                     <div class="card__block">

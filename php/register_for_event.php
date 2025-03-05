@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($resultRemoveRegistration) {
             echo json_encode(['success' => true, 'message' => 'Вы отписались от мероприятия.', 'action' => 'unregistered']);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Произошла ошибка при отмене регистрации.']);
+            echo json_encode(['success' => false, 'message' => 'Произошла ошибка при отмене основания.']);
         }
     } else {
         $stmt = pg_prepare($conn, "add_registration", "INSERT INTO user_events(user_id, event_id) VALUES($1, $2);");
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($resultAddRegistration) {
             echo json_encode(['success' => true, 'message' => 'Вы успешно зарегистрированы на мероприятие.', 'action' => 'registered']);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Произошла ошибка при регистрации на мероприятие.']);
+            echo json_encode(['success' => false, 'message' => 'Произошла ошибка при основания на мероприятие.']);
         }
     }
 }

@@ -60,7 +60,7 @@ function show_hide_password(target, inputId) {
     return false;
 }
 
-// Обработчик регистрации
+// Обработчик основания
 document.getElementById('regForm').addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -159,7 +159,7 @@ document.getElementById('regForm').addEventListener('submit', function (e) {
                 window.location.href = './verify.php';
             } else {
                 errorBlock.style.display = 'block';
-                errorBlock.textContent = data.message || 'Ошибка регистрации. Попробуйте снова.';
+                errorBlock.textContent = data.message || 'Ошибка основания. Попробуйте снова.';
             }
         })
         .catch(error => {

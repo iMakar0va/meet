@@ -70,6 +70,9 @@
                 <div class="">*-поля для обязательного заполения</div>
                 <div id="error" class="error title2" style="display: none;">Пользователь с такой почтой уже зарегистрирован!</div>
                 <button class="btn1 title2" type="submit">Зарегистрироваться</button>
+                <a href="./leaderid_login.php" style="text-align: center;">
+                    <img src="./img/leader_id.png" alt="Войти через Leader-ID" style="width: 140px; padding: 13px 0px; background: white; border-radius: 10px;">
+                </a>
                 <a href="./auth.php" class="title3" id="link-auth">Авторизоваться</a>
             </form>
         </div>

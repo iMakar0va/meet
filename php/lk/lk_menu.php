@@ -5,7 +5,8 @@
     $userStatusQuery = "
         SELECT
             users.is_admin,
-            organizators.is_approved
+            organizators.is_approved,
+            organizators.is_organizator
         FROM
             users
         LEFT JOIN
@@ -53,11 +54,19 @@
 
     // Проверка, если пользователь является организатором
     if ($userStatus['is_approved'] === 't') {
-        renderMenuItemsWithCount('Организатор', [
-            'nowEvent_organizer.php' => 'Предстоящие события',
-            'pastEvent_organizer.php' => 'История',
-            'createEvent.php' => 'Создать мероприятие'
-        ], []);
+        if ($userStatus['is_organizator'] === 't') {
+            renderMenuItemsWithCount('Организатор', [
+                'futureEvent_organizer.php' => 'События на одобрении',
+                'nowEventActive_organizer.php' => 'Предстоящие события',
+                'pastEvent_organizer.php' => 'История',
+                'createEvent.php' => 'Создать мероприятие'
+            ], []);
+        } else {
+            renderMenuItemsWithCount('Организатор', [
+                'nowEventActive_organizer.php' => 'Предстоящие события',
+                'pastEvent_organizer.php' => 'История'
+            ], []);
+        }
     }
 
     // Проверка, если пользователь является администратором
@@ -79,7 +88,6 @@
     <!-- Выход и удаление аккаунта -->
     <div class="lk__menu-footer">
         <a href="#!" onclick="logout()" class="title2 lk__menu-title">Выйти<img src="img/icons/exit.svg" alt="exit"></a>
-        <a href="#!" onclick="deleteAccount()" class="title2 lk__menu-title">Удалить аккаунт</a>
     </div>
 </div>
 <!-- /lk__menu -->

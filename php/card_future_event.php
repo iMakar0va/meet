@@ -1,5 +1,4 @@
 <?php
-
 $months = [
     1 => 'января',
     'февраля',
@@ -30,19 +29,12 @@ $imageSrc = !empty($row["image"])
         </div>
         <div class="card__city"><?= htmlspecialchars($row["city"]) ?></div>
         <div class="card__title"><?= htmlspecialchars($row["title"]) ?></div>
-        <div class="card__status status" data-id="<?= htmlspecialchars($row['event_id']) ?>">
-            <?= htmlspecialchars($row["is_active"]) === 't' ? '✅ Одобрено' : '❌ Отменено' ?>
-        </div>
     </div>
     <div class="card__btns">
-        <a href="changeEvent.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Изменить данные</a>
         <a href="event.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Подробнее</a>
-        <button class="btn1 toggle-event-button"
-            data-id="<?= htmlspecialchars($row['event_id']) ?>"
-            data-status="<?= htmlspecialchars($row["is_active"]) ?>">
-            <?= htmlspecialchars($row["is_active"]) === 't' ? 'Отменить' : 'Подать повторно' ?>
-        </button>
+        <a href="changeEvent.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Изменить данные</a>
     </div>
 
+    <!-- <a href="event.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Удалить</a> -->
 </div>
 <!-- /card -->

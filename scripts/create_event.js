@@ -93,6 +93,7 @@ document.getElementById('createForm').addEventListener('submit', function (e) {
     const dateEvent = document.getElementById('date_event');
     const startTime = document.getElementById('start_time');
     const endTime = document.getElementById('end_time');
+    const phone = document.getElementById('phone');
 
     // Очистка старых ошибок
     document.querySelectorAll('.error-border').forEach(input => {
@@ -134,6 +135,13 @@ document.getElementById('createForm').addEventListener('submit', function (e) {
         errorMessage += 'Время окончания должно быть в формате ЧЧ:ММ (00:00 – 23:59).\n';
     }
 
+    // Проверка телефона
+    if ( phone.value.length !== 18) {
+        isValid = false;
+        phone.classList.add('error-border');
+        errorMessage += 'Телефон должен быть в формате +7 (XXX) XXX-XX-XX.\n';
+    }
+
     // Проверка, что start_time < end_time
     if (startTime.value && endTime.value && timePattern.test(startTime.value) && timePattern.test(endTime.value)) {
         const [startHours, startMinutes] = startTime.value.split(':').map(Number);
@@ -161,7 +169,7 @@ document.getElementById('createForm').addEventListener('submit', function (e) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.href = './lk.php';
+                window.location.href = './nowEvent_organizer.php';
             } else {
                 errorBlock.style.display = 'block';
                 errorBlock.textContent = data.message || 'Ошибка создания. Попробуйте снова.';
@@ -171,4 +179,9 @@ document.getElementById('createForm').addEventListener('submit', function (e) {
             errorBlock.style.display = 'block';
             errorBlock.textContent = error.message + 'Произошла ошибка.';
         });
+});
+
+// Кнопка Отмена
+document.getElementById('cancelBtn').addEventListener('click', function () {
+    window.location.href = 'nowEventActive_organizer.php'; // Замени 'lk.php' на нужную страницу
 });

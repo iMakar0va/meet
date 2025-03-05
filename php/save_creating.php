@@ -96,7 +96,7 @@ try {
         $organizer,
         $eventData['place'],
         $eventData['phone'],
-        $email
+        $organizerEmail
     ]);
 
     // Получаем ID вставленного события

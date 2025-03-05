@@ -2,6 +2,8 @@
 require 'conn.php';
 require 'autoload.php';
 
+$variables = require 'variables.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -19,11 +21,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Обновляем статус мероприятия
     $toggleQuery = "UPDATE events
-                    SET is_active = NOT is_active
-                    WHERE event_id = $1
-                    RETURNING is_active, title, event_date";
+                    SET
+                        is_active = CASE
+                                        WHEN is_active = true THEN false
+                                        ELSE is_active
+                                    END,
+                        is_approved = CASE
+                                        WHEN is_active = false THEN NOT is_approved
+                                        ELSE is_approved
+                                    END
+                        WHERE event_id = $1
+                        RETURNING is_active, title, event_date;";
+
     $result = pg_query_params($conn, $toggleQuery, [$eventId]);
 
     if ($result && $row = pg_fetch_assoc($result)) {
@@ -53,11 +63,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->isSMTP();
             $mail->Host       = 'smtp.yandex.ru';
             $mail->SMTPAuth   = true;
-            $mail->Username   = 'eno7i@yandex.ru';
-            $mail->Password   = 'clzyppxymjxvnmbt';
+            $mail->Username   = $variables['smtp_username'];
+            $mail->Password   = $variables['smtp_password'];
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
             $mail->Port       = 465;
-            $mail->setFrom('eno7i@yandex.ru', 'MEET');
+            $mail->setFrom($variables['smtp_username'], 'MEET');
             $mail->CharSet = 'UTF-8';
             $mail->isHTML(true);
 
@@ -95,7 +105,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response['message'] = $newStatus
                 ? 'Мероприятие одобрено, уведомления отправлены'
                 : 'Мероприятие отменено, уведомления отправлены';
-
         } catch (Exception $e) {
             $response['message'] = 'Ошибка отправки email: ' . $e->getMessage();
         }

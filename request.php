@@ -10,6 +10,11 @@
     <link rel="stylesheet" href="styles/media/media_auth.css">
     <link rel="stylesheet" href="styles/media/media_lk.css">
     <title>Личный кабинет</title>
+    <style>
+        .error-border {
+            border: 3px solid rgb(202, 32, 17);
+        }
+    </style>
 </head>
 
 <body>
@@ -35,9 +40,9 @@
                         <input id="date_start_work" name="date_start_work" class="text-field__input title2" type="text" placeholder="Дата начала деятельности" required>
                     </div>
                     <div class="form__group">
-                        <textarea class="input textarea title2" id="description" name="description" rows="4" placeholder="Описание деятельности организации"></textarea>
+                        <textarea class="input textarea title2" id="description" name="description" rows="4" placeholder="Описание деятельности организации" required></textarea>
                     </div>
-                    <div id="error" class="error title2" style="display: none;">Пользователь с такой почтой уже зарегистрирован!</div>
+                    <div id="error" class="error title2" style="display: none;"></div>
                     <button class="btn1 title2" type="submit">Отправить заявку</button>
                 </form>
             </div>

@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $row = pg_fetch_assoc($resultInsert);
             $userId = $row['user_id'];
             $_SESSION['user_id'] = $userId;
-            setcookie("user_id", $userId, time() + 3600 * 24 * 30, "/");
+            // setcookie("user_id", $userId, time() + 3600 * 24 * 30, "/");
 
             unset($_SESSION['verification_code']);
             unset($_SESSION['reg_data']);
@@ -64,27 +64,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/general.css">
+    <link rel="stylesheet" href="styles/auth.css">
+    <link rel="stylesheet" href="styles/media/media_auth.css">
+    <!-- <link rel="stylesheet" href="styles/general.css"> -->
     <title>Подтверждение</title>
     <style>
         body {
-            background-color: #44969a;
+            /* background-color: #44969a; */
         }
 
         form {
             text-align: center;
-            height: 100vh;
+            /* height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 50px;
+            gap: 50px; */
         }
 
         h1 {
 
             font-weight: bold;
-            font-size: 39px;
+            font-size: 34px;
         }
 
         .ap-otp-inputs {
@@ -95,10 +97,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border: 3px solid #ebebeb;
             border-radius: 18px;
             width: 10%;
-            height: 100px;
+            /* height: 100px; */
+            padding: 20px 10px;
             margin: 4px;
             text-align: center;
-            font-size: 35px;
+            font-size: 24px;
+            color: var(--black-color);
         }
 
         .ap-otp-input:focus {
@@ -110,46 +114,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
-    <form method="post">
-        <h1>Пожалуйста, проверьте свою электронную почту!</h1>
-        <h3 class="title3">Мы отправили вам 6-значный код подтверждения. Пожалуйста, введите код в поле ниже, чтобы подтвердить свой адрес электронной почты.</h3>
-        <div class="ap-otp-inputs" data-username="otibij" data-channel="email" data-nonce="0-8bf87e338f" data-length="6" data-form="registration">
-            <input class="ap-otp-input" type="text" maxlength="1" data-index="0" inputmode="numeric" name="input1">
-            <input class="ap-otp-input" type="text" maxlength="1" data-index="1" inputmode="numeric" name="input2">
-            <input class="ap-otp-input" type="text" maxlength="1" data-index="2" inputmode="numeric" name="input3">
-            <input class="ap-otp-input" type="text" maxlength="1" data-index="3" inputmode="numeric" name="input4">
-            <input class="ap-otp-input" type="text" maxlength="1" data-index="4" inputmode="numeric" name="input5">
-            <input class="ap-otp-input" type="text" maxlength="1" data-index="5" inputmode="numeric" name="input6">
+    <?php
+    require "./php/header.php";
+    ?>
+    <div class="container">
+        <div class="form">
+            <form method="post">
+                <h1>Пожалуйста, проверьте свою электронную почту!</h1>
+                <h3 class="title3">Мы отправили вам 6-значный код подтверждения. Пожалуйста, введите код в поле ниже, чтобы подтвердить свой адрес электронной почты. <br> Если код не пришел <b>проверьте папку "Спам"</b> или отправьте код повторно.</h3>
+                <div class="ap-otp-inputs" data-username="otibij" data-channel="email" data-nonce="0-8bf87e338f" data-length="6" data-form="registration">
+                    <input class="ap-otp-input" type="text" maxlength="1" data-index="0" inputmode="numeric" name="input1">
+                    <input class="ap-otp-input" type="text" maxlength="1" data-index="1" inputmode="numeric" name="input2">
+                    <input class="ap-otp-input" type="text" maxlength="1" data-index="2" inputmode="numeric" name="input3">
+                    <input class="ap-otp-input" type="text" maxlength="1" data-index="3" inputmode="numeric" name="input4">
+                    <input class="ap-otp-input" type="text" maxlength="1" data-index="4" inputmode="numeric" name="input5">
+                    <input class="ap-otp-input" type="text" maxlength="1" data-index="5" inputmode="numeric" name="input6">
+                </div>
+                <button type="submit" class="btn1">Подтвердить</button>
+                <!-- <h4 class="title3"></h4> -->
+                <a href="./reg.php">Вернуться к входу</a>
+            </form>
         </div>
-        <button type="submit" class="btn1">Подтвердить</button>
-        <h4 class="title3">Если код не пришел <b>проверьте папку "Спам"</b> или отправьте код повторно</h4>
-        <a href="./reg.php">Вернуться к входу</a>
-    </form>
+    </div>
+
+
+    <?php
+    require "./php/footer.php";
+    ?>
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
     <script>
-        // Сброс пароля
-        const $inp = $(".ap-otp-input");
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = document.querySelectorAll('.ap-otp-input');
 
-        $inp.on({
-            paste(ev) {
-                const clip = ev.originalEvent.clipboardData.getData('text').trim();
+            inputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    let value = e.target.value.replace(/\D/g, ''); // Оставляем только цифры
+                    e.target.value = value.slice(0, 1); // Ограничиваем ввод одной цифрой
 
-                if (!/\d{6}/.test(clip)) return ev.preventDefault();
+                    if (value && inputs[index + 1]) {
+                        inputs[index + 1].focus();
+                    }
+                });
 
-                const s = [...clip];
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === "Backspace" && !input.value && inputs[index - 1]) {
+                        inputs[index - 1].focus();
+                    }
+                });
+            });
 
-                $inp.val(i => s[i]).eq(5).focus();
-            },
-            input(ev) {
+            document.addEventListener('paste', (ev) => {
+                const clip = ev.clipboardData.getData('text').trim();
+                if (!/^\d{6}$/.test(clip)) return ev.preventDefault();
 
-                const i = $inp.index(this);
-                if (this.value) $inp.eq(i + 1).focus();
-            },
-            keydown(ev) {
-                const i = $inp.index(this);
-                if (!this.value && ev.key === "Backspace" && i) $inp.eq(i - 1).focus();
-            }
+                [...clip].forEach((char, i) => {
+                    if (inputs[i]) inputs[i].value = char;
+                });
 
+                inputs[5].focus();
+            });
         });
     </script>
 </body>

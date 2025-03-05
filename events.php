@@ -33,11 +33,11 @@ if (!empty($_GET['event_date'])) {
 $whereClause = count($whereClauses) > 0 ? " AND " . implode(" AND ", $whereClauses) : "";
 
 // Основной запрос с пагинацией
-$getEvents = "SELECT * FROM events WHERE event_date >= CURRENT_DATE AND is_active = true $whereClause ORDER BY event_date ASC LIMIT $limit OFFSET $offset";
+$getEvents = "SELECT * FROM events WHERE event_date >= CURRENT_DATE AND is_active = true and is_approved = true $whereClause ORDER BY event_date ASC LIMIT $limit OFFSET $offset";
 $resultGetEvents = pg_query_params($conn, $getEvents, $params);
 
 // Запрос для подсчёта всех записей (без лимита и оффсета)
-$countQuery = "SELECT COUNT(*) FROM events WHERE event_date >= CURRENT_DATE AND is_active = true $whereClause";
+$countQuery = "SELECT COUNT(*) FROM events WHERE event_date >= CURRENT_DATE AND is_active = true and is_approved = true $whereClause";
 $countResult = pg_query_params($conn, $countQuery, $params);
 $totalRows = pg_fetch_result($countResult, 0, 0);
 $totalPages = ceil($totalRows / $limit);

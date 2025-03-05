@@ -148,6 +148,7 @@ $endTimeFormatted = date("H:i", strtotime($event['end_time']));
                     <div id="error" class="error title2" style="display: none;">Ошибка!</div>
                     <input type="hidden" name="remove_image" id="removeImageField" value="0">
                     <button class="btn1 title2" id="saveProfile" type="submit">Сохранить изменения</button>
+                    <button class="btn1 title2" type="button" id="cancelBtn">Отмена</button>
                 </form>
             </div>
             <!-- /lk__profile -->

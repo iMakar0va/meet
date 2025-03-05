@@ -2,6 +2,8 @@
 require 'conn.php';
 require 'autoload.php';
 
+$variables = require 'variables.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -48,7 +50,7 @@ try {
     }
 
     // Отправляем письмо с новым паролем
-    if (sendNewPasswordEmail($userEmail, $newPassword)) {
+    if (sendNewPasswordEmail($userEmail, $newPassword, $variables)) {
         echo json_encode(['success' => true, 'message' => 'Новый пароль отправлен на вашу почту.']);
     } else {
         echo json_encode(['success' => false, 'message' => 'Ошибка при отправке письма. Попробуйте позже.']);
@@ -60,7 +62,7 @@ try {
 /**
  * Отправляет новый пароль пользователю по email
  */
-function sendNewPasswordEmail($email, $password)
+function sendNewPasswordEmail($email, $password, $variables)
 {
     $mail = new PHPMailer(true);
 
@@ -69,14 +71,14 @@ function sendNewPasswordEmail($email, $password)
         $mail->isSMTP();
         $mail->Host       = 'smtp.yandex.ru';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'eno7i@yandex.ru';  // Замените на свой email
-        $mail->Password   = 'clzyppxymjxvnmbt'; // Замените на свой пароль приложения
+        $mail->Username   = $variables['smtp_username'];
+        $mail->Password   = $variables['smtp_password'];
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465;
         $mail->CharSet    = 'UTF-8';
 
         // Отправитель и получатель
-        $mail->setFrom('eno7i@yandex.ru', 'MEET'); // Замените на свой email
+        $mail->setFrom($variables['smtp_username'], 'MEET'); // Замените на свой email
         $mail->addAddress($email);
 
         // Содержание письма

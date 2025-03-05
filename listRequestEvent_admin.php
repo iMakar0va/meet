@@ -25,7 +25,7 @@
                 <div class="title1">Список заявок мероприятий</div>
                 <div class="cards">
                     <?php
-                    $getPendingEvents = "SELECT * FROM events WHERE is_approved = false ORDER BY event_date ASC;";
+                    $getPendingEvents = "SELECT * FROM events WHERE is_approved = false and is_active = false ORDER BY event_date ASC;";
                     $result = pg_query($conn, $getPendingEvents);
 
                     if ($result && pg_num_rows($result) > 0) {

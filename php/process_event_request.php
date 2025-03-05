@@ -3,6 +3,8 @@ session_start();
 require 'conn.php';
 require 'autoload.php';
 
+$variables = require 'variables.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -35,11 +37,11 @@ try {
     $mail->isSMTP();
     $mail->Host = 'smtp.yandex.ru';
     $mail->SMTPAuth = true;
-    $mail->Username = 'eno7i@yandex.ru';
-    $mail->Password = 'clzyppxymjxvnmbt';
+    $mail->Username = $variables['smtp_username'];
+    $mail->Password = $variables['smtp_password'];
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
     $mail->Port = 465;
-    $mail->setFrom('eno7i@yandex.ru', 'MEET');
+    $mail->setFrom($variables['smtp_username'], 'MEET');
     $mail->addAddress($organizerEmail);
     $mail->CharSet = 'UTF-8';
     $mail->isHTML(true);
@@ -50,8 +52,9 @@ try {
         $mail->Body = "Ваше мероприятие <b>\"$eventTitle\"</b> одобрено и теперь доступно на платформе.";
         echo json_encode(['success' => true, 'message' => "Мероприятие \"$eventTitle\" одобрено."]);
     } elseif ($action === 'reject') {
-        pg_query_params($conn, "DELETE FROM organizators_events WHERE event_id = $1;", [$eventId]);
-        pg_query_params($conn, "DELETE FROM events WHERE event_id = $1;", [$eventId]);
+        pg_query_params($conn, "UPDATE events SET is_approved = false, is_active = true WHERE event_id = $1;", [$eventId]);
+        // pg_query_params($conn, "DELETE FROM organizators_events WHERE event_id = $1;", [$eventId]);
+        // pg_query_params($conn, "DELETE FROM events WHERE event_id = $1;", [$eventId]);
 
         $mail->Subject = "Мероприятие отклонено";
         $mail->Body = "Ваше мероприятие <b>\"$eventTitle\"</b> было отклонено. Причина: <b>$reason</b>.";

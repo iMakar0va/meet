@@ -4,7 +4,7 @@
         <div class="card__block">
             <div class="card__item"><?= htmlspecialchars($row["email"]) ?></div>
             <div class="card__item"><?= htmlspecialchars($row["phone_number"]) ?></div>
-            <div class="card__item">Дата регистрации: <?= htmlspecialchars($row["date_start_work"]) ?></div>
+            <div class="card__item">Дата основания: <?= htmlspecialchars($row["date_start_work"]) ?></div>
             <div class="card__item" data-id="<?= htmlspecialchars($row['organizator_id']) ?>">
                 Статус: <?= $row["is_organizator"] === 't' ? 'Организатор' : 'Не организатор' ?>
             </div>

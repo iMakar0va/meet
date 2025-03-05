@@ -8,13 +8,11 @@
 /* @import url(https://fonts.googleapis.com/css?family=Lato:100,100italic,300,300italic,regular,italic,700,700italic,900,900italic); */
 /* =============Общие настройки============= */
 :root {
-    /* --blue-color: #0C949C; */
     --blue-color: #44969a;
-    --light-blue-color: #69E5EB;
+    /* --light-blue-color: #69E5EB; */
     --very-light-blue-color: #c2e4e6;
     --green-color: #02494C;
     --light-green-color: #296163;
-    /* --yellow-color: #FFA150; */
     --yellow-color: #ff8f2d;
     --brown-color: #ff770085;
     --white-color: #f2f2f2;
@@ -23,7 +21,7 @@
 
 body {
     font-family: "Roboto", sans-serif;
-    color: #fff;
+    color: var(--white-color);
 }
 
 .container {

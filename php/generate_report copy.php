@@ -16,7 +16,7 @@ $pdf->SetAuthor('Организатор');
 $pdf->SetTitle('Отчет по мероприятию');
 $pdf->SetSubject('Аналитический отчет');
 $pdf->SetKeywords('PDF, отчет, мероприятие');
-$pdf->SetFont('dejavusans', '', 10);
+$pdf->SetFont('dejavusans', '', 12);
 $pdf->AddPage();
 
 $html = '<h1>Отчет по мероприятию</h1>';
@@ -85,7 +85,7 @@ $resultParticipants = pg_query_params($conn, $queryParticipants, [$eventId]);
 $countParticipants = pg_fetch_result($resultParticipants, 0, 0);
 
 $html .= '<h3 style="text-align: center;">Статистика участников</h3>';
-$html .= "<p><b>Количество участников:</b> $countParticipants человек(а)</p>";
+$html .= "<p><b>Количество участников:</b> $countParticipants</p>";
 
 // Если участники есть, получаем гендерное и возрастное распределение
 if ($countParticipants > 0) {
@@ -98,29 +98,13 @@ if ($countParticipants > 0) {
 
     $resultGender = pg_query_params($conn, $queryGender, [$countParticipants, $eventId]);
 
-    $html .= '<h3 style="text-align: center;">Гендерное распределение</h3>';
-    $html .= '<table border="1" cellpadding="5" cellspacing="0" style="width: 100%; text-align: center;">
-        <thead>
-            <tr style="background-color:rgb(177, 177, 177);">
-                <th>Пол</th>
-                <th>Процент участников</th>
-            </tr>
-        </thead>
-        <tbody>';
-
     while ($genderData = pg_fetch_assoc($resultGender)) {
         $html .= sprintf(
-            '<tr>
-            <td>%s</td>
-            <td>%.0f%%</td>
-        </tr>',
+            '<p><b>%s:</b> %.0f%%</p>',
             htmlspecialchars(ucfirst($genderData['gender']), ENT_QUOTES, 'UTF-8'),
             round($genderData['percentage'])
         );
     }
-
-    $html .= '</tbody></table>';
-
 
     // Возрастное распределение
     $ageRanges = [
@@ -131,51 +115,20 @@ if ($countParticipants > 0) {
         'Старше 65' => '> 65'
     ];
 
-    $ageData = [];
+    $html .= '<p><b>Распределение по возрасту:</b></p>';
 
     foreach ($ageRanges as $label => $condition) {
         $queryAge = "SELECT COUNT(*) * 100.0 / $1
-                 FROM users u
-                 JOIN user_events ue ON ue.user_id = u.user_id
-                 WHERE ue.event_id = $2
-                 AND EXTRACT(YEAR FROM AGE(CURRENT_DATE, birth_date)) $condition";
+                     FROM users u
+                     JOIN user_events ue ON ue.user_id = u.user_id
+                     WHERE ue.event_id = $2
+                     AND EXTRACT(YEAR FROM AGE(CURRENT_DATE, birth_date)) $condition";
 
         $resultAge = pg_query_params($conn, $queryAge, [$countParticipants, $eventId]);
         $agePercentage = round(pg_fetch_result($resultAge, 0, 0));
 
-        $ageData[] = [
-            'label' => $label,
-            'percentage' => $agePercentage
-        ];
+        $html .= sprintf('<p>   %s: %d%%</p>', htmlspecialchars($label, ENT_QUOTES, 'UTF-8'), $agePercentage);
     }
-
-    // Определяем максимальное значение для выделения
-    $maxPercentage = max(array_column($ageData, 'percentage'));
-
-    $html .= '<h3 style="text-align: center;">Возрастное распределение</h3>';
-    $html .= '<table border="1" cellpadding="5" cellspacing="0" style="width: 100%; text-align: center;">
-            <thead>
-                <tr style="background-color:rgb(177, 177, 177);">
-                    <th>Возрастная категория</th>
-                    <th>Процент участников</th>
-                </tr>
-            </thead>
-            <tbody>';
-
-    foreach ($ageData as $row) {
-        $highlight = ($row['percentage'] == $maxPercentage) ? 'background-color:rgb(255, 255, 106);' : '';
-        $html .= sprintf(
-            '<tr style="%s">
-            <td>%s</td>
-            <td>%d%%</td>
-        </tr>',
-            $highlight,
-            htmlspecialchars($row['label'], ENT_QUOTES, 'UTF-8'),
-            $row['percentage']
-        );
-    }
-
-    $html .= '</tbody></table>';
 }
 
 // Запись содержимого в PDF

@@ -56,6 +56,7 @@ $(document).ready(function () {
         const dateEvent = document.getElementById('date_event');
         const startTime = document.getElementById('start_time');
         const endTime = document.getElementById('end_time');
+        const phone = document.getElementById('phone');
 
         // Очистка старых ошибок
         document.querySelectorAll('.error-border').forEach(input => {
@@ -116,6 +117,13 @@ $(document).ready(function () {
                 endTime.classList.add('error-border');
                 errorMessage += 'Время начала должно быть раньше времени окончания.\n';
             }
+        }
+
+        // Проверка телефона
+        if (phone.value.length !== 18) {
+            isValid = false;
+            phone.classList.add('error-border');
+            errorMessage += 'Телефон должен быть в формате +7 (XXX) XXX-XX-XX.\n';
         }
 
         // Вывод ошибок
@@ -182,3 +190,7 @@ function removeFilesItem(target) {
 
     $('#removeImageField').val('1');
 }
+// Кнопка Отмена
+document.getElementById('cancelBtn').addEventListener('click', function () {
+    window.location.href = 'nowEventActive_organizer.php'; // Замени 'lk.php' на нужную страницу
+});

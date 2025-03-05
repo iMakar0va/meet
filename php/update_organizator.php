@@ -4,6 +4,8 @@ require 'conn.php';
 
 require 'autoload.php';
 
+$variables = require 'variables.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -64,11 +66,11 @@ try {
     $mail->isSMTP();
     $mail->Host = 'smtp.yandex.ru';
     $mail->SMTPAuth = true;
-    $mail->Username = 'eno7i@yandex.ru';
-    $mail->Password = 'clzyppxymjxvnmbt';
+    $mail->Username = $variables['smtp_username'];
+    $mail->Password = $variables['smtp_password'];
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
     $mail->Port = 465;
-    $mail->setFrom('eno7i@yandex.ru', 'MEET');
+    $mail->setFrom($variables['smtp_username'], 'MEET');
     $mail->addAddress($organizerEmail);
     $mail->CharSet = 'UTF-8';
     $mail->isHTML(true);

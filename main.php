@@ -116,7 +116,7 @@
         <div class="h2 title0">Популярные мероприятия</div>
         <div class="cards">
             <?php
-            $getEvents = "SELECT e.event_id,e.image,e.title,e.type,e.topic,e.description, e.start_time, e.end_time, e.event_date, e.city, e.address, e.organizer, e.place, e.phone, e.email, COUNT(ue.user_id) AS participants_count FROM events e LEFT JOIN user_events ue ON e.event_id = ue.event_id WHERE e.event_date > CURRENT_DATE GROUP BY e.event_id ORDER BY participants_count DESC LIMIT 3;";
+            $getEvents = "SELECT e.event_id,e.image,e.title,e.type,e.topic,e.description, e.start_time, e.end_time, e.event_date, e.city, e.address, e.organizer, e.place, e.phone, e.email, COUNT(ue.user_id) AS participants_count FROM events e LEFT JOIN user_events ue ON e.event_id = ue.event_id WHERE e.event_date >= CURRENT_DATE and e.is_active = true and e.is_approved = true GROUP BY e.event_id ORDER BY participants_count DESC LIMIT 3;";
             $resultGetEvents = pg_query($conn, $getEvents);
             if ($resultGetEvents) {
                 while ($row = pg_fetch_assoc($resultGetEvents)) {
@@ -156,7 +156,7 @@
                 </div>
                 <div class="faq-item">
                     <div class="faq-question">Как изменить данные организатора или мероприятия? <span class="faq-icon">+</span></div>
-                    <div class="faq-answer">Редактирование данных организатора и мероприятий доступно только администратору. Если вам необходимо внести изменения, свяжитесь с нами по электронной почте: <b>eno7i@yandex.com</b> .</div>
+                    <div class="faq-answer">Редактирование данных организатора и доступно только администратору. Если вам необходимо внести изменения, свяжитесь с нами по электронной почте: <b>eno7i@yandex.com</b> .</div>
                 </div>
                 <div class="faq-item">
                     <div class="faq-question">Я был организатором, но теперь функции недоступны. Почему? <span class="faq-icon">+</span></div>

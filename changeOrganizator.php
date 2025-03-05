@@ -68,6 +68,7 @@ $dateFormatted = date("d/m/Y", strtotime($organizator['date_start_work']));
                     </div>
                     <div id="error" class="error title2" style="display: none;"></div>
                     <button class="btn1 title2" type="submit">Сохранить изменения</button>
+                    <button class="btn1 title2" type="button" id="cancelBtn">Отмена</button>
                 </form>
             </div>
             <!-- /lk__profile -->

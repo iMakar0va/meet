@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="styles/auth.css">
     <link rel="stylesheet" href="styles/lk.css">
-    <!-- <link rel="stylesheet" href="styles/events.css"> -->
     <link rel="stylesheet" href="styles/media/media_auth.css">
     <link rel="stylesheet" href="styles/media/media_lk.css">
     <title>Личный кабинет</title>
@@ -33,8 +32,8 @@
     $getEventUser = "SELECT * FROM users u
                      JOIN user_events ue ON u.user_id = ue.user_id
                      JOIN events e ON ue.event_id = e.event_id
-                     WHERE u.user_id = $1 AND e.event_date < CURRENT_DATE
-                     LIMIT $limit OFFSET $offset;";
+                     WHERE u.user_id = $1 AND e.event_date < CURRENT_DATE and e.is_approved = true
+                     ORDER BY e.event_date LIMIT $limit OFFSET $offset;";
 
     $resultGetEventUser = pg_query_params($conn, $getEventUser, [$userId]);
 
@@ -42,7 +41,7 @@
     $countQuery = "SELECT COUNT(*) FROM users u
                    JOIN user_events ue ON u.user_id = ue.user_id
                    JOIN events e ON ue.event_id = e.event_id
-                   WHERE u.user_id = $1 AND e.event_date < CURRENT_DATE;";
+                   WHERE u.user_id = $1 AND e.event_date < CURRENT_DATE and e.is_approved = true;";
     $countResult = pg_query_params($conn, $countQuery, [$userId]);
     $totalRows = pg_fetch_result($countResult, 0, 0);
     $totalPages = ceil($totalRows / $limit);

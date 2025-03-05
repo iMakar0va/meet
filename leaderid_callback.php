@@ -5,6 +5,8 @@ require './PHPMailer/src/Exception.php';
 require './PHPMailer/src/PHPMailer.php';
 require './PHPMailer/src/SMTP.php';
 
+$variables = require './php/variables.php';
+
 // Конфигурация
 $leader_id_client_id = "1e35caef-6ec7-4995-b5ef-6d2d054790c2";
 $leader_id_client_secret = "JCj2acm68cANw5aHOZoOJGQeaLXvLPGu";
@@ -126,7 +128,7 @@ $user_check_result = pg_query_params($conn, "SELECT user_id FROM users WHERE ema
 if ($user_check_result && pg_num_rows($user_check_result) > 0) {
     // Пользователь найден
     $_SESSION['user_id'] = pg_fetch_result($user_check_result, 0, 'user_id');
-    setcookie("user_id", $_SESSION['user_id'], time() + 3600 * 24 * 30, "/");
+    // setcookie("user_id", $_SESSION['user_id'], time() + 3600 * 24 * 30, "/");
     header("Location: lk.php");
 } else {
     $first_name = $user_data['firstName'] ?? '';
@@ -149,12 +151,12 @@ if ($user_check_result && pg_num_rows($user_check_result) > 0) {
     $mail->isSMTP();
     $mail->Host = 'smtp.yandex.ru';
     $mail->SMTPAuth = true;
-    $mail->Username = 'eno7i@yandex.ru';
-    $mail->Password = 'clzyppxymjxvnmbt';
+    $mail->Username = $variables['smtp_username'];
+    $mail->Password = $variables['smtp_password'];
     $mail->SMTPSecure = 'ssl';
     $mail->Port = 465;
     $mail->CharSet = 'UTF-8';
-    $mail->setFrom('eno7i@yandex.ru', 'MEET');
+    $mail->setFrom($variables['smtp_username'], 'MEET');
     $mail->addAddress($user_email);
     $mail->Subject = 'Ваш новый пароль';
     $mail->Body = "Здравствуйте, $first_name!\n\nВаш пароль для входа: $generated_password\n\nПожалуйста, измените его после входа.";
@@ -169,7 +171,7 @@ if ($user_check_result && pg_num_rows($user_check_result) > 0) {
     // Получаем ID пользователя и создаем сессию
     $user_id_query = pg_query_params($conn, "SELECT user_id FROM users WHERE email = $1", [$user_email]);
     $_SESSION['user_id'] = pg_fetch_result($user_id_query, 0, 'user_id');
-    setcookie("user_id", $_SESSION['user_id'], time() + 3600 * 24 * 30, "/");
+    // setcookie("user_id", $_SESSION['user_id'], time() + 3600 * 24 * 30, "/");
     header("Location: lk.php");
 }
 

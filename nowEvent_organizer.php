@@ -52,6 +52,10 @@
             <?php require 'php/lk/lk_menu.php'; ?>
             <div class="lk__profile">
                 <div class="title1">Текущие мероприятия</div>
+                <div class="links">
+                    <a href="./listEventActive_admin.php" class="active">Активные мероприятия</a>
+                    <a href="./listEventCancelled_admin.php" class="no_active">Отмененные мероприятия</a>
+                </div>
                 <div class="cards">
                     <?php
                     if ($resultGetEventUser && pg_num_rows($resultGetEventUser) > 0) {

@@ -107,6 +107,7 @@
                     <div class="" style="color: black;">*-поля для обязательного заполения</div>
                     <div id="error" class="error title2" style="display: none;">Пользователь с такой почтой уже зарегистрирован!</div>
                     <button class="btn1 title2" type="submit">Создать мероприятие</button>
+                    <button class="btn1 title2" type="button" id="cancelBtn">Отмена</button>
                 </form>
             </div>
             <!-- /lk__profile -->
@@ -123,8 +124,9 @@
     require './php/footer.php';
     ?>
 
-    <script src="./scripts/create_event.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="./scripts/create_event.js"></script>
 </body>
 
 </html>

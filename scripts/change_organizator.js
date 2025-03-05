@@ -33,7 +33,8 @@ $(document).ready(function () {
         let isValid = true;
         let errorMessage = "";
         const errorBlock = document.getElementById('error');
-        const dateEvent = document.getElementById('date_start_work');
+        const dateStartWork = document.getElementById('date_start_work');
+        const phone = document.getElementById('phone_number');
 
         // Очистка старых ошибок
         document.querySelectorAll('.error-border').forEach(input => {
@@ -44,13 +45,13 @@ $(document).ready(function () {
 
         // Проверка формата даты ДД/ММ/ГГГГ
         const datePattern = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
-        if (dateEvent.value.trim() && !datePattern.test(dateEvent.value)) {
+        if (dateStartWork.value.trim() && !datePattern.test(dateStartWork.value)) {
             isValid = false;
-            dateEvent.classList.add('error-border');
+            dateStartWork.classList.add('error-border');
             errorMessage += 'Пожалуйста, укажите дату в формате ДД/ММ/ГГГГ.\n';
         } else {
             // Проверка существования даты
-            const [day, month, year] = dateEvent.value.split('/').map(Number);
+            const [day, month, year] = dateStartWork.value.split('/').map(Number);
             const eventDate = new Date(year, month - 1, day);
             const today = new Date();
             today.setHours(0, 0, 0, 0); // Обнуляем время для корректного сравнения
@@ -61,13 +62,20 @@ $(document).ready(function () {
                 eventDate.getDate() !== day
             ) {
                 isValid = false;
-                dateEvent.classList.add('error-border');
+                dateStartWork.classList.add('error-border');
                 errorMessage += 'Некорректная дата. Такой даты не существует.\n';
             } else if (eventDate >= today) {
                 isValid = false;
-                dateEvent.classList.add('error-border');
-                errorMessage += 'Дата регистрации должна быть раньше сегодняшнего дня.\n';
+                dateStartWork.classList.add('error-border');
+                errorMessage += 'Дата основания должна быть раньше сегодняшнего дня.\n';
             }
+        }
+
+        // Проверка телефона
+        if (phone.value.length !== 18) {
+            isValid = false;
+            phone.classList.add('error-border');
+            errorMessage += 'Телефон должен быть в формате +7 (XXX) XXX-XX-XX.\n';
         }
 
         // Вывод ошибок
@@ -76,6 +84,7 @@ $(document).ready(function () {
             errorBlock.style.display = 'block';
             return;
         }
+
         // Обработчик изменений профиля организатора
         $.ajax({
             url: "php/update_organizator.php",
@@ -98,4 +107,8 @@ $(document).ready(function () {
             }
         });
     });
+});
+// Кнопка Отмена
+document.getElementById('cancelBtn').addEventListener('click', function () {
+    window.location.href = 'listOrganizatorActive_admin.php'; // Замени 'lk.php' на нужную страницу
 });
