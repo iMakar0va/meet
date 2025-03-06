@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="icon" type="image/png" href="./img/icons/logo.svg">
+    <meta name="theme-color" content="#000"> -->
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/media/media_main.css">
     <title>Главная</title>

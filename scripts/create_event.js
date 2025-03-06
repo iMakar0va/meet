@@ -169,7 +169,7 @@ document.getElementById('createForm').addEventListener('submit', function (e) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.href = './nowEvent_organizer.php';
+                window.location.href = './futureEvent_organizer.php';
             } else {
                 errorBlock.style.display = 'block';
                 errorBlock.textContent = data.message || 'Ошибка создания. Попробуйте снова.';

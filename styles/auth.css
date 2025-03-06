@@ -17,10 +17,7 @@ form {
 
 
 form a {
-    /* display: flex;
-    justify-content: end; */
     color: var(--white-color);
-    /* margin-top: 15px; */
 }
 
 form a:hover {
@@ -28,7 +25,6 @@ form a:hover {
 }
 
 form a:last-child {
-    /* margin-top: -15px; */
     text-align: center;
 }
 
@@ -158,7 +154,7 @@ form button {
 .input-file span {
     display: inline-block;
     cursor: pointer;
-    color: rgb(255 255 255);
+    color: var(--white-color);
     border-radius: 10px;
     background-color: var(--light-green-color);
     padding: 20px 30px;
@@ -193,7 +189,7 @@ form button {
 }
 
 .input-file-list-remove {
-    color: #fff;
+    color: var(--white-color);
     display: inline-block;
     position: absolute;
     top: -5px;

@@ -9,11 +9,11 @@
 /* =============Общие настройки============= */
 :root {
     --blue-color: #44969a;
-    /* --light-blue-color: #69E5EB; */
+    --light-blue-color: #3E626C;
     --very-light-blue-color: #c2e4e6;
     --green-color: #02494C;
     --light-green-color: #296163;
-    --yellow-color: #ff8f2d;
+    --yellow-color: #f48625;
     --brown-color: #ff770085;
     --white-color: #f2f2f2;
     --black-color: #2B2C2D;
@@ -62,13 +62,13 @@ p {
     font-size: 16px;
 }
 
-.title4 {
+/* .title4 {
     font-size: 12px;
-}
+} */
 
-.title5 {
+/* .title5 {
     font-size: 10px;
-}
+} */
 
 .btn1 {
     display: inline-block;
@@ -84,7 +84,7 @@ p {
 }
 
 .btn1:hover {
-    background-color: #f48625;
+    background-color: var(--yellow-color);
     box-shadow: 0px 0px 13px var(--brown-color);
 }
 
@@ -93,22 +93,22 @@ p {
     color: var(--white-color);
 }
 
-.logo img {
-    height: 50px;
-}
-
 .btn1 a {
     color: #2B2C2D;
 }
 
+.logo img {
+    height: 50px;
+}
+
+/* Результат когда ничего не найдено */
 .no-results {
-    background-color: #3E626C;
+    background-color: var(--light-blue-color);
     border-radius: 10px;
-    color: #fff;
+    color: var(--white-color);
 
     width: 100%;
     margin: 15px 0px 50px 0px;
-    /* margin: 15px 35px 50px 35px; */
     padding: 50px;
     display: flex;
     flex-direction: column;
@@ -120,15 +120,14 @@ p {
 
 .no-results img {
     width: 240px;
-
 }
 
 /* =============Header============= */
 header {
-    /* position: sticky;
+    position: sticky;
     top: 0;
-    z-index: 90; */
-    background-color: #44969a;
+    z-index: 90;
+    background-color: var(--blue-color);
 }
 
 .header__wrapper {
@@ -178,7 +177,7 @@ header {
     display: none;
 }
 
-/* -------------- */
+/* Меню для адаптива */
 
 .nav-button {
     display: none;
@@ -219,7 +218,7 @@ footer {
     display: block;
     margin-top: 5px;
     font-weight: 300;
-    color: #fff;
+    color: var(--white-color);
 }
 
 .footer-help a:hover {
@@ -239,7 +238,6 @@ footer {
 }
 
 /* Показать/скрыть пароль */
-/* Скрыть дефолтную иконку глазика, появляющуюся в некоторых браузерах */
 input[type="password"]::-ms-reveal,
 input[type="password"]::-webkit-credentials-auto-fill-button {
     display: none;
@@ -262,7 +260,6 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
 .password-control.view {
     background: url(../img/icons/view.svg) 0 0 no-repeat;
 }
-
 
 /* =============Cards============= */
 
@@ -306,6 +303,16 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
 
 .card__content {
     padding: 15px 10px;
+
+}
+
+.card__content:has(.card__comment) {
+    height: 252px;
+}
+
+.card__comment {
+    color: #FADD84;
+    font-weight: bold;
 }
 
 .card__type {
@@ -339,8 +346,8 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
 
 .card__title {
     font-size: 18px;
-    height: 60px;
-    margin-bottom: 5px;
+    height: 65px;
+    margin-bottom: 7px;
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 3;
@@ -351,8 +358,6 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
     /* Это поможет разрывать слова, если они слишком длинные */
 }
 
-
-
 .card .btn1 {
     display: flex;
     justify-content: center;
@@ -361,4 +366,88 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
 
 .cards_line .card {
     width: 100%;
+}
+
+/* Стили для пагинации */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+}
+
+.pagination a {
+    text-decoration: none;
+    color: var(--light-blue-color);
+    padding: 10px 15px;
+    margin: 0 5px;
+    border-radius: 5px;
+    background-color: #f1f1f1;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.pagination a:hover {
+    background-color: var(--light-blue-color);
+    color: #fff;
+}
+
+.pagination a:disabled {
+    color: #ccc;
+    cursor: not-allowed;
+    background-color: #c5c7ca;
+}
+
+.pagination span {
+    padding: 10px 15px;
+    margin: 0 5px;
+    font-size: 16px;
+    color: #333;
+}
+
+.pagination a[disabled] {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Стили для модального окна */
+.modal {
+    display: none;
+    /* Скрыто по умолчанию */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Полупрозрачный фон */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    color: var(--black-color);
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    max-width: 600px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #000;
+}
+
+h2 {
+    font-weight: bold;
 }

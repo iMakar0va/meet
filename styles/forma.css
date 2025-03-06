@@ -35,7 +35,7 @@ form {
     padding: 18px 26px;
     color: black;
     border-radius: 10px;
-    background-color: white;
+    background-color: var(--white-color);
     font-size: 18px;
 }
 
@@ -55,7 +55,7 @@ form {
 
 .input:focus+.label {
     transform: translateY(-30px);
-    background-color: #fff;
+    background-color: var(--white-color);
     padding: 3px;
     border-radius: 3px 7px;
     font-size: 12px;
@@ -67,14 +67,14 @@ form {
 
 /* .input:focus+.label,
 .input:not(:placeholder-shown)+.label {
-    background-color: #fff;
+    background-color: var(--white-color);
     padding: 5px;
     border-radius: 5px;
 } */
 
 .input:not(:placeholder-shown)+.label {
     transform: translateY(-30px);
-    background-color: #fff;
+    background-color: var(--white-color);
     padding: 3px;
     border-radius: 3px 7px;
     font-size: 12px;
@@ -106,7 +106,7 @@ textarea {
 
 
 select {
-    background-color: #fff;
+    background-color: var(--white-color);
     color: black;
     padding: 18px 26px;
     font-size: 16px;
@@ -134,7 +134,7 @@ select {
 .input-file span {
     display: inline-block;
     cursor: pointer;
-    color: rgb(255 255 255);
+    color: var(--white-color);
     border-radius: 10px;
     background-color: var(--light-green-color);
     padding: 20px 30px;
@@ -169,7 +169,7 @@ select {
 }
 
 .input-file-list-remove {
-    color: #fff;
+    color: var(--white-color);
     display: inline-block;
     position: absolute;
     top: -5px;

@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Подтверждение</title>
     <style>
         body {
-            /* background-color: #44969a; */
+            /* background-color: var(--blue-color); */
         }
 
         form {

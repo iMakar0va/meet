@@ -30,11 +30,25 @@ $imageSrc = !empty($row["image"])
         </div>
         <div class="card__city"><?= htmlspecialchars($row["city"]) ?></div>
         <div class="card__title"><?= htmlspecialchars($row["title"]) ?></div>
+        <div class="card__comment">
+            <?php
+            if ($row["is_repeated"] == 't') {
+                echo "Мероприятие отправлено повторно";
+            }
+            ?>
+        </div>
     </div>
     <div class="card__btns">
         <a href="event.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Подробнее</a>
         <button class="btn1" onclick="approveEvent(<?= $row['event_id'] ?>, '<?= addslashes($row['title']) ?>')">Одобрить</button>
         <button class="btn1" onclick="rejectEvent(<?= $row['event_id'] ?>, '<?= addslashes($row['title']) ?>')">Отклонить</button>
+        <?php
+        if ($row["is_repeated"] == 't') { ?>
+            <button onclick="showComment(<?= $row['event_id'] ?>)" class="btn1">Посмотреть комментарий</button>
+        <?php
+        }
+        ?>
+
     </div>
 </div>
 <!-- /card -->

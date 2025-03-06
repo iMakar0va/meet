@@ -13,10 +13,10 @@ $response = ['success' => false];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $eventId = $_POST['event_id'] ?? null;
-    $reason = trim($_POST['reason'] ?? ''); // Получаем причину отмены
+    $reason = trim($_POST['reason'] ?? NULL); // Получаем причину отмены
 
     if (!$eventId) {
-        $response['message'] = 'Отсутствует ID мероприятия';
+        $response['message'] = 'Мероприятие не найдено или уже обработано.';
         echo json_encode($response);
         exit;
     }
@@ -30,11 +30,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         is_approved = CASE
                                         WHEN is_active = false THEN NOT is_approved
                                         ELSE is_approved
-                                    END
-                        WHERE event_id = $1
+                                    END,
+                        is_repeated = CASE
+                                        WHEN is_active = false and is_approved = true THEN true
+                                        ELSE false
+                                    END,
+                        reason_for_refusal = CASE
+                                                WHEN $1 <> '' THEN $1
+                                                ELSE reason_for_refusal
+                                            END
+                        WHERE event_id = $2
                         RETURNING is_active, title, event_date;";
 
-    $result = pg_query_params($conn, $toggleQuery, [$eventId]);
+    $result = pg_query_params($conn, $toggleQuery, [$reason, $eventId]);
 
     if ($result && $row = pg_fetch_assoc($result)) {
         $newStatus = $row['is_active'] === 't';

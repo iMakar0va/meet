@@ -94,7 +94,7 @@
 
             <div class="links">
                 <a href="./organizatorEventNow.php?organizator_id=<?= htmlspecialchars($row['organizator_id']) ?>" class="no_active">Текущие мероприятия</a>
-                <a href="./organizatorEventPast.php?organizator_id=<?= htmlspecialchars($row['organizator_id']) ?>" class="active">Пройденные мероприятия</a>
+                <a href="./organizatorEventPast.php?organizator_id=<?= htmlspecialchars($row['organizator_id']) ?>" class="active">Прошедшие мероприятия</a>
             </div>
 
             <div class="cards">
@@ -110,7 +110,7 @@
                         require './php/card.php';
                     }
                 } else {
-                    echo "<p>Нет текущих мероприятий для отображения.</p>";
+                    echo "<p>Нет прошедших мероприятий для отображения.</p>";
                 }
                 ?>
             </div>

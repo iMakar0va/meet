@@ -64,7 +64,16 @@
                     }
                     ?>
                 </div>
-
+                <div id="commentModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span> <!-- Крестик для закрытия -->
+                        <h2>Название мероприятия:</h2>
+                        <div id="modalTitle"></div> <!-- Название мероприятия -->
+                        <br>
+                        <h2>Комментарий:</h2>
+                        <p id="modalComment"></p> <!-- Комментарий (причина отказа) -->
+                    </div>
+                </div>
                 <!-- Пагинация -->
                 <?php if ($totalPages > 1): ?>
                     <div class="pagination">
@@ -85,6 +94,7 @@
     </div>
 
     <?php require './php/footer.php'; ?>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         // Обработчик отмены активных мероприятий
         document.addEventListener('DOMContentLoaded', function() {
@@ -129,6 +139,48 @@
                         alert('Ошибка сети. Попробуйте позже.');
                     });
             }
+        });
+    </script>
+    <script>
+        // Функция для открытия модального окна и загрузки данных
+        function showComment(eventId) {
+            // Отправка AJAX-запроса для получения данных
+            $.ajax({
+                url: 'php/get_comment.php', // Файл, который возвращает данные
+                type: 'GET',
+                data: {
+                    event_id: eventId
+                }, // Передаем ID мероприятия
+                dataType: 'json', // Ожидаем JSON-ответ
+                success: function(response) {
+                    if (response.success) {
+                        // Заполняем модальное окно данными
+                        $('#modalTitle').text(response.title); // Название мероприятия
+                        $('#modalComment').text(response.comment); // Комментарий
+                        $('#commentModal').css('display', 'block'); // Показываем модальное окно
+                    } else {
+                        alert(response.message); // Показываем сообщение об ошибке
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("Ошибка при загрузке данных: " + error); // Обработка ошибок AJAX
+                }
+            });
+        }
+
+        // Закрытие модального окна
+        $(document).ready(function() {
+            // Закрытие при клике на крестик
+            $('.close').click(function() {
+                $('#commentModal').css('display', 'none');
+            });
+
+            // Закрытие при клике вне модального окна
+            $(window).click(function(event) {
+                if (event.target.id === 'commentModal') {
+                    $('#commentModal').css('display', 'none');
+                }
+            });
         });
     </script>
 </body>

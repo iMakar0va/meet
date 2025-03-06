@@ -80,8 +80,6 @@
 
 /* =============Hash============= */
 .carousel {
-    /* margin: 0 0; */
-    /* padding: 20px 0; */
     overflow: hidden;
     display: flex;
 }
@@ -146,7 +144,7 @@
     align-items: center;
     gap: 10px;
     padding: 15px 55px 15px 20px;
-    background-color: #3E626C;
+    background-color: var(--light-blue-color);
     border-radius: 10px;
 }
 
@@ -158,7 +156,6 @@
     position: relative;
     font-weight: bold;
     color: #FADD84;
-    /* color: var(--yellow-color); */
 }
 
 .info__number img {
@@ -172,19 +169,13 @@
     margin-top: 15px;
     margin-bottom: 35px;
     padding: 32px;
-    background-color: #3E626C;
+    background-color: var(--light-blue-color);
     border-radius: 10px;
 
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
 }
-
-/* .creation__block {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-} */
 
 .creation-title {
     font-size: 32px;
@@ -212,14 +203,12 @@
 
 .faq-title {
     width: 30%;
-    /* padding: 32px; */
     font-size: 32px;
     font-weight: bold;
 }
 
 .faq-content {
     width: 70%;
-    /* padding: 20px; */
 }
 
 .faq-item {
@@ -249,10 +238,8 @@
 
 .faq-item.active .faq-answer {
     max-height: 200px;
-    /* Достаточно для длинного ответа */
     opacity: 1;
     padding: 10px;
-    /* Восстанавливаем padding */
 }
 
 
