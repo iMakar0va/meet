@@ -3,6 +3,24 @@ session_start();
 require './php/header.php';
 require './php/conn.php';
 
+// Проверка, авторизован ли пользователь
+if (!isset($_SESSION['user_id'])) {
+    header("Location: auth.php");
+    exit();
+}
+
+$userId = $_SESSION['user_id'];
+
+// Проверка, является ли пользователь администратором
+$queryAdmin = "SELECT 1 FROM users WHERE user_id = $1 AND is_admin = true";
+$resultAdmin = pg_query_params($conn, $queryAdmin, [$userId]);
+
+if (!$resultAdmin || pg_num_rows($resultAdmin) == 0) {
+    // Если пользователь не является администратором, перенаправляем на страницу личного кабинета
+    header("Location: lk.php");
+    exit();
+}
+
 $limit = 6; // Количество мероприятий на страницу
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;

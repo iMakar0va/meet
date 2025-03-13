@@ -97,9 +97,12 @@ if ($userDataResult) {
             <img src="<?= $profileImageSrc ?>" alt="Профильное изображение">
         </div>
         <div>
-            <div class="title2 setting" id="editProfileButton" onclick="toggleForms('lkSetting')">
+            <a class="title2" href="changeUser.php?user_id=<?= $user['user_id'] ?>">
                 <img src="img/icons/setting.svg" alt="setting">Редактировать профиль
-            </div>
+            </a>
+            <!-- <div class="title2 setting" id="editProfileButton" onclick="toggleForms('lkSetting')">
+                <img src="img/icons/setting.svg" alt="setting">Редактировать профиль
+            </div> -->
             <div class="title0" style="margin-top: 15px;"><?= $user["last_name"] . " " . $user["first_name"] ?></div>
         </div>
     </div>

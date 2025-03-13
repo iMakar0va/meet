@@ -31,7 +31,7 @@ $imageSrc = !empty($row["image"])
         <div class="card__city"><?= htmlspecialchars($row["city"]) ?></div>
         <div class="card__title"><?= htmlspecialchars($row["title"]) ?></div>
         <div class="card__status status" data-id="<?= htmlspecialchars($row['event_id']) ?>">
-            <?= htmlspecialchars($row["is_active"]) === 't' ? '✅ Одобрено' : '❌ Отменено' ?>
+            <?= htmlspecialchars($row["is_active"]) === 't' ? '✅ Одобрено' : '❌ Отменено или отклонено' ?>
         </div>
     </div>
     <div class="card__btns">

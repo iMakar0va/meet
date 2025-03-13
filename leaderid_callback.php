@@ -136,8 +136,42 @@ if ($user_check_result && pg_num_rows($user_check_result) > 0) {
     $birth_date = substr($user_data['birthday'], 0, 10);
     $gender = $user_data['gender'] == 'male' ? 'мужской' : 'женский';
 
-    $generated_password = rand(100000, 999999); // Генерация 8-значного пароля
-    $hashed_password = password_hash($generated_password, PASSWORD_DEFAULT);
+    function generateSecurePassword($length = 6)
+    {
+        // Убедимся, что длина пароля не меньше 6
+        if ($length < 6) {
+            $length = 6;
+        }
+
+        // Множество символов для пароля
+        $lowercase = 'abcdefghijklmnopqrstuvwxyz';
+        $uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $numbers = '0123456789';
+        $specialChars = '!@#$%^&*()-_=+[]{}|;:,.<>?';
+
+        // Генерация случайных символов из каждой категории
+        $password = '';
+        $password .= $lowercase[random_int(0, strlen($lowercase) - 1)];
+        $password .= $uppercase[random_int(0, strlen($uppercase) - 1)];
+        $password .= $numbers[random_int(0, strlen($numbers) - 1)];
+        $password .= $specialChars[random_int(0, strlen($specialChars) - 1)];
+
+        // Заполнение оставшихся символов случайными символами из всех категорий
+        $allChars = $lowercase . $uppercase . $numbers . $specialChars;
+        for ($i = 4; $i < $length; $i++) {
+            $password .= $allChars[random_int(0, strlen($allChars) - 1)];
+        }
+
+        // Перемешиваем пароль для случайного порядка символов
+        $password = str_shuffle($password);
+
+        return $password;
+    }
+
+    // Пример использования:
+    $newPassword = generateSecurePassword(8); // Генерация пароля длиной 8 символов
+
+    $hashed_password = password_hash($newPassword, PASSWORD_DEFAULT);
 
     // Вставка данных о пользователе в базу данных
     $insert_user_query = pg_query_params(
@@ -159,7 +193,7 @@ if ($user_check_result && pg_num_rows($user_check_result) > 0) {
     $mail->setFrom($variables['smtp_username'], 'MEET');
     $mail->addAddress($user_email);
     $mail->Subject = 'Ваш новый пароль';
-    $mail->Body = "Здравствуйте, $first_name!\n\nВаш пароль для входа: $generated_password\n\nПожалуйста, измените его после входа.";
+    $mail->Body = "Здравствуйте, $first_name!\n\nВаш пароль для входа: $newPassword\n\nПожалуйста, измените его после входа.";
     $mail->send();
     if (!$mail->send()) {
         error_log("Ошибка отправки письма: " . $mail->ErrorInfo);

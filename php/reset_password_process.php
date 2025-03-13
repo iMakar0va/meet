@@ -38,7 +38,41 @@ try {
     }
 
     // Генерируем новый пароль и хешируем его
-    $newPassword = bin2hex(random_bytes(4)); // 8 символов (4 байта * 2)
+    function generateSecurePassword($length = 6)
+    {
+        // Убедимся, что длина пароля не меньше 6
+        if ($length < 6) {
+            $length = 6;
+        }
+
+        // Множество символов для пароля
+        $lowercase = 'abcdefghijklmnopqrstuvwxyz';
+        $uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $numbers = '0123456789';
+        $specialChars = '!@#$%^&*()-_=+[]{}|;:,.<>?';
+
+        // Генерация случайных символов из каждой категории
+        $password = '';
+        $password .= $lowercase[random_int(0, strlen($lowercase) - 1)];
+        $password .= $uppercase[random_int(0, strlen($uppercase) - 1)];
+        $password .= $numbers[random_int(0, strlen($numbers) - 1)];
+        $password .= $specialChars[random_int(0, strlen($specialChars) - 1)];
+
+        // Заполнение оставшихся символов случайными символами из всех категорий
+        $allChars = $lowercase . $uppercase . $numbers . $specialChars;
+        for ($i = 4; $i < $length; $i++) {
+            $password .= $allChars[random_int(0, strlen($allChars) - 1)];
+        }
+
+        // Перемешиваем пароль для случайного порядка символов
+        $password = str_shuffle($password);
+
+        return $password;
+    }
+
+    // Пример использования:
+    $newPassword = generateSecurePassword(8); // Генерация пароля длиной 8 символов
+
     $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
     // Обновляем пароль в базе данных

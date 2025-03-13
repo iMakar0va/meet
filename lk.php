@@ -17,6 +17,11 @@
     session_start();
     require './php/header.php';
     require './php/conn.php';
+
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: auth.php');
+        exit();
+    }
     ?>
 
     <div class="container">

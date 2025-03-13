@@ -2,116 +2,96 @@
 session_start();
 require 'conn.php';
 
-// Проверка авторизации пользователя
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['success' => false, 'message' => 'Пользователь не авторизован.']);
+require 'autoload.php';
+
+$variables = require 'variables.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Получаем user_id
+$userId = $_POST['user_id'] ?? null;
+
+if (!$userId) {
+    echo json_encode(['success' => false, 'message' => 'Ошибка: пользователь не найден.']);
     exit();
 }
 
-$userId = $_SESSION['user_id'];
-$isUpdated = false;
-
 // Получаем данные из формы
-$firstName = $_POST['first_name'] ?? null;
-$lastName = $_POST['last_name'] ?? null;
-$password = $_POST['password'] ?? null;
-$gender = $_POST['gender'] ?? null;
-$birthDate = $_POST['birth_date'] ?? null;
+$lastName = $_POST['last_name'] ?? '';
+$firstName = $_POST['first_name'] ?? '';
+$birthDate = $_POST['birth_date'] ?? '';
+$gender = $_POST['gender'] ?? '';
 
-// ✅ Преобразуем дату в формат `YYYY-MM-DD`
-if (!empty($birthDate)) {
-    $dateParts = explode('/', $birthDate);
-    if (count($dateParts) === 3) {
-        $birthDate = $dateParts[2] . '-' . $dateParts[1] . '-' . $dateParts[0];
-    }
+// Проверка обязательных полей
+if (empty($lastName) || empty($firstName) || empty($birthDate) || empty($gender) ) {
+    echo json_encode(['success' => false, 'message' => 'Ошибка: все поля должны быть заполнены.']);
+    exit();
 }
 
-// Обновляем только изменённые данные
-$updateFields = [];
-$params = [];
-$paramIndex = 1;
+// Обновление данных мероприятия
+$query = "UPDATE users SET last_name = $1, first_name = $2, birth_date = $3, gender = $4 WHERE user_id = $5";
+$result = pg_query_params($conn, $query, [
+    $lastName,
+    $firstName,
+    $birthDate,
+    $gender,
+    $userId
+]);
 
-if (!empty($firstName)) {
-    $updateFields[] = "first_name = $" . $paramIndex++;
-    $params[] = $firstName;
+if (!$result) {
+    echo json_encode(['success' => false, 'message' => 'Ошибка при обновлении данных.']);
+    exit();
 }
 
-if (!empty($lastName)) {
-    $updateFields[] = "last_name = $" . $paramIndex++;
-    $params[] = $lastName;
-}
-
-if (!empty($password)) {
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    $updateFields[] = "password = $" . $paramIndex++;
-    $params[] = $hashedPassword;
-}
-
-if (!empty($gender)) {
-    $updateFields[] = "gender = $" . $paramIndex++;
-    $params[] = $gender;
-}
-
-if (!empty($birthDate)) {
-    $updateFields[] = "birth_date = $" . $paramIndex++;
-    $params[] = $birthDate;
-}
-
-// Выполняем обновление только если есть изменения
-if (!empty($updateFields)) {
-    $params[] = $userId;
-    $query = "UPDATE users SET " . implode(', ', $updateFields) . " WHERE user_id = $" . $paramIndex;
-    $result = pg_query_params($conn, $query, $params);
-
-    if ($result) {
-        $isUpdated = true;
-    }
-}
-
-// ✅ Обработка удаления изображения
+// Обработка изображения
 if (isset($_POST['remove_image']) && $_POST['remove_image'] === '1') {
-    $defaultImagePath = '../img/profile.jpg';
-    $defaultImageData = file_get_contents($defaultImagePath);
-
-    if ($defaultImageData !== false) {
-        $escapedImageData = pg_escape_bytea($conn, $defaultImageData);
-        $query = "UPDATE users SET image = $1 WHERE user_id = $2";
-        $result = pg_query_params($conn, $query, [$escapedImageData, $userId]);
-
-        if ($result) {
-            $_SESSION['user_image'] = $defaultImageData;
-            $isUpdated = true;
-        }
+    // Восстановление дефолтного изображения
+    $defaultImage = file_get_contents('../img/profile.jpg');
+    if ($defaultImage === false) {
+        echo json_encode(['success' => false, 'message' => 'Ошибка при чтении дефолтного изображения.']);
+        exit();
     }
-}
+    $escapedData = pg_escape_bytea($conn, $defaultImage);
+    $query = "UPDATE users SET image = $1 WHERE user_id = $2";
+    $result = pg_query_params($conn, $query, [$escapedData, $userId]);
 
-// ✅ Обработка загрузки изображения
-if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+    if (!$result) {
+        echo json_encode(['success' => false, 'message' => 'Ошибка при восстановлении изображения.']);
+        exit();
+    }
+} elseif (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+    // Проверка и загрузка нового изображения
     $file = $_FILES['file'];
     $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-    $maxFileSize = 10 * 1024 * 1024; // 10 МБ
+    $maxSize = 10 * 1024 * 1024; // 10 МБ
 
-    if (in_array($file['type'], $allowedTypes) && $file['size'] <= $maxFileSize) {
-        $imageData = file_get_contents($file['tmp_name']);
-        if ($imageData !== false) {
-            $escapedImageData = pg_escape_bytea($conn, $imageData);
-            $query = "UPDATE users SET image = $1 WHERE user_id = $2";
-            $result = pg_query_params($conn, $query, [$escapedImageData, $userId]);
+    if (!in_array($file['type'], $allowedTypes)) {
+        echo json_encode(['success' => false, 'message' => 'Формат изображения должен быть JPEG, JPG или PNG.']);
+        exit();
+    }
 
-            if ($result) {
-                $_SESSION['user_image'] = $imageData;
-                $isUpdated = true;
-            }
-        }
+    if ($file['size'] > $maxSize) {
+        echo json_encode(['success' => false, 'message' => 'Размер изображения не должен превышать 10 МБ.']);
+        exit();
+    }
+
+    // Чтение и сохранение изображения
+    $imageData = file_get_contents($file['tmp_name']);
+    if ($imageData === false) {
+        echo json_encode(['success' => false, 'message' => 'Ошибка при чтении содержимого изображения.']);
+        exit();
+    }
+
+    $escapedData = pg_escape_bytea($conn, $imageData);
+    $query = "UPDATE users SET image = $1 WHERE user_id = $2";
+    $result = pg_query_params($conn, $query, [$escapedData, $userId]);
+
+    if (!$result) {
+        echo json_encode(['success' => false, 'message' => 'Ошибка при обновлении изображения.']);
+        exit();
     }
 }
 
-// ✅ Отправка ответа
-$response = $isUpdated
-    ? ['success' => true, 'message' => 'Данные успешно обновлены.']
-    : ['success' => false, 'message' => 'Нет изменений для сохранения.'];
-
-echo json_encode($response);
-
-// Закрываем соединение
+echo json_encode(['success' => true, 'message' => 'Данные успешно обновлены.']);
 pg_close($conn);

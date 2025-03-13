@@ -18,7 +18,23 @@
     require './php/header.php';
     require './php/conn.php';
 
+    // Проверка, авторизован ли пользователь
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: auth.php");
+        exit();
+    }
+
     $userId = $_SESSION['user_id'];
+
+    // Проверка, является ли пользователь организатором
+    $query = "SELECT 1 FROM organizators WHERE organizator_id = $1";
+    $result = pg_query_params($conn, $query, [$userId]);
+
+    if (!$result || pg_num_rows($result) == 0) {
+        // Если пользователь не организатор, перенаправляем в личный кабинет
+        header("Location: lk.php");
+        exit();
+    }
 
     $limit = 6; // Количество мероприятий на страницу
     $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
@@ -51,7 +67,7 @@
                 <div class="title1">Список одобренных мероприятий</div>
                 <div class="links">
                     <a href="./nowEventActive_organizer.php" class="active">Активные мероприятия</a>
-                    <a href="./nowEventCancelled_organizer.php" class="no_active">Отмененные мероприятия</a>
+                    <a href="./nowEventCancelled_organizer.php" class="no_active">Неактивные мероприятия</a>
                 </div>
                 <div class="cards">
                     <?php

@@ -16,8 +16,13 @@
 
 <body>
     <?php
-    session_start();
     require './php/header.php';
+    session_start();
+
+    if (isset($_SESSION['user_id'])) {
+        header('Location: lk.php');
+        exit();
+    }
     ?>
     <div class="container">
         <div class="form">

@@ -2,11 +2,68 @@
 session_start();
 require 'php/conn.php';
 
-if (!isset($_GET['event_id'])) {
-    die("Ошибка: мероприятие не найдено.");
+// Проверка, авторизован ли пользователь
+if (!isset($_SESSION['user_id'])) {
+    header("Location: auth.php");
+    exit();
 }
 
-$eventId = intval($_GET['event_id']);
+$userId = $_SESSION['user_id'];
+$eventId = isset($_GET['event_id']) ? intval($_GET['event_id']) : null;
+
+if (!$eventId) {
+    header("Location: lk.php");
+    exit();
+}
+
+// Проверка, является ли пользователь администратором
+$queryAdmin = "SELECT 1 FROM users WHERE user_id = $1 AND is_admin = true";
+$resultAdmin = pg_query_params($conn, $queryAdmin, [$userId]);
+
+// Если пользователь администратор, то он может редактировать любое событие
+if ($resultAdmin && pg_num_rows($resultAdmin) > 0) {
+    // Администратор может редактировать все события
+    // Ничего не нужно делать, так как администратор всегда может редактировать любое событие
+} else {
+    // Если пользователь не администратор, проверяем, является ли он организатором этого мероприятия
+    $queryOrganizer = "
+        SELECT 1
+        FROM organizators_events
+        WHERE organizator_id = $1 AND event_id = $2
+    ";
+    $resultOrganizer = pg_query_params($conn, $queryOrganizer, [$userId, $eventId]);
+
+    if (!$resultOrganizer || pg_num_rows($resultOrganizer) == 0) {
+        // Если пользователь не организатор этого события, перенаправляем его на личный кабинет
+        header("Location: lk.php");
+        exit();
+    }
+}
+// Проверка, что мероприятие актуально (дата мероприятия должна быть позже или равна сегодняшнему дню)
+$queryEventDate = "
+    SELECT event_date
+    FROM events
+    WHERE event_id = $1
+";
+$resultEventDate = pg_query_params($conn, $queryEventDate, [$eventId]);
+
+if ($resultEventDate && pg_num_rows($resultEventDate) > 0) {
+    $event = pg_fetch_assoc($resultEventDate);
+    $eventDate = $event['event_date'];
+
+    // Проверяем, что дата мероприятия не раньше текущей
+    if (strtotime($eventDate) < strtotime(date('Y-m-d'))) {
+        // Если дата мероприятия раньше сегодняшнего дня, перенаправляем на личный кабинет
+        header("Location: lk.php");
+        exit();
+    }
+} else {
+    // Если не найдено такого мероприятия, перенаправляем на личный кабинет
+    header("Location: lk.php");
+    exit();
+}
+
+// $eventId = intval($_GET['event_id']);
 $_SESSION['event_id'] = $eventId;
 
 // Получаем данные мероприятия
@@ -14,9 +71,9 @@ $query = "SELECT * FROM events WHERE event_id = $1";
 $result = pg_query_params($conn, $query, [$eventId]);
 $event = pg_fetch_assoc($result);
 
-if (!$event) {
-    die("Ошибка: мероприятие не найдено.");
-}
+// if (!$event) {
+//     die("Ошибка: мероприятие не найдено.");
+// }
 
 // Определяем изображение
 $imageSrc = !empty($event["image"])
