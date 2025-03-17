@@ -23,8 +23,12 @@ $firstName = $_POST['first_name'] ?? '';
 $birthDate = $_POST['birth_date'] ?? '';
 $gender = $_POST['gender'] ?? '';
 
+$oldPassword = $_POST['old_password'] ?? '';
+$newPassword = $_POST['new_password'] ?? '';
+
+
 // Проверка обязательных полей
-if (empty($lastName) || empty($firstName) || empty($birthDate) || empty($gender) ) {
+if (empty($lastName) || empty($firstName) || empty($birthDate) || empty($gender)) {
     echo json_encode(['success' => false, 'message' => 'Ошибка: все поля должны быть заполнены.']);
     exit();
 }
@@ -42,6 +46,37 @@ $result = pg_query_params($conn, $query, [
 if (!$result) {
     echo json_encode(['success' => false, 'message' => 'Ошибка при обновлении данных.']);
     exit();
+}
+// Проверка и обновление пароля
+if (!empty($oldPassword) && !empty($newPassword)) {
+    // Получаем текущий хэш пароля из базы
+    $passwordQuery = "SELECT password FROM users WHERE user_id = $1";
+    $passwordResult = pg_query_params($conn, $passwordQuery, [$userId]);
+
+    if ($passwordResult && $row = pg_fetch_assoc($passwordResult)) {
+        $hashedPassword = $row['password'];
+
+        // Проверяем соответствие старого пароля
+        if (password_verify($oldPassword, $hashedPassword)) {
+            // Хэшируем новый пароль
+            $newHashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+            // Обновляем пароль в базе данных
+            $updatePasswordQuery = "UPDATE users SET password = $1 WHERE user_id = $2";
+            $updatePasswordResult = pg_query_params($conn, $updatePasswordQuery, [$newHashedPassword, $userId]);
+
+            if (!$updatePasswordResult) {
+                echo json_encode(['success' => false, 'message' => 'Ошибка при обновлении пароля.']);
+                exit();
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Cтарый пароль введён неверно.']);
+            exit();
+        }
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Ошибка при получении пароля из базы.']);
+        exit();
+    }
 }
 
 // Обработка изображения

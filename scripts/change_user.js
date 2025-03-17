@@ -9,7 +9,18 @@ document.addEventListener('DOMContentLoaded', () => {
         date.value = value.slice(0, 10);
     });
 });
-
+// Скрыть/показать пароль
+function show_hide_password(target, inputId) {
+    var input = document.getElementById(inputId);
+    if (input.getAttribute('type') == 'password') {
+        target.classList.add('view');
+        input.setAttribute('type', 'text');
+    } else {
+        target.classList.remove('view');
+        input.setAttribute('type', 'password');
+    }
+    return false;
+}
 // Обработчик сохранения изменений мероприятия
 $(document).ready(function () {
     $("#editUserForm").on("submit", function (event) {
@@ -22,12 +33,60 @@ $(document).ready(function () {
         const errorBlock = document.getElementById('error');
         const dateEvent = document.getElementById('birth_date');
 
+        const oldPassword = document.getElementById('old_password');
+        const newPassword = document.getElementById('new_password');
+        const repeatPassword = document.getElementById('repeat_password');
+
         // Очистка старых ошибок
         document.querySelectorAll('.error-border').forEach(input => {
             input.classList.remove('error-border');
         });
         errorBlock.style.display = 'none';
         errorBlock.textContent = '';
+
+        // Проверка смены пароля (если хотя бы одно поле заполнено)
+        if (oldPassword.value.trim() || newPassword.value.trim() || repeatPassword.value.trim()) {
+            // Проверяем, что все три поля заполнены
+            if (!oldPassword.value.trim() || !newPassword.value.trim() || !repeatPassword.value.trim()) {
+                isValid = false;
+                oldPassword.classList.add('error-border');
+                newPassword.classList.add('error-border');
+                repeatPassword.classList.add('error-border');
+                errorMessage += 'Ошибка: необходимо заполнить все поля для смены пароля.\n';
+            }
+
+            // Проверка нового пароля
+            if (newPassword.value !== repeatPassword.value) {
+                isValid = false;
+                newPassword.classList.add('error-border');
+                repeatPassword.classList.add('error-border');
+                errorMessage += 'Пароли не совпадают.\n';
+            }
+
+            if (newPassword.value.length < 6) {
+                isValid = false;
+                newPassword.classList.add('error-border');
+                errorMessage += 'Длина пароля должна быть не менее 6 символов.\n';
+            }
+
+            if (!/[a-zA-Z]/.test(newPassword.value)) {
+                isValid = false;
+                newPassword.classList.add('error-border');
+                errorMessage += 'Пароль должен содержать хотя бы одну букву.\n';
+            }
+
+            if (!/[0-9]/.test(newPassword.value)) {
+                isValid = false;
+                newPassword.classList.add('error-border');
+                errorMessage += 'Пароль должен содержать хотя бы одну цифру.\n';
+            }
+
+            if (!/[!@#$%^&*(),.?":{}|<>]/.test(newPassword.value)) {
+                isValid = false;
+                newPassword.classList.add('error-border');
+                errorMessage += 'Пароль должен содержать хотя бы один специальный символ.\n';
+            }
+        }
 
         // Проверка формата даты ДД/ММ/ГГГГ
         const datePattern = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;

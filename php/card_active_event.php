@@ -42,7 +42,12 @@ $imageSrc = !empty($row["image"])
             data-status="<?= htmlspecialchars($row["is_active"]) ?>">
             <?= htmlspecialchars($row["is_active"]) === 't' ? 'Отменить' : 'Одобрить' ?>
         </button>
-        <a href="php/generate_report_users.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Скачать данные</a>
+        <?php
+        if ($row["is_active"] != 't') { ?>
+            <button onclick="showComment(<?= $row['event_id'] ?>)" class="btn1">Посмотреть комментарий</button>
+        <?php }
+        ?>
+        <!-- <a href="php/generate_report_users.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Скачать данные</a> -->
     </div>
 
 </div>

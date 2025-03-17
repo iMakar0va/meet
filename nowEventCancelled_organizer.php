@@ -145,6 +145,7 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
+                            alert(data.message);
                             document.querySelector(`.toggle-event-button[data-id="${eventId}"]`).closest('.card').remove();
                         } else {
                             alert(data.message || 'Ошибка при изменении статуса.');

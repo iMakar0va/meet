@@ -105,10 +105,21 @@ $dateFormatted = date("d/m/Y", strtotime($user['birth_date']));
                             <label for="female">Женщина</label>
                         </div>
                     </div>
-
                     <div class="form__group">
                         <input id="birth_date" name="birth_date" class="input title2" type="text" value="<?= $dateFormatted ?>" placeholder="ЧЧ/ММ/ГГ" required>
                         <label class="label title2" for="">Дата рождения</label>
+                    </div>
+                    <div class="text-field__icon text-field__icon_password password">
+                        <input id="old_password" name="old_password" class="text-field__input title2" type="password" placeholder="Старый пароль">
+                        <a href="#" class="password-control" onclick="return show_hide_password(this, 'old_password');"></a>
+                    </div>
+                    <div class="text-field__icon text-field__icon_password password">
+                        <input id="new_password" name="new_password" class="text-field__input title2" type="password" placeholder="Новый пароль">
+                        <a href="#" class="password-control" onclick="return show_hide_password(this, 'new_password');"></a>
+                    </div>
+                    <div class="text-field__icon text-field__icon_password password">
+                        <input id="repeat_password" name="repeat_password" class="text-field__input title2" type="password" placeholder="Повторите новый пароль">
+                        <a href="#" class="password-control" onclick="return show_hide_password(this, 'repeat_password');"></a>
                     </div>
                     <div id="error" class="error title2" style="display: none;">Ошибка!</div>
                     <input type="hidden" name="remove_image" id="removeImageField" value="0">

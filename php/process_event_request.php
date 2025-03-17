@@ -20,7 +20,7 @@ $action = $_POST['action'];
 $reason = $_POST['reason'] ?? NULL;
 
 // Получаем данные мероприятия
-$query = "SELECT title, email, event_date FROM events WHERE event_id = $1 AND is_approved = false;";
+$query = "SELECT * FROM events WHERE event_id = $1 AND is_approved = false;";
 $result = pg_query_params($conn, $query, [$eventId]);
 
 if (!$result || pg_num_rows($result) === 0) {
@@ -33,6 +33,15 @@ $eventTitle = $event['title'];
 $organizerEmail = $event['email'];
 $eventDate = $event['event_date'];
 
+// Получаем email всех зарегистрированных участников
+$participantsQuery = "SELECT u.email FROM users u
+       JOIN user_events ue ON u.user_id = ue.user_id
+       WHERE ue.event_id = $1";
+$participantsResult = pg_query_params($conn, $participantsQuery, [$eventId]);
+$participantsEmails = [];
+while ($participant = pg_fetch_assoc($participantsResult)) {
+    $participantsEmails[] = $participant['email'];
+}
 $mail = new PHPMailer(true);
 try {
     $mail->isSMTP();
@@ -49,73 +58,81 @@ try {
 
     if ($action === 'approve') {
         pg_query_params($conn, "UPDATE events SET is_active = true, is_approved = true, reason_for_refusal = NULL, is_repeated = false WHERE event_id = $1;", [$eventId]);
-        $mail->Subject = 'Ваше мероприятие одобрено';
+        $mail->clearAddresses();
+        $mail->addAddress($organizerEmail);
+        $mail->Subject = 'Уведомление об одобрении мероприятия';
 
         // HTML-тело письма
         $mail->Body = "
-    <html>
-    <head>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                line-height: 1.6;
-                color: #333;
-            }
-            .container {
-                max-width: 600px;
-                margin: 0 auto;
-                padding: 20px;
-                border: 1px solid #ddd;
-                border-radius: 10px;
-                background-color: #f9f9f9;
-            }
-            h1 {
-                color: #4CAF50;
-                font-size: 24px;
-                margin-bottom: 20px;
-            }
-            p {
-                margin: 10px 0;
-            }
-            .footer {
-                margin-top: 20px;
-                font-size: 12px;
-                color: #777;
-            }
-        </style>
-    </head>
-    <body>
-        <div class='container'>
-            <h1>Ваше мероприятие одобрено</h1>
+            <h1>Подтверждение одобрения мероприятия</h1>
             <p>Уважаемый организатор,</p>
-            <p>Мы рады сообщить, что ваше мероприятие <b>\"{$eventTitle}\"</b> было успешно одобрено.</p>
-            <p><b>Дата мероприятия:</b> {$eventDate}</p>
-            <p>Благодарим вас за ваш вклад и желаем успешного проведения мероприятия!</p>
-            <div class='footer'>
-                <p>С уважением,<br>Команда MEET</p>
-            </div>
-        </div>
-    </body>
-    </html>
-";
+            <p>Ваше мероприятие <strong>\"{$eventTitle}\"</strong> успешно одобрено.</p>
+            <p><strong>Дата проведения:</strong> {$eventDate}</p>
+            <p>Благодарим вас за ваш вклад в развитие сообщества и желаем успешного проведения мероприятия!</p>
+            <p>С уважением,</p>
+            <p>Команда MEET</p>
+        ";
 
-        // Альтернативное текстовое тело для клиентов, которые не поддерживают HTML
+        // Альтернативное текстовое тело для почтовых клиентов без поддержки HTML
         $mail->AltBody = "Уважаемый организатор,\n\n"
-            . "Мы рады сообщить, что ваше мероприятие \"{$eventTitle}\" было успешно одобрено.\n"
-            . "Дата мероприятия: {$eventDate}\n\n"
-            . "Благодарим вас за ваш вклад и желаем успешного проведения мероприятия!\n\n"
+            . "Ваше мероприятие \"{$eventTitle}\" успешно одобрено.\n"
+            . "Дата проведения: {$eventDate}\n\n"
+            . "Благодарим вас за ваш вклад в развитие сообщества и желаем успешного проведения мероприятия!\n\n"
             . "С уважением,\nКоманда MEET";
 
+        $mail->send();
         echo json_encode(['success' => true, 'message' => "Мероприятие \"$eventTitle\" одобрено."]);
+
+        // Уведомление участникам без указания причины
+        foreach ($participantsEmails as $participantEmail) {
+            $mail->clearAddresses();
+            $mail->addAddress($participantEmail);
+            $mail->Subject = 'Уведомление о доступном мероприятии';
+
+            // HTML-тело письма
+            $mail->Body = "
+                <h1>Уведомление о доступном мероприятии</h1>
+                <p>Уважаемый участник,</p>
+                <p>С радостью сообщаем вам, что мероприятие <strong>\"{$eventTitle}\"</strong>, которое ранее было отменено, снова доступно. Вы по-прежнему записаны на него. В случае необходимости отмены записи, вы можете сделать это в личном кабинете.</p>
+                <p><strong>Дата мероприятия:</strong> {$eventDate}</p>
+                <p>Если у вас возникнут вопросы, пожалуйста, не стесняйтесь связаться с нашей командой.</p>
+                <p>С уважением,</p>
+                <p>Команда MEET</p>
+            ";
+
+            // Альтернативное текстовое тело для почтовых клиентов без поддержки HTML
+            $mail->AltBody = "Уважаемый участник,\n\n"
+                . "С радостью сообщаем вам, что мероприятие \"{$eventTitle}\", которое ранее было отменено, снова доступно. Вы по-прежнему записаны на него. В случае необходимости отмены записи, вы можете сделать это в личном кабинете.\n\n"
+                . "Дата мероприятия: {$eventDate}\n\n"
+                . "Если у вас возникнут вопросы, пожалуйста, не стесняйтесь связаться с нашей командой.\n\n"
+                . "С уважением,\nКоманда MEET";
+            $mail->send();
+        }
     } elseif ($action === 'reject') {
         pg_query_params($conn, "UPDATE events SET is_active = false, is_approved = true, reason_for_refusal = $1, is_repeated = false  WHERE event_id = $2;", [$reason, $eventId]);
 
-        $mail->Subject = "Мероприятие отклонено";
-        $mail->Body = "Ваше мероприятие <b>\"$eventTitle\"</b> было отклонено. Причина: <b>$reason</b>.";
+        $mail->Subject = "Уведомление об отклонении мероприятия";
+
+        // HTML-тело письма
+        $mail->Body = "
+            <h1>Ваше мероприятие отклонено</h1>
+            <p>Уважаемый организатор,</p>
+            <p>К сожалению, ваше мероприятие <strong>\"{$eventTitle}\"</strong> было отклонено.</p>
+            <p><strong>Причина:</strong> {$reason}</p>
+            <p>Если у вас есть вопросы, пожалуйста, свяжитесь с администрацией.</p>
+            <p>С уважением,</p>
+            <p>Команда MEET</p>
+        ";
+
+        // Альтернативное текстовое тело для почтовых клиентов без поддержки HTML
+        $mail->AltBody = "Уважаемый организатор,\n\n"
+            . "К сожалению, ваше мероприятие \"{$eventTitle}\" было отклонено.\n"
+            . "Причина: {$reason}\n\n"
+            . "Если у вас есть вопросы, пожалуйста, свяжитесь с администрацией.\n\n"
+            . "С уважением,\nКоманда MEET";
+        $mail->send();
         echo json_encode(['success' => true, 'message' => "Мероприятие \"$eventTitle\" отклонено."]);
     }
-
-    $mail->send();
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => "Ошибка при отправке письма: {$mail->ErrorInfo}"]);
 }

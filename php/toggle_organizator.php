@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Получаем email организатора
-    $emailQuery = "SELECT email FROM organizators WHERE organizator_id = $1";
+    $emailQuery = "SELECT * FROM organizators WHERE organizator_id = $1";
     $emailResult = pg_query_params($conn, $emailQuery, [$organizatorId]);
     $userData = pg_fetch_assoc($emailResult);
     $userEmail = $userData['email'] ?? null;
@@ -55,14 +55,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = pg_query_params($conn, $query, [$organizatorId]);
 
             if ($result) {
-                $mail->Subject = 'Вы стали организатором';
-                $mail->Body    = '<b>Поздравляем! Вам предоставлены права организатора.</b>';
-                $mail->AltBody = 'Поздравляем! Вам предоставлены права организатора.';
+                $mail->Subject = 'Уведомление о статусе';
+                $mail->Body = "
+                    <h1>Поздравляем!</h1>
+                    <p>Уважаемый организатор,</p>
+                    <p>Мы рады сообщить вам, что <strong>\"{$userData['name']}\"</strong> были предоставлены права организатора на платформе <strong>MEET</strong>.</p>
+                    <p>Теперь у вас есть возможность создавать и управлять мероприятиями.</p>
+                    <p>Если у вас возникнут вопросы, пожалуйста, свяжитесь с нашей командой.</p>
+                    <p>С уважением,</p>
+                    <p>Команда MEET</p>
+                ";
+
+                $mail->AltBody = "Уважаемый организатор,\n\n"
+                    . "Мы рады сообщить вам, что вам были предоставлены права организатора на платформе MEET.\n"
+                    . "Теперь у вас есть возможность создавать и управлять мероприятиями.\n\n"
+                    . "Если у вас возникнут вопросы, пожалуйста, свяжитесь с нашей командой.\n\n"
+                    . "С уважением,\nКоманда MEET.";
                 $response['message'] = 'Организатор одобрен, уведомление отправлено';
             } else {
                 $response['message'] = 'Ошибка при обновлении БД';
             }
-
         } elseif ($action === 'cancel') {
             // Отмена статуса организатора
             $query = "UPDATE organizators SET is_organizator = FALSE WHERE organizator_id = $1";
@@ -70,9 +82,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = pg_query_params($conn, $query, [$organizatorId]);
 
             if ($result) {
-                $mail->Subject = 'Ваш статус организатора снят';
-                $mail->Body    = "<b>Ваш статус организатора был снят.</b><br>Причина: $reason";
-                $mail->AltBody = "Ваш статус организатора был снят. Причина: $reason";
+                $mail->Subject = 'Уведомление о снятии статуса';
+                $mail->Body = "
+                    <h1>Уведомление об изменении статуса</h1>
+                    <p>Уважаемый организатор,</p>
+                    <p>Мы вынуждены сообщить вам, что ваш статус организатора <strong>\"{$userData['name']}\"</strong> на платформе <strong>MEET</strong> был снят.</p>
+                    <p><strong>Причина:</strong> {$reason}</p>
+                    <p>Если у вас возникли вопросы или вы хотите уточнить детали, пожалуйста, свяжитесь с нашей командой.</p>
+                    <p>С уважением,</p>
+                    <p>Команда MEET</p>
+                ";
+
+                $mail->AltBody = "Уважаемый организатор,\n\n"
+                    . "Мы вынуждены сообщить вам, что ваш статус организатора на платформе MEET был снят.\n\n"
+                    . "Причина: {$reason}\n\n"
+                    . "Если у вас возникли вопросы или вы хотите уточнить детали, пожалуйста, свяжитесь с нашей командой.\n\n"
+                    . "С уважением,\nКоманда MEET";
                 $response['message'] = 'Статус снят, уведомление отправлено';
             } else {
                 $response['message'] = 'Ошибка при обновлении БД';
