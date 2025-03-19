@@ -46,12 +46,12 @@
                     $query = "SELECT * FROM organizators WHERE is_approved = false;";
                     $result = pg_query($conn, $query);
 
-                    if ($result) {
+                    if ($result && pg_num_rows($result) > 0) {
                         while ($row = pg_fetch_assoc($result)) {
                             require './php/card_request.php';
                         }
                     } else {
-                        echo "Ошибка при получении данных: " . pg_last_error();
+                        echo "<p style='text-align:center;'>Нет заявок на рассмотрение.</p>";
                     }
                     ?>
                 </div>

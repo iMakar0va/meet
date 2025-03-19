@@ -31,7 +31,7 @@ $(document).ready(function () {
         let isValid = true;
         let errorMessage = "";
         const errorBlock = document.getElementById('error');
-        const dateEvent = document.getElementById('birth_date');
+        const birthDate = document.getElementById('birth_date');
 
         const oldPassword = document.getElementById('old_password');
         const newPassword = document.getElementById('new_password');
@@ -87,36 +87,44 @@ $(document).ready(function () {
                 errorMessage += 'Пароль должен содержать хотя бы один специальный символ.\n';
             }
         }
+        // Проверка возраста
+        const CURRENT_DATE = new Date(); // Получаем текущую дату
+        if (birthDate.value.trim()) {
+            const [day, month, year] = birthDate.value.split('/').map(Number); // Разбираем строку в день, месяц, год
+            const birthDateValue = new Date(year, month - 1, day); // Создаем объект Date с правильным форматом
 
-        // Проверка формата даты ДД/ММ/ГГГГ
-        const datePattern = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
-        if (dateEvent.value.trim() && !datePattern.test(dateEvent.value)) {
-            isValid = false;
-            dateEvent.classList.add('error-border');
-            errorMessage += 'Пожалуйста, укажите дату в формате ДД/ММ/ГГГГ.\n';
-        } else {
             // Проверка существования даты
-            const [day, month, year] = dateEvent.value.split('/').map(Number);
-            const eventDate = new Date(year, month - 1, day);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0); // Обнуляем время для корректного сравнения
-
             if (
-                eventDate.getFullYear() !== year ||
-                eventDate.getMonth() !== month - 1 ||
-                eventDate.getDate() !== day
+                birthDateValue.getFullYear() !== year ||
+                birthDateValue.getMonth() !== month - 1 ||
+                birthDateValue.getDate() !== day
             ) {
                 isValid = false;
-                dateEvent.classList.add('error-border');
+                birthDate.classList.add('error-border');
                 errorMessage += 'Некорректная дата. Такой даты не существует.\n';
-            } else if (eventDate > today) {
+            } else if (birthDateValue > CURRENT_DATE) {
                 isValid = false;
-                dateEvent.classList.add('error-border');
+                birthDate.classList.add('error-border');
                 errorMessage += 'Дата рождения должна быть раньше сегодняшнего дня.\n';
+            } else {
+                // Вычисление возраста
+                let age = CURRENT_DATE.getFullYear() - birthDateValue.getFullYear();
+                const monthDiff = CURRENT_DATE.getMonth() - birthDateValue.getMonth();
+
+                // Если месяц меньше или равно, но день больше
+                if (monthDiff < 0 || (monthDiff === 0 && CURRENT_DATE.getDate() < birthDateValue.getDate())) {
+                    age--; // Если еще не достиг дня рождения в этом году
+                }
+
+                // Проверка на возраст
+                if (age < 18) {
+                    isValid = false;
+                    birthDate.classList.add('error-border');
+                    errorMessage += 'Пользователи младше 18 лет не доступны.\n';
+                }
             }
         }
 
-        // Вывод ошибок
         if (!isValid) {
             errorBlock.innerHTML = errorMessage.trim().replace(/\n/g, '<br>');
             errorBlock.style.display = 'block';

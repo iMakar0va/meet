@@ -13,8 +13,8 @@
             </div>
             <!-- /footer__block -->
             <div class="footer__block">
-                <a href="#!">Пользовательское соглашение</a><br><br>
-                <a href="#!">Политика обработки персональных данных</a>
+                <a href="document/polsoglacie.docx" >Пользовательское соглашение</a><br><br>
+                <a href="document/policydoc.docx" download>Политика обработки персональных данных</a>
             </div>
             <!-- /footer__block -->
         </div>

@@ -31,14 +31,16 @@ $totalPages = ceil($totalRows / $limit);
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/media/media_general.css">
     <link rel="stylesheet" href="styles/lk.css">
     <link rel="stylesheet" href="styles/events.css">
+    <link rel="stylesheet" href="styles/media/media_general.css">
     <title>Организаторы</title>
 </head>
+
 <body>
     <div class="container">
         <div class="search-form">
@@ -80,10 +82,11 @@ $totalPages = ceil($totalRows / $limit);
 
     <script>
         document.getElementById('resetButton').addEventListener('click', function() {
-            window.location.href = 'organizers.php';
+            window.location.href = 'organizators.php';
         });
     </script>
 </body>
+
 </html>
 
 <?php pg_close($conn); ?>

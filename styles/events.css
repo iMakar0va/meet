@@ -15,8 +15,9 @@ input,
 select {
     padding: 7px 10px;
     border-radius: 5px;
-    background-color: var(--white-color);
+    /* background-color: var(--white-color); */
     color: var(--black-color);
+    border: 3px solid #02494C;
 }
 
 form img {
@@ -25,6 +26,10 @@ form img {
 
 input {
     width: 210px;
+}
+
+#organizerSearchForm input {
+    width: 90%;
 }
 
 input[type="date"] {

@@ -70,6 +70,7 @@ document.getElementById('regForm').addEventListener('submit', function (e) {
     const password = document.getElementById('password_reg');
     const repeatPassword = document.getElementById('repeat_password');
     const birthDate = document.getElementById('birthDateInput');
+    const termsCheckbox = document.getElementById('terms'); // Чекбокс для соглашения
     const errorBlock = document.getElementById('error');
     let isValid = true;
     let errorMessage = "";
@@ -89,6 +90,12 @@ document.getElementById('regForm').addEventListener('submit', function (e) {
             errorMessage += `Поле "${input.placeholder || input.name}" не должно быть пустым.\n`;
         }
     });
+
+    // Проверка на наличие согласия с пользовательским соглашением
+    if (!termsCheckbox.checked) {
+        isValid = false;
+        errorMessage += 'Вы должны согласиться с пользовательским соглашением.\n';
+    }
 
     // Проверка email
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -139,6 +146,25 @@ document.getElementById('regForm').addEventListener('submit', function (e) {
         isValid = false;
         birthDate.classList.add('error-border');
         errorMessage += 'Пожалуйста, укажите дату в формате ДД/ММ/ГГГГ.\n';
+    }
+
+    // Проверка возраста
+    const CURRENT_DATE = new Date(); // Получаем текущую дату
+    if (birthDate.value.trim()) {
+        const birthDateValue = new Date(birthDate.value); // Преобразуем введенную дату в объект Date
+        let age = CURRENT_DATE.getFullYear() - birthDateValue.getFullYear();
+        const monthDiff = CURRENT_DATE.getMonth() - birthDateValue.getMonth();
+
+        // Проверяем, если месяц меньше или равно, но день больше
+        if (monthDiff < 0 || (monthDiff === 0 && CURRENT_DATE.getDate() < birthDateValue.getDate())) {
+            age--; // Если еще не достиг дня рождения в этом году
+        }
+
+        if (age < 18) {
+            isValid = false;
+            birthDate.classList.add('error-border');
+            errorMessage += 'Пользователи младше 18 лет не доступны.\n';
+        }
     }
 
     if (!isValid) {

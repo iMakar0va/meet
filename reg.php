@@ -72,6 +72,11 @@
                         required
                         id="birthDateInput">
                 </div>
+                <!-- Чекбокс для согласия с пользовательским соглашением -->
+                <div class="checkbox-container">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms" class="terms-label">Я согласен с <a href="document/polsoglacie.docx" style="color: #FADD84;">Пользовательским соглашением</a> *</label>
+                </div>
                 <div class="">*-поля для обязательного заполения</div>
                 <div id="error" class="error title2" style="display: none;">Пользователь с такой почтой уже зарегистрирован!</div>
                 <button class="btn1 title2" type="submit">Зарегистрироваться</button>

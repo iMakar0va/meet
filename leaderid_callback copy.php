@@ -70,33 +70,29 @@ if ($link_data_response === FALSE) {
 
 $link_data = json_decode($link_data_response, true);
 error_log("Ответ от /users/link-app: " . json_encode($link_data));
+die("Ответ от /users/link-app: " . json_encode($link_data));
+$leader_id = null;
 
-$leader_id = $token_data['user_id'] ?? null;
+if (!empty($link_data['items']) && isset($link_data['items'][0]['id'])) {
+    // Если есть профили, берем первый ID
+    $leader_id = $link_data['items'][0]['id'];
+    error_log("Получен leader_id из профилей: $leader_id");
+} elseif (isset($link_data['id'])) {
+    // Если нет профилей, но есть просто id
+    $leader_id = $link_data['id'];
+    error_log("Получен leader_id напрямую: $leader_id");
+} elseif (preg_match('/\[(\d+)\]/', json_encode($link_data), $matches)) {
+    // Если ID пришел как [6749818] в ответе
+    $leader_id = $matches[1];
+    error_log("Получен leader_id из текста ошибки: $leader_id");
+} else {
+    error_log("Ошибка: нет профилей и leader_id?" . $leader_id);
+    die("Ошибка: нет профилей и отсутствует leader_id!" . $leader_id);
+}
 
 if (!$leader_id) {
     die("Ошибка: не удалось получить leader_id.");
 }
-
-// Проверяем, есть ли $leader_id в списке items
-$allowed = false;
-
-// Если API вернул просто массив ID без ключа "items"
-if (is_array($link_data) && in_array($leader_id, $link_data)) {
-    $allowed = true;
-}
-
-// // Если API вернул массив с ключом "items"
-// if (isset($link_data['items']) && is_array($link_data['items']) && in_array($leader_id, $link_data['items'])) {
-//     $allowed = true;
-// }
-
-if (!$allowed) {
-    error_log("Ошибка: leader_id $leader_id отсутствует в списке разрешенных.");
-    die("Ошибка: у вас нет доступа! " . $leader_id . " - " . json_encode($link_data));
-}
-
-error_log("Успешная проверка: leader_id $leader_id найден в списке разрешенных.");
-
 
 // --- Получаем данные пользователя по leader_id ---
 $user_data_url = "https://apps.leader-id.ru/api/v1/users/$leader_id";
@@ -195,8 +191,8 @@ if ($user_check_result && pg_num_rows($user_check_result) > 0) {
     $mail->Port = 465;
     $mail->CharSet = 'UTF-8';
     $mail->setFrom($variables['smtp_username'], 'MEET');
-    // $mail->addAddress($variables['smtp_username']);
-    $mail->addAddress($user_email);
+    $mail->addAddress($variables['smtp_username']);
+    // $mail->addAddress($user_email);
     $mail->Subject = 'Данные для входа в систему MEET';
 
     $mail->Body = "

@@ -93,11 +93,24 @@ if ($userDataResult) {
     $profileImageSrc = !empty($user["image"]) ? "data:image/jpeg;base64," . base64_encode(pg_unescape_bytea($user["image"])) : "img/profile.jpg";
 ?>
     <div class="lk__profile-top">
+        <div id="qrcode"></div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // let qrText = "<?php echo htmlspecialchars($userId, ENT_QUOTES, 'UTF-8'); ?>"; // Тут передавать user_id
+                let qrText = "<?php echo htmlspecialchars($user["email"], ENT_QUOTES, 'UTF-8'); ?>"; // Тут передавать user_id
+                new QRCode(document.getElementById("qrcode"), {
+                    text: qrText,
+                    width: 128,
+                    height: 128
+                });
+            });
+        </script>
         <div class="lk__profile-img">
             <img src="<?= $profileImageSrc ?>" alt="Профильное изображение">
         </div>
-        <div>
-            <a class="title2" href="changeUser.php?user_id=<?= $user['user_id'] ?>">
+        <div class="lk-a">
+            <a class="title2 setting" href="changeUser.php?user_id=<?= $user['user_id'] ?>">
                 <img src="img/icons/setting.svg" alt="setting">Редактировать профиль
             </a>
             <!-- <div class="title2 setting" id="editProfileButton" onclick="toggleForms('lkSetting')">
@@ -177,7 +190,7 @@ if ($organizerData) {
 } else { ?>
     <div class="title1">Хочешь стать организатором?</div>
     <div class="title2">
-    Хочешь не просто участвовать, а создавать собственные мероприятия? Воплоти свои идеи в жизнь — стань организатором и собери единомышленников!
+        Хочешь не просто участвовать, а создавать собственные мероприятия? Воплоти свои идеи в жизнь — стань организатором и собери единомышленников!
     </div>
     <button class="btn1"><a href="./request.php">Стать организатором</a></button>
 <?php } ?>
