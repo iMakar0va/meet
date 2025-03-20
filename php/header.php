@@ -22,6 +22,8 @@
                     <a href="#!" onclick="logout()"><img src="img/icons/exit.svg" alt="exit"></a>
                 <?php
                 }
+                // session_unset();
+                // session_destroy();
                 ?>
             </div>
             <!-- header__icons -->

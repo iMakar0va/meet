@@ -70,6 +70,7 @@
             renderMenuItemsWithCount('Организатор', [
                 'futureEvent_organizer.php' => 'События на одобрении',
                 'nowEventActive_organizer.php' => 'Предстоящие события',
+                'scanEvent_organizer.php' => 'Сканирование событий',
                 'pastEvent_organizer.php' => 'История',
                 'createEvent.php' => 'Создать мероприятие'
             ], [

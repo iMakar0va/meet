@@ -97,8 +97,8 @@ if ($userDataResult) {
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-                // let qrText = "<?php echo htmlspecialchars($userId, ENT_QUOTES, 'UTF-8'); ?>"; // Тут передавать user_id
-                let qrText = "<?php echo htmlspecialchars($user["email"], ENT_QUOTES, 'UTF-8'); ?>"; // Тут передавать user_id
+                let qrText = "<?php echo htmlspecialchars($userId, ENT_QUOTES, 'UTF-8'); ?>"; // Тут передавать user_id
+                // let qrText = "<?php echo htmlspecialchars($user["email"], ENT_QUOTES, 'UTF-8'); ?>"; // Тут передавать user_id
                 new QRCode(document.getElementById("qrcode"), {
                     text: qrText,
                     width: 128,
