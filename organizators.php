@@ -38,6 +38,7 @@ $totalPages = ceil($totalRows / $limit);
     <link rel="stylesheet" href="styles/lk.css">
     <link rel="stylesheet" href="styles/events.css">
     <link rel="stylesheet" href="styles/media/media_general.css">
+    <link rel="stylesheet" href="styles/media/media_organizators.css">
     <title>Организаторы</title>
 </head>
 

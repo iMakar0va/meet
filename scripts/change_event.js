@@ -190,7 +190,3 @@ function removeFilesItem(target) {
 
     $('#removeImageField').val('1');
 }
-// Кнопка Отмена
-document.getElementById('cancelBtn').addEventListener('click', function () {
-    window.location.href = 'nowEventActive_organizer.php'; // Замени 'lk.php' на нужную страницу
-});

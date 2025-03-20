@@ -13,7 +13,7 @@
 
 <body>
     <?php
-    // session_start();
+    session_start();
     require './php/header.php';
     require './php/conn.php';
     ?>
@@ -157,7 +157,7 @@
                     <div class="faq-answer">Став организатором, вы сможете создавать мероприятия прямо в личном кабинете. Просто выберите "Создать мероприятие" в меню и заполните все необходимые данные. Учтите, что перед публикацией каждое мероприятие проходит проверку администратора.</div>
                 </div>
                 <div class="faq-item">
-                    <div class="faq-question">Как изменить данные организатора или мероприятия? <span class="faq-icon">+</span></div>
+                    <div class="faq-question">Как изменить данные организатора? <span class="faq-icon">+</span></div>
                     <div class="faq-answer">Редактирование данных организатора доступно только администратору. Если вам необходимо внести изменения, свяжитесь с нами по электронной почте: <b>eno7i@yandex.com</b> .</div>
                 </div>
                 <div class="faq-item">

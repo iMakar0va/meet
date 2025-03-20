@@ -94,28 +94,13 @@ if ($userDataResult) {
 ?>
     <div class="lk__profile-top">
         <div id="qrcode"></div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                let qrText = "<?php echo htmlspecialchars($userId, ENT_QUOTES, 'UTF-8'); ?>"; // Тут передавать user_id
-                // let qrText = "<?php echo htmlspecialchars($user["email"], ENT_QUOTES, 'UTF-8'); ?>"; // Тут передавать user_id
-                new QRCode(document.getElementById("qrcode"), {
-                    text: qrText,
-                    width: 128,
-                    height: 128
-                });
-            });
-        </script>
-        <div class="lk__profile-img">
+        <!-- <div class="lk__profile-img">
             <img src="<?= $profileImageSrc ?>" alt="Профильное изображение">
-        </div>
+        </div> -->
         <div class="lk-a">
             <a class="title2 setting" href="changeUser.php?user_id=<?= $user['user_id'] ?>">
                 <img src="img/icons/setting.svg" alt="setting">Редактировать профиль
             </a>
-            <!-- <div class="title2 setting" id="editProfileButton" onclick="toggleForms('lkSetting')">
-                <img src="img/icons/setting.svg" alt="setting">Редактировать профиль
-            </div> -->
             <div class="title0" style="margin-top: 15px;"><?= $user["last_name"] . " " . $user["first_name"] ?></div>
         </div>
     </div>

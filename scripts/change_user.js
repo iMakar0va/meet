@@ -188,7 +188,3 @@ function removeFilesItem(target) {
 
     $('#removeImageField').val('1');
 }
-// Кнопка Отмена
-document.getElementById('cancelBtn').addEventListener('click', function () {
-    window.location.href = 'listUser_admin.php'; // Замени 'lk.php' на нужную страницу
-});

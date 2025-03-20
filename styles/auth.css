@@ -119,6 +119,7 @@ form button {
     border: 3px solid var(--white-color);
     border-radius: 10px;
     user-select: none;
+    background-color: #699496b3;
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
@@ -206,4 +207,44 @@ input[type="password"] {
 
 form.show-passwords input[type="password"] {
     -webkit-text-security: none;
+}
+
+/* Checkbox */
+.checkbox-container input[type="checkbox"] {
+    appearance: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 7px;
+    background-color: white;
+    cursor: pointer;
+    /* position: relative;
+    vertical-align: middle;
+    display: inline-block; */
+}
+
+.checkbox-container input[type="checkbox"]:checked {
+    background-color: var(--light-green-color);
+}
+
+.checkbox-container input[type="checkbox"]::before {
+    content: "✔";
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 22px;
+    padding: 5px;
+    /* display: none; */
+}
+
+.checkbox-container input[type="checkbox"]:checked::before {
+    display: block;
+}
+.checkbox-container label{
+    font-size: 18px;
+}
+.checkbox-container{
+    display: flex;
+    align-items: center;
+    gap: 7px;
 }

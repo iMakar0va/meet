@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/lk.css">
     <link rel="stylesheet" href="styles/auth.css">
+    <link rel="stylesheet" href="styles/lk.css">
+
     <link rel="stylesheet" href="styles/media/media_auth.css">
     <link rel="stylesheet" href="styles/media/media_lk.css">
     <title>Личный кабинет</title>
@@ -31,7 +32,6 @@
                 <?php require 'php/lk/lk_profile.php'; ?>
             </div>
             <!-- /lk__profile -->
-            <?php require 'php/lk/lk_setting.php'; ?>
         </div>
         <!-- /lk -->
         <?php
@@ -47,7 +47,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="scripts/lk_script.js"></script>
-    <script>
+    <!-- <script>
         // отображение/удаление фото профиля
         var dt = new DataTransfer();
 
@@ -81,6 +81,18 @@
 
             $('#removeImageField').val('1');
         }
+    </script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let qrText = "<?php echo htmlspecialchars($userId, ENT_QUOTES, 'UTF-8'); ?>"; // Тут передавать user_id
+            // let qrText = "<?php echo htmlspecialchars($user["email"], ENT_QUOTES, 'UTF-8'); ?>"; // Тут передавать user_id
+            new QRCode(document.getElementById("qrcode"), {
+                text: qrText,
+                width: 128,
+                height: 128
+            });
+        });
     </script>
 </body>
 

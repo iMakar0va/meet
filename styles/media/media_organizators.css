@@ -1,0 +1,6 @@
+@import url(media_general.css);
+@media (max-width: 700px) {
+    .cards .card_organizator {
+        width: 100%;
+    }
+}

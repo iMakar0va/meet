@@ -1,0 +1,23 @@
+@import url(media_general.css);
+@media (max-width: 960px) {
+    .search-form form {
+        flex-wrap: wrap;
+    }
+
+    .card {
+        width: 45%;
+    }
+}
+
+@media (max-width: 626px) {
+    .search-form form {
+        flex-wrap: wrap;
+        /* flex-direction: column; */
+    }
+}
+
+@media (max-width: 610px) {
+    .card {
+        width: 100%;
+    }
+}

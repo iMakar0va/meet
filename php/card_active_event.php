@@ -47,7 +47,6 @@ $imageSrc = !empty($row["image"])
             <button onclick="showComment(<?= $row['event_id'] ?>)" class="btn1">Посмотреть комментарий</button>
         <?php }
         ?>
-        <!-- <a href="php/generate_report_users.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Скачать данные</a> -->
     </div>
 
 </div>

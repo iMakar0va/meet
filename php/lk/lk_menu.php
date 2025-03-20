@@ -1,4 +1,9 @@
+<!-- Бургер-кнопка -->
+<div class="burger-menu" onclick="toggleMenu()">
+    <img src="img/icons/nav-open.svg" alt="open"> Меню личного кабинета
+</div>
 <div class="lk__menu">
+    <span class="close-menu" onclick="toggleMenu()">✖</span>
     <?php
     // Получение данных пользователя о статусе
     $userId = $_SESSION['user_id'];
@@ -99,10 +104,15 @@
         ]);
     }
     ?>
-
     <!-- Выход и удаление аккаунта -->
     <div class="lk__menu-footer">
         <a href="#!" onclick="logout()" class="title2 lk__menu-title">Выйти<img src="img/icons/exit.svg" alt="exit"></a>
     </div>
 </div>
 <!-- /lk__menu -->
+<script>
+    function toggleMenu() {
+        let menu = document.querySelector(".lk__menu");
+        menu.classList.toggle("active");
+    }
+</script>

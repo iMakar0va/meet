@@ -32,11 +32,30 @@
     }
 
     .info__block {
-        width: 450px;
+        /* width: 450px; */
+        width: 100%;
     }
 
     .h2 {
         margin: 20px 0;
+    }
+
+    .creation img {
+        display: none;
+    }
+}
+
+@media (max-width: 850px) {
+    .faq-container {
+        flex-direction: column;
+    }
+
+    .faq-title {
+        width: 100%;
+    }
+
+    .faq-content {
+        width: 100%;
     }
 }
 
@@ -49,8 +68,8 @@
         margin-bottom: 10px;
     }
 
-    .info__block {
-        width: 350px;
+    .card {
+        width: 100%;
     }
 }
 

@@ -79,27 +79,45 @@ if ($organizer = pg_fetch_assoc($resultOrganizer)) {
     );
 }
 
-// Получение количества участников
+// Получение количества всех участников
 $queryParticipants = "SELECT COUNT(*) FROM user_events WHERE event_id = $1";
 $resultParticipants = pg_query_params($conn, $queryParticipants, [$eventId]);
 $countParticipants = pg_fetch_result($resultParticipants, 0, 0);
 
+// Получение количества посетивших участников
+$queryParticipantsPast = "SELECT COUNT(*) FROM user_events WHERE event_id = $1 and presense = true and is_signed = true";
+$resultParticipantsPast = pg_query_params($conn, $queryParticipantsPast, [$eventId]);
+$countParticipantsPast = pg_fetch_result($resultParticipantsPast, 0, 0);
+
+// Получение количества отмененных участников
+$queryParticipantsCancelled = "SELECT COUNT(*) FROM user_events WHERE event_id = $1 and is_signed = false";
+$resultParticipantsCancelled = pg_query_params($conn, $queryParticipantsCancelled, [$eventId]);
+$countParticipantsCancelled = pg_fetch_result($resultParticipantsCancelled, 0, 0);
+
+// Получение количества непришедших участников
+$queryParticipantsNo = "SELECT COUNT(*) FROM user_events WHERE event_id = $1 and is_signed = true and presense = false";
+$resultParticipantsNo = pg_query_params($conn, $queryParticipantsNo, [$eventId]);
+$countParticipantsNo = pg_fetch_result($resultParticipantsNo, 0, 0);
+
 $html .= '<h3 style="text-align: center;">Статистика участников</h3>';
-$html .= "<p><b>Количество участников:</b> $countParticipants человек(а)</p>";
+$html .= "<p><b>Количество записанных участников на мероприятие:</b> $countParticipants человек(а)</p>";
+$html .= "<p><b>Количество посетивших участников мероприятие:</b> $countParticipantsPast человек(а)</p>";
+$html .= "<p><b>Количество участников непрешедших на мероприятие:</b> $countParticipantsNo человек(а)</p>";
+$html .= "<p><b>Количество участников передумавших идти:</b> $countParticipantsCancelled человек(а)</p>";
 
 // Если участники есть, получаем гендерное и возрастное распределение
-if ($countParticipants > 0) {
+if ($countParticipantsPast > 0) {
     // Гендерное распределение
     $queryGender = "SELECT gender, COUNT(*) * 100.0 / $1 AS percentage
                     FROM users u
                     JOIN user_events ue ON ue.user_id = u.user_id
-                    WHERE ue.event_id = $2
+                    WHERE ue.event_id = $2 and presense = true and is_signed = true
                     GROUP BY gender";
 
-    $resultGender = pg_query_params($conn, $queryGender, [$countParticipants, $eventId]);
+    $resultGender = pg_query_params($conn, $queryGender, [$countParticipantsPast, $eventId]);
 
     $html .= '<h3 style="text-align: center;">Гендерное распределение</h3>';
-    $html .= '<table border="1" cellpadding="5" cellspacing="0" style="width: 100%; text-align: center;">
+    $html .= '<table border="1" cellpadding="4" cellspacing="0" style="width: 100%; text-align: center;">
         <thead>
             <tr style="background-color:rgb(177, 177, 177);">
                 <th>Пол</th>
@@ -124,7 +142,6 @@ if ($countParticipants > 0) {
 
     // Возрастное распределение
     $ageRanges = [
-        'Младше 18' => '< 18',
         'От 18 до 25' => 'BETWEEN 18 AND 25',
         'От 26 до 45' => 'BETWEEN 26 AND 45',
         'От 46 до 65' => 'BETWEEN 46 AND 65',
@@ -137,10 +154,10 @@ if ($countParticipants > 0) {
         $queryAge = "SELECT COUNT(*) * 100.0 / $1
                  FROM users u
                  JOIN user_events ue ON ue.user_id = u.user_id
-                 WHERE ue.event_id = $2
+                 WHERE ue.event_id = $2 and presense = true and is_signed = true
                  AND EXTRACT(YEAR FROM AGE(CURRENT_DATE, birth_date)) $condition";
 
-        $resultAge = pg_query_params($conn, $queryAge, [$countParticipants, $eventId]);
+        $resultAge = pg_query_params($conn, $queryAge, [$countParticipantsPast, $eventId]);
         $agePercentage = round(pg_fetch_result($resultAge, 0, 0));
 
         $ageData[] = [

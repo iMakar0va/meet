@@ -13,27 +13,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    $stmt = pg_prepare($conn, "check_registration", "SELECT EXISTS(SELECT 1 FROM user_events WHERE user_id = $1 AND event_id = $2);");
-    $resultCheckRegistration = pg_execute($conn, "check_registration", [$userId, $eventId]);
-    $isRegistered = pg_fetch_result($resultCheckRegistration, 0) === 't';
+    // Проверяем, есть ли запись о пользователе на мероприятии
+    $stmtCheck = pg_prepare(
+        $conn,
+        "check_registration",
+        "SELECT is_signed FROM user_events WHERE user_id = $1 AND event_id = $2;"
+    );
+    $resultCheck = pg_execute($conn, "check_registration", [$userId, $eventId]);
+    $row = pg_fetch_assoc($resultCheck);
 
-    if ($isRegistered) {
-        $stmt = pg_prepare($conn, "remove_registration", "DELETE FROM user_events WHERE user_id = $1 AND event_id = $2;");
-        $resultRemoveRegistration = pg_execute($conn, "remove_registration", [$userId, $eventId]);
+    if ($row) {
+        // Если пользователь уже есть в БД
+        if ($row['is_signed'] === 't') {
+            // Если он уже записан, делаем посещение false (отписка)
+            $stmtUpdate = pg_prepare(
+                $conn,
+                "unsubscribe_user",
+                "UPDATE user_events SET is_signed = FALSE WHERE user_id = $1 AND event_id = $2;"
+            );
+            $resultUpdate = pg_execute($conn, "unsubscribe_user", [$userId, $eventId]);
 
-        if ($resultRemoveRegistration) {
-            echo json_encode(['success' => true, 'message' => 'Вы отписались от мероприятия.', 'action' => 'unregistered']);
+            if ($resultUpdate) {
+                echo json_encode(['success' => true, 'message' => 'Вы отписались от мероприятия.', 'action' => 'unregistered']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Ошибка при отмене регистрации.']);
+            }
         } else {
-            echo json_encode(['success' => false, 'message' => 'Произошла ошибка при отмене основания.']);
+            // Если он есть в БД, но не записан, делаем is_signed = TRUE (восстанавливаем регистрацию)
+            $stmtRestore = pg_prepare(
+                $conn,
+                "restore_registration",
+                "UPDATE user_events SET is_signed = TRUE WHERE user_id = $1 AND event_id = $2;"
+            );
+            $resultRestore = pg_execute($conn, "restore_registration", [$userId, $eventId]);
+
+            if ($resultRestore) {
+                echo json_encode(['success' => true, 'message' => 'Вы снова зарегистрированы на мероприятие.', 'action' => 'registered']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Ошибка при восстановлении регистрации.']);
+            }
         }
     } else {
-        $stmt = pg_prepare($conn, "add_registration", "INSERT INTO user_events(user_id, event_id) VALUES($1, $2);");
-        $resultAddRegistration = pg_execute($conn, "add_registration", [$userId, $eventId]);
+        // Если записи нет — создаём новую
+        $stmtInsert = pg_prepare(
+            $conn,
+            "register_user",
+            "INSERT INTO user_events(user_id, event_id, is_signed) VALUES($1, $2, TRUE);"
+        );
+        $resultInsert = pg_execute($conn, "register_user", [$userId, $eventId]);
 
-        if ($resultAddRegistration) {
+        if ($resultInsert) {
             echo json_encode(['success' => true, 'message' => 'Вы успешно зарегистрированы на мероприятие.', 'action' => 'registered']);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Произошла ошибка при основания на мероприятие.']);
+            echo json_encode(['success' => false, 'message' => 'Ошибка при регистрации на мероприятие.']);
         }
     }
 }

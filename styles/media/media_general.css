@@ -1,4 +1,11 @@
 @media (max-width: 800px) {
+    .header__icons img {
+        width: 66px;
+    }
+
+    .logo img {
+        height: 60px;
+    }
 
     .menu,
     .header__icons {
@@ -28,9 +35,11 @@
         background-color: var(--blue-color);
         z-index: 5;
 
-        padding: 100px 30px 30px 30px;
+        padding: 110px 30px 30px 30px;
         display: flex;
         flex-direction: column;
+
+        font-size: 32px;
     }
 
     .nav.open #lk {
@@ -43,7 +52,8 @@
 
     .nav.open .header__icons {
         position: fixed;
-        bottom: 450px;
+        /* bottom: 350px; */
+        top: 400px;
         right: 0;
         left: 0;
 
@@ -62,7 +72,7 @@
     .nav-button {
         position: absolute;
         z-index: 90;
-        top: 27px;
+        top: 22px;
         right: 30px;
     }
 

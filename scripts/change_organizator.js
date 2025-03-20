@@ -108,7 +108,3 @@ $(document).ready(function () {
         });
     });
 });
-// Кнопка Отмена
-document.getElementById('cancelBtn').addEventListener('click', function () {
-    window.location.href = 'listOrganizatorActive_admin.php'; // Замени 'lk.php' на нужную страницу
-});

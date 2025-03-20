@@ -28,7 +28,7 @@
         $resultGetOrganizator = pg_execute($conn, "get_organizer", [$eventId]);
         $resGetOrganizator = pg_fetch_assoc($resultGetOrganizator);
 
-        $countQuery = pg_prepare($conn, "count_people", "SELECT count(*) FROM user_events WHERE event_id = $1;");
+        $countQuery = pg_prepare($conn, "count_people", "SELECT count(*) FROM user_events WHERE event_id = $1 and is_signed = true;");
         $resultCountPeople = pg_execute($conn, "count_people", [$eventId]);
         $countPeople = pg_fetch_result($resultCountPeople, 0, 0);
 
@@ -38,8 +38,8 @@
 
         $isAuthed = isset($_SESSION['user_id']);
         if ($isAuthed) {
-            $userId = $_SESSION['user_id']; // используем $_SESSION для идентификатора пользователя
-            $registrationQuery = pg_prepare($conn, "check_registration", "SELECT EXISTS(SELECT 1 FROM user_events WHERE user_id = $1 AND event_id = $2);");
+            $userId = $_SESSION['user_id'];
+            $registrationQuery = pg_prepare($conn, "check_registration", "SELECT EXISTS(SELECT 1 FROM user_events WHERE user_id = $1 AND event_id = $2 and is_signed = true);");
             $resultCheckRegistration = pg_execute($conn, "check_registration", [$userId, $eventId]);
             $isRegistered = pg_fetch_result($resultCheckRegistration, 0) === 't';
         } else {

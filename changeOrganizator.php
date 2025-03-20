@@ -85,8 +85,10 @@ $dateFormatted = date("d/m/Y", strtotime($organizator['date_start_work']));
                         <textarea class="input textarea title2" id="description" name="description" rows="4" placeholder="Описание деятельности организации"><?= htmlspecialchars($organizator['description']) ?></textarea>
                     </div>
                     <div id="error" class="error title2" style="display: none;"></div>
-                    <button class="btn1 title2" type="submit">Сохранить изменения</button>
-                    <button class="btn1 title2" type="button" id="cancelBtn">Отмена</button>
+                    <div class="btns__lk">
+                        <button class="btn1 title2" type="button" onclick="window.history.back();">Отмена</button>
+                        <button class="btn1 title2" type="submit">Сохранить изменения</button>
+                    </div>
                 </form>
             </div>
             <!-- /lk__profile -->
