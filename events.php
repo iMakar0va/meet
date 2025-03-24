@@ -51,6 +51,8 @@ $totalPages = ceil($totalRows / $limit);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/events.css">
     <link rel="stylesheet" href="styles/media/media_events.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+
     <title>Афиша</title>
 </head>
 
@@ -59,6 +61,7 @@ $totalPages = ceil($totalRows / $limit);
         <div class="search-form">
             <form id="eventSearchForm" method="GET" action="">
                 <input type="text" id="city" name="city" placeholder="Город" autocomplete="off" value="<?= htmlspecialchars($_GET['city'] ?? '') ?>">
+                <input type="date" id="event_date" name="event_date" value="<?= htmlspecialchars($_GET['event_date'] ?? '') ?>">
                 <select id="type" name="type">
                     <option value="" disabled selected hidden>Выберите тип:</option>
                     <?php
@@ -79,7 +82,7 @@ $totalPages = ceil($totalRows / $limit);
                     }
                     ?>
                 </select>
-                <input type="date" id="event_date" name="event_date" value="<?= htmlspecialchars($_GET['event_date'] ?? '') ?>">
+
                 <button type="submit"><img src="./img/icons/search.svg" alt="Найти"></button>
                 <button type="button" id="resetButton"><img src="./img/icons/close.svg" alt="Сбросить"></button>
             </form>
@@ -124,6 +127,14 @@ $totalPages = ceil($totalRows / $limit);
     <script>
         document.getElementById('resetButton').addEventListener('click', function() {
             window.location.href = 'events.php';
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 500, // Длительность анимации в мс
+            easing: 'ease-in-out', // Плавность анимации
+            // once: true // Анимация будет срабатывать только один раз
         });
     </script>
 

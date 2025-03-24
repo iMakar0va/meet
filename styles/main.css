@@ -13,7 +13,7 @@
 
     background-image: url(../img/banner.png);
     background-color: var(--blue-color);
-    border-top: 3px solid var(--white-color);
+
     padding: 50px 0;
 }
 

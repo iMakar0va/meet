@@ -1,4 +1,24 @@
 @media (max-width: 800px) {
+    .title {
+        font-size: 34px;
+    }
+
+    .title0 {
+        font-size: 24px;
+    }
+
+    .title1 {
+        font-size: 20px;
+    }
+
+    .title2 {
+        font-size: 16px;
+    }
+
+    .title3 {
+        font-size: 14px;
+    }
+
     .header__icons img {
         width: 66px;
     }

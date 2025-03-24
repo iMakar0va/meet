@@ -102,7 +102,7 @@
                 </div>
                 <div class="info__number title0">
                     <?php
-                    $getUsers = "select count(*) from events;";
+                    $getUsers = "select count(*) from events where is_active = true and is_approved = true and event_date < CURRENT_DATE;";
                     $resultGetUsers = pg_query($conn, $getUsers);
                     $row = pg_fetch_row($resultGetUsers);
                     $count = $row[0];

@@ -45,4 +45,6 @@
             navBtnImg.src = "img/icons/nav-open.svg";
         }
     }
+
+
 </script>

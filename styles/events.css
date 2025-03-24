@@ -36,6 +36,14 @@ input[type="date"] {
     width: 150px;
 }
 
+#title {
+    width: 60%;
+}
+
+.lk__profile .search-form form {
+    margin: 0;
+}
+
 select {
     width: 300px;
 }

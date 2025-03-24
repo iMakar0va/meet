@@ -20,14 +20,14 @@ function fetchEventStatistics($conn, $userId)
 {
     $upcomingEventsQuery = "SELECT count(*) FROM events e
                             JOIN user_events ue ON ue.event_id = e.event_id
-                            WHERE ue.user_id = $1 AND e.event_date > CURRENT_DATE";
+                            WHERE ue.user_id = $1 AND e.event_date > CURRENT_DATE and ue.is_signed = true";
     $pastEventsQuery = "SELECT count(*) FROM events e
                         JOIN user_events ue ON ue.event_id = e.event_id
-                        WHERE ue.user_id = $1 AND e.event_date < CURRENT_DATE";
+                        WHERE ue.user_id = $1 AND e.event_date < CURRENT_DATE and ue.is_signed = true";
     $popularTopicsQuery = "SELECT e.topic, COUNT(*) AS topic_count
                            FROM user_events ue
                            JOIN events e ON ue.event_id = e.event_id
-                           WHERE ue.user_id = $1
+                           WHERE ue.user_id = $1 and ue.is_signed = true
                            GROUP BY e.topic
                            ORDER BY topic_count DESC
                            LIMIT 3";
