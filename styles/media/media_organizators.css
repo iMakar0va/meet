@@ -3,4 +3,24 @@
     .cards .card_organizator {
         width: 100%;
     }
+
+    .card__blocks {
+        flex-direction: column;
+        /* gap: 10px; */
+    }
+
+    .card__block {
+        width: 100%;
+    }
+
+    section {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 515px) {
+    .links {
+        flex-direction: column;
+        margin-top: -20px;
+    }
 }

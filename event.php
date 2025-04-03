@@ -22,7 +22,7 @@
         $eventQuery = pg_prepare($conn, "get_event", "SELECT * FROM events WHERE event_id = $1;");
         $resultGetEvents = pg_execute($conn, "get_event", [$eventId]);
 
-        $organizerQuery = pg_prepare($conn, "get_organizer", "SELECT o.name, o.email, o.phone_number FROM organizators_events oe
+        $organizerQuery = pg_prepare($conn, "get_organizer", "SELECT o.organizator_id, o.name, o.email, o.phone_number FROM organizators_events oe
                                                               JOIN organizators o ON o.organizator_id = oe.organizator_id
                                                               WHERE oe.event_id = $1;");
         $resultGetOrganizator = pg_execute($conn, "get_organizer", [$eventId]);
@@ -32,7 +32,7 @@
         $resultCountPeople = pg_execute($conn, "count_people", [$eventId]);
         $countPeople = pg_fetch_result($resultCountPeople, 0, 0);
 
-        $checkEventQuery = pg_prepare($conn, "check_event", "SELECT EXISTS (SELECT 1 FROM events WHERE event_id = $1 AND event_date > CURRENT_DATE and is_active=true);");
+        $checkEventQuery = pg_prepare($conn, "check_event", "SELECT EXISTS (SELECT 1 FROM events WHERE event_id = $1 AND event_date >= CURRENT_DATE and is_active=true);");
         $resultCheckEvent = pg_execute($conn, "check_event", [$eventId]);
         $isFutureEvent = pg_fetch_result($resultCheckEvent, 0, 0) === 't';
 
@@ -64,7 +64,7 @@
                     'декабря'
                 ];
                 $dateParts = explode('-', $event['event_date']);
-                $formattedDate = intval($dateParts[2]) . ' ' . $months[intval($dateParts[1])];
+                $formattedDate = intval($dateParts[2]) . ' ' . $months[intval($dateParts[1])] . ' ' . intval($dateParts[0]);
 
                 $imageSrc = !empty($event["image"])
                     ? "data:image/jpeg;base64," . base64_encode(pg_unescape_bytea($event["image"]))
@@ -76,7 +76,7 @@
                             <div class="event__banner-block">
                                 <div class="event-date title0"><?= htmlspecialchars($formattedDate) ?></div>
                                 <div class="event-time title1">
-                                    <?= substr($event['start_time'], 0, 5) . "-" . substr($event['end_time'], 0, 5) ?>
+                                    <?= substr($event['start_time'], 0, 5) . " - " . substr($event['end_time'], 0, 5) ?>
                                 </div>
                                 <div class="event-title title"><?= htmlspecialchars($event['title']) ?></div>
                                 <div class="event-type title1">Тип мероприятия: <?= " " . htmlspecialchars($event['type']) ?></div>
@@ -96,7 +96,8 @@
                                 </div>
                                 <div class="event-organisator">
                                     <div class="_1 title1">Организатор</div>
-                                    <div class="_2 title2"><?= htmlspecialchars($resGetOrganizator['name']) ?></div>
+                                    <!-- <div class="_2 title2"><?= htmlspecialchars($resGetOrganizator['name']) ?></div> -->
+                                    <div class="_2 title2"><a href="organizatorEventNow.php?organizator_id=<?= htmlspecialchars($resGetOrganizator['organizator_id']) ?>"><?= htmlspecialchars($resGetOrganizator['name']) ?></a></div>
                                 </div>
                             </div>
                         </div>

@@ -14,7 +14,7 @@
     --green-color: #02494C;
     --light-green-color: #296163;
     --yellow-color: #f48625;
-    --brown-color: #ff770085;
+    --brown-color: #ff770084;
     --white-color: #f2f2f2;
     --black-color: #2B2C2D;
 }
@@ -85,7 +85,7 @@ p {
 
 .btn1:hover {
     background-color: var(--yellow-color);
-    box-shadow: 0px 0px 13px var(--brown-color);
+    box-shadow: 0px 0px 20px var(--brown-color);
 }
 
 .btn2 {

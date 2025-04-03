@@ -13,11 +13,11 @@ $userIdSession = $_SESSION['user_id'];
 $queryAdmin = "SELECT 1 FROM users WHERE user_id = $1 AND is_admin = true";
 $resultAdmin = pg_query_params($conn, $queryAdmin, [$userIdSession]);
 
-if (!$resultAdmin || pg_num_rows($resultAdmin) == 0) {
-    // Если пользователь не является администратором, перенаправляем на страницу личного кабинета
-    header("Location: lk.php");
-    exit();
-}
+// if (!$resultAdmin || pg_num_rows($resultAdmin) == 0) {
+//     // Если пользователь не является администратором, перенаправляем на страницу личного кабинета
+//     header("Location: lk.php");
+//     exit();
+// }
 if (!isset($_GET['user_id'])) {
     die("Ошибка: пользователь не найден.");
 }

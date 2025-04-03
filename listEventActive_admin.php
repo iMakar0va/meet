@@ -85,24 +85,16 @@
                 </div>
                 <div class="links">
                     <a href="./listEventActive_admin.php" class="active">Активные мероприятия</a>
-                    <a href="./listEventCancelled_admin.php" class="no_active">Отмененные мероприятия</a>
+                    <a href="./listEventCancelled_admin.php" class="no_active">Неактивные мероприятия</a>
                 </div>
-                <?php
-                if (!$resultGetEvents) {
-                        echo "<div class='no-results'>Ошибка при получении данных: " . pg_last_error() . "</div>";
-                    } elseif (pg_num_rows($resultGetEvents) == 0) {
-                        echo "<div class='no-results'><img src='./img/icons/not_found.svg' alt='not found'><div>Мероприятий не найдено</div></div>";
-                    } else {
-                ?>
                 <div class="cards" style="margin-top: 25px;">
                     <?php
-                        if ($resultGetEvents) {
-                            while ($row = pg_fetch_assoc($resultGetEvents)) {
-                                require './php/card_active_event.php';
-                            }
-                        } else {
-                            echo "Ошибка при получении данных: " . pg_last_error();
+                    if ($resultGetEvents && pg_num_rows($resultGetEvents) > 0) {
+                        while ($row = pg_fetch_assoc($resultGetEvents)) {
+                            require './php/card_active_event.php';
                         }
+                    } else {
+                        echo "<p>Мероприятий не найдено</p>";
                     }
                     ?>
                 </div>

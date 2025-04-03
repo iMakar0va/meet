@@ -13,8 +13,9 @@
             </div>
             <!-- /footer__block -->
             <div class="footer__block">
-                <a href="document/polsoglacie.docx" >Пользовательское соглашение</a><br><br>
-                <a href="document/policydoc.docx" download>Политика обработки персональных данных</a>
+                <a href="document/пользовательское соглашение.docx">Пользовательское соглашение</a><br><br>
+                <a href="document/политика обработки данных.docx">Политика обработки персональных данных</a><br><br>
+                <a href="document/политика конфиденциальности.docx">Политика конфиденциальности</a>
             </div>
             <!-- /footer__block -->
         </div>
@@ -30,7 +31,8 @@
 </footer>
 <!-- Баннер о куки -->
 <div id="cookie-banner" class="cookie-banner">
-    <p>Этот сайт использует cookies для улучшения пользовательского опыта. Продолжая использовать сайт, вы соглашаетесь с их использованием.</p>
+    <p>Наш сайт использует cookie-файлы, чтобы сделать наши сервисы быстрее и удобнее.
+        Продолжая им пользоваться вы принимаете условия <a href="document/пользовательское соглашение.docx">Пользовательского соглашения</a> и соглашаетесь со сбором cookie-файлов. Подробности про отработку данных — в нашей <a href="document/политика обработки данных.docx">Политике обрабоки персональных данных</a></p>
     <button id="accept-cookies">Согласиться</button>
 </div>
 
@@ -51,7 +53,19 @@
         max-width: 80%;
         font-size: 14px;
         z-index: 1000;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.26);
+    }
+
+    .cookie-banner p {
+        color: white;
+    }
+
+    .cookie-banner a {
+        color: #ff9800;
+    }
+
+    .cookie-banner a:hover {
+        text-decoration: underline;
     }
 
     .cookie-banner button {

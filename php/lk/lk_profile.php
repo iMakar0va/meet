@@ -20,10 +20,10 @@ function fetchEventStatistics($conn, $userId)
 {
     $upcomingEventsQuery = "SELECT count(*) FROM events e
                             JOIN user_events ue ON ue.event_id = e.event_id
-                            WHERE ue.user_id = $1 AND e.event_date > CURRENT_DATE and ue.is_signed = true";
+                            WHERE ue.user_id = $1 AND e.event_date >= CURRENT_DATE and ue.is_signed = true and e.is_active = true and e.is_approved = true";
     $pastEventsQuery = "SELECT count(*) FROM events e
                         JOIN user_events ue ON ue.event_id = e.event_id
-                        WHERE ue.user_id = $1 AND e.event_date < CURRENT_DATE and ue.is_signed = true";
+                        WHERE ue.user_id = $1 AND e.event_date < CURRENT_DATE and ue.is_signed = true and e.is_active = true and e.is_approved = true";
     $popularTopicsQuery = "SELECT e.topic, COUNT(*) AS topic_count
                            FROM user_events ue
                            JOIN events e ON ue.event_id = e.event_id
@@ -47,7 +47,7 @@ function fetchOrganizerStatistics($conn, $userId)
         SELECT COUNT(*)
         FROM events e
         JOIN organizators_events oe ON e.event_id = oe.event_id
-        WHERE oe.organizator_id = $1 AND e.event_date > CURRENT_DATE
+        WHERE oe.organizator_id = $1 AND e.is_active = true AND e.is_approved = true and e.event_date >= CURRENT_DATE
     ";
 
     // Количество прошедших мероприятий
@@ -55,7 +55,7 @@ function fetchOrganizerStatistics($conn, $userId)
         SELECT COUNT(*)
         FROM events e
         JOIN organizators_events oe ON e.event_id = oe.event_id
-        WHERE oe.organizator_id = $1 AND e.event_date < CURRENT_DATE
+        WHERE oe.organizator_id = $1 AND e.is_active = true AND e.is_approved = true and e.event_date < CURRENT_DATE
     ";
 
     // Количество отменённых мероприятий
@@ -63,7 +63,7 @@ function fetchOrganizerStatistics($conn, $userId)
         SELECT COUNT(*)
         FROM events e
         JOIN organizators_events oe ON e.event_id = oe.event_id
-        WHERE oe.organizator_id = $1 AND e.is_active = FALSE
+        WHERE oe.organizator_id = $1 AND e.is_active = false AND e.is_approved = true
     ";
 
     // Популярные темы мероприятий
@@ -102,6 +102,7 @@ if ($userDataResult) {
                 <img src="img/icons/setting.svg" alt="setting">Редактировать профиль
             </a>
             <div class="title0" style="margin-top: 15px;"><?= $user["last_name"] . " " . $user["first_name"] ?></div>
+            <div class="title4" style="margin-top: 15px;">ID пользователя: <?= $user["user_id"] ?></div>
         </div>
     </div>
 
@@ -118,8 +119,8 @@ if ($userDataResult) {
         <div class="title1" style="margin-bottom:10px;">Анализ участника</div>
         <div class="title2 lk__profile-data">
             <?php $eventStatistics = fetchEventStatistics($conn, $userId); ?>
-            <div>Посещено мероприятий: <?= $eventStatistics['pastEventCount'] ?></div>
             <div>Текущих мероприятий: <?= $eventStatistics['upcomingEventCount'] ?></div>
+            <div>Посещено мероприятий: <?= $eventStatistics['pastEventCount'] ?></div>
             <div>Популярные направления:
                 <?= empty($eventStatistics['popularTopics']) ? "вы еще нигде не участвовали." :
                     implode(", ", array_column($eventStatistics['popularTopics'], 'topic')) . "." ?>

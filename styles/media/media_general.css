@@ -24,7 +24,7 @@
     }
 
     .logo img {
-        height: 60px;
+        height: 40px;
     }
 
     .menu,
@@ -92,7 +92,7 @@
     .nav-button {
         position: absolute;
         z-index: 90;
-        top: 22px;
+        top: 15px;
         right: 30px;
     }
 
@@ -110,5 +110,27 @@
 
     .footer__block {
         text-align: center;
+    }
+}
+
+@media (max-width: 460px) {
+    .title {
+        font-size: 24px;
+    }
+
+    .title0 {
+        font-size: 18px;
+    }
+
+    .title1 {
+        font-size: 16px;
+    }
+
+    .title2 {
+        font-size: 14px;
+    }
+
+    .title3 {
+        font-size: 12px;
     }
 }

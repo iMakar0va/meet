@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="styles/media/media_auth.css">
     <link rel="stylesheet" href="styles/media/media_lk.css">
     <title>Личный кабинет</title>
-    <script src="scripts/setting.js" defer></script>
+    <!-- <script src="scripts/setting.js" defer></script> -->
 </head>
 
 <body>
@@ -46,7 +46,6 @@
     ?>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="scripts/lk_script.js"></script>
     <!-- <script>
         // отображение/удаление фото профиля
         var dt = new DataTransfer();

@@ -36,6 +36,7 @@
 
     // Обработка email
     $email = htmlspecialchars($row["email"]);
+    $userId = htmlspecialchars($row["user_id"]);
 
     // Получаем статистику по событиям
     $eventStatistics = fetchEventStatistics($conn, $row["user_id"]);
@@ -46,6 +47,7 @@
     <div class="card__title"><?= $fullName ?></div>
     <div class="card__blocks">
         <div class="card__block">
+            <div class="card__item">ID пользователя: <?= $userId ?></div>
             <div class="card__item"><?= $formattedBirthDate ?></div>
             <div class="card__item"><?= $email ?></div>
             <div class="card__item">Текущих мероприятий: <?= $countNowEvent ?></div>

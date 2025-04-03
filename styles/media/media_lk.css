@@ -5,7 +5,7 @@
         display: block;
         display: flex;
         align-items: center;
-        gap: 5px;
+        gap: 20px;
         font-size: 24px;
     }
 
@@ -45,7 +45,6 @@
         width: 100%;
     }
 
-    .lk__setting,
     .lk__participant,
     .lk__profile {
         border-radius: 0 0 15px 15px;

@@ -1,7 +1,29 @@
 @import url(media_general.css);
-@media (max-width: 768px){
+@media (max-width: 700px) {
+    .event__banner {
+        flex-direction: column-reverse;
+        padding-top: 20px;
+        gap: 45px;
+    }
 
+    .event-time,
+    .event-topic {
+        margin-bottom: 10px;
+    }
+
+    .event-people {
+        margin: 10px auto;
+    }
+
+    .contact__item img {
+        width: 26px;
+    }
+
+    .event-bottom {
+        padding: 15px 0px;
+    }
 }
+
 /* @media (max-width: 768px) {
     .event__banner {
         flex-direction: column-reverse;

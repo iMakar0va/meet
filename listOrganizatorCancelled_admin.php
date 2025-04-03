@@ -99,7 +99,9 @@ $totalPages = ceil($totalRows / $limit);
             document.querySelectorAll('.toggle-button').forEach(button => {
                 button.addEventListener('click', function() {
                     const organizatorId = button.getAttribute('data-id');
-
+                    if (!confirm("Вы уверены, что хотите предоставить права организатору?")) {
+                        return; // Если пользователь отменил, ничего не делаем
+                    }
                     // Одобрение активных организаторов
                     fetch('./php/toggle_organizator.php', {
                             method: 'POST',

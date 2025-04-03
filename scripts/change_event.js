@@ -143,7 +143,8 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.success) {
                     alert(response.message);
-                    window.location.href = "listEventActive_admin.php";
+                    window.history.back();
+                    // window.location.href = "listEventActive_admin.php";
                 } else {
                     alert("Ошибка: " + response.message);
                 }

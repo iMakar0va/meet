@@ -74,8 +74,16 @@
                 </div>
                 <!-- Чекбокс для согласия с пользовательским соглашением -->
                 <div class="checkbox-container">
-                    <input type="checkbox" id="terms" name="terms" required>
-                    <label for="terms" class="terms-label">Я согласен с <a href="document/polsoglacie.docx" style="color: #FADD84;">Условиями использования</a> и <a href="document/polsoglacie.docx" style="color: #FADD84;">Политикой конфиденциальности</a></label>
+                    <input type="checkbox" id="terms1" name="terms1" required>
+                    <label for="terms" class="terms-label">Я согласен на <a href="document/согласие на обработку персональных данных.docx" style="color: #FADD84;">Обработку персональных данных</a></label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="terms2" name="terms2" required>
+                    <label for="terms" class="terms-label">Я согласен с <a href="document/политика обработки данных.docx" style="color: #FADD84;">Политикой обрабоки персональных данных</a></label>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="terms2" name="terms2" required>
+                    <label for="terms" class="terms-label">Я согласен с <a href="document/пользовательское соглашение.docx" style="color: #FADD84;">Пользовательским соглашением</a></label>
                 </div>
                 <div class="">*-поля для обязательного заполения</div>
                 <div id="error" class="error title2" style="display: none;">Пользователь с такой почтой уже зарегистрирован!</div>

@@ -51,8 +51,6 @@ $totalPages = ceil($totalRows / $limit);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/events.css">
     <link rel="stylesheet" href="styles/media/media_events.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-
     <title>Афиша</title>
 </head>
 
@@ -87,37 +85,38 @@ $totalPages = ceil($totalRows / $limit);
                 <button type="button" id="resetButton"><img src="./img/icons/close.svg" alt="Сбросить"></button>
             </form>
         </div>
-
-        <div class="cards" style="margin-top: 25px;">
-            <?php
-            if (!$resultGetEvents) {
-                echo "<div class='no-results'>Ошибка при получении данных: " . pg_last_error() . "</div>";
-            } elseif (pg_num_rows($resultGetEvents) == 0) {
-                echo "<div class='no-results'><img src='./img/icons/not_found.svg' alt='not found'><div>Мероприятий не найдено</div></div>";
-            } else {
-                while ($row = pg_fetch_assoc($resultGetEvents)) {
-                    require './php/card.php';
-                }
-            }
-            ?>
-        </div>
-
-        <!-- Пагинация -->
-        <?php if ($totalPages > 1): ?>
-            <div class="pagination">
-                <?php if ($page > 1): ?>
-                    <a href="?<?= http_build_query(array_merge($_GET, ['page' => $page - 1])) ?>">Назад</a>
-                <?php endif; ?>
-
-                <span>Страница <?= $page ?> из <?= $totalPages ?></span>
-
-                <?php if ($page < $totalPages): ?>
-                    <a href="?<?= http_build_query(array_merge($_GET, ['page' => $page + 1])) ?>">Вперед</a>
-                <?php endif; ?>
-            </div>
-        <?php endif;
-
+        <?php
+        if (!$resultGetEvents) {
+            echo "<div class='no-results'>Ошибка при получении данных: " . pg_last_error() . "</div>";
+        } elseif (pg_num_rows($resultGetEvents) == 0) {
+            echo "<div class='no-results'><img src='./img/icons/not_found.svg' alt='not found'><div>Мероприятий не найдено</div></div>";
+        } else {
         ?>
+            <div class="cards" style="margin-top: 25px;">
+            <?php
+            while ($row = pg_fetch_assoc($resultGetEvents)) {
+                require './php/card.php';
+            }
+        }
+            ?>
+            </div>
+
+            <!-- Пагинация -->
+            <?php if ($totalPages > 1): ?>
+                <div class="pagination">
+                    <?php if ($page > 1): ?>
+                        <a href="?<?= http_build_query(array_merge($_GET, ['page' => $page - 1])) ?>">Назад</a>
+                    <?php endif; ?>
+
+                    <span>Страница <?= $page ?> из <?= $totalPages ?></span>
+
+                    <?php if ($page < $totalPages): ?>
+                        <a href="?<?= http_build_query(array_merge($_GET, ['page' => $page + 1])) ?>">Вперед</a>
+                    <?php endif; ?>
+                </div>
+            <?php endif;
+
+            ?>
     </div>
     <?php
     require './php/footer.php';
@@ -129,15 +128,6 @@ $totalPages = ceil($totalRows / $limit);
             window.location.href = 'events.php';
         });
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script>
-        AOS.init({
-            duration: 500, // Длительность анимации в мс
-            easing: 'ease-in-out', // Плавность анимации
-            // once: true // Анимация будет срабатывать только один раз
-        });
-    </script>
-
 </body>
 
 </html>

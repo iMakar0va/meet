@@ -123,6 +123,9 @@
                     const isActive = button.getAttribute('data-status') === 't';
 
                     if (!isActive) {
+                        if (!confirm("Вы уверены, что хотите отпрвить мероприятие повторно?")) {
+                            return; // Если пользователь отменил, ничего не делаем
+                        }
                         updateEventStatus(eventId, null);
                     } else {
                         const reason = prompt('Укажите причину отмены мероприятия:');

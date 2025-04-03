@@ -36,8 +36,13 @@ input[type="date"] {
     width: 150px;
 }
 
-#title {
+#title,
+#email {
     width: 60%;
+}
+
+#user_id {
+    width: 18%;
 }
 
 .lk__profile .search-form form {

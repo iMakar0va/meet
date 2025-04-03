@@ -36,7 +36,7 @@
     $getEvents = "SELECT * FROM organizators o
                  JOIN organizators_events oe ON o.organizator_id = oe.organizator_id
                  JOIN events e ON oe.event_id = e.event_id
-                 WHERE o.organizator_id = $1 AND e.event_date > CURRENT_DATE AND is_active = true
+                 WHERE o.organizator_id = $1 AND e.event_date = CURRENT_DATE AND is_active = true
                  LIMIT $limit OFFSET $offset;";
 
     $resultGetEvents = pg_query_params($conn, $getEvents, [$userId]);
@@ -45,7 +45,7 @@
     $countQuery = "SELECT COUNT(*) FROM organizators o
                JOIN organizators_events oe ON o.organizator_id = oe.organizator_id
                JOIN events e ON oe.event_id = e.event_id
-               WHERE o.organizator_id = $1 AND e.event_date > CURRENT_DATE AND is_active = true;";
+               WHERE o.organizator_id = $1 AND e.event_date = CURRENT_DATE AND is_active = true;";
     $countResult = pg_query_params($conn, $countQuery, [$userId]);
     $totalRows = pg_fetch_result($countResult, 0, 0);
     $totalPages = ceil($totalRows / $limit);
@@ -57,7 +57,7 @@
         <div class="lk">
             <?php require 'php/lk/lk_menu.php'; ?>
             <div class="lk__profile">
-                <div class="title1">Список текущих мероприятий</div>
+                <div class="title1">Список мероприятий сегодня</div>
                 <div class="cards">
                     <?php
                     if ($resultGetEvents && pg_num_rows($resultGetEvents) > 0) {

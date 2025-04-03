@@ -70,7 +70,9 @@ document.getElementById('regForm').addEventListener('submit', function (e) {
     const password = document.getElementById('password_reg');
     const repeatPassword = document.getElementById('repeat_password');
     const birthDate = document.getElementById('birthDateInput');
-    const termsCheckbox = document.getElementById('terms'); // Чекбокс для соглашения
+    const termsCheckbox1 = document.getElementById('terms1'); // Чекбокс для соглашения
+    const termsCheckbox2 = document.getElementById('terms2'); // Чекбокс для соглашения
+    const termsCheckbox3 = document.getElementById('terms3'); // Чекбокс для соглашения
     const errorBlock = document.getElementById('error');
     let isValid = true;
     let errorMessage = "";
@@ -92,9 +94,9 @@ document.getElementById('regForm').addEventListener('submit', function (e) {
     });
 
     // Проверка на наличие согласия с пользовательским соглашением
-    if (!termsCheckbox.checked) {
+    if (!termsCheckbox1.checked || !termsCheckbox2.checked || !termsCheckbox3.checked) {
         isValid = false;
-        errorMessage += 'Вы должны согласиться с пользовательским соглашением.\n';
+        errorMessage += 'Вы должны согласиться с пользовательским соглашением, политикой обработки персональных данных.\n';
     }
 
     // Проверка email

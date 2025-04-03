@@ -1,12 +1,14 @@
 <!-- Бургер-кнопка -->
 <div class="burger-menu" onclick="toggleMenu()">
-    <img src="img/icons/nav-open.svg" alt="open"> Меню личного кабинета
+    <img src="img/icons/burger-menu.svg" alt="open"> Меню личного кабинета
 </div>
 <div class="lk__menu">
     <span class="close-menu" onclick="toggleMenu()">✖</span>
     <?php
     // Получение данных пользователя о статусе
     $userId = $_SESSION['user_id'];
+    $current_page = basename($_SERVER['REQUEST_URI'], '?' . $_SERVER['QUERY_STRING']);
+
     $userStatusQuery = "
         SELECT
             users.is_admin,
@@ -22,14 +24,15 @@
     $result = pg_query_params($conn, $userStatusQuery, array($userId));
     $userStatus = pg_fetch_assoc($result);
 
-    // Функция для рендеринга элементов меню с количеством
-    function renderMenuItemsWithCount($title, $links, $counts)
+    // Функция для рендеринга элементов меню с количеством и активным пунктом
+    function renderMenuItemsWithCount($title, $links, $counts, $current_page)
     {
         echo "<div class='title1 lk__menu-title'>$title</div>";
         echo "<div class='lk__menu-items'>";
         foreach ($links as $link => $text) {
             $count = isset($counts[$link]) ? $counts[$link] : 0;
-            echo "<a href='$link' class='title2'>$text";
+            $activeClass = ($current_page == $link) ? 'active-link' : ''; // Добавление класса активного пункта
+            echo "<a href='$link' class='title2 $activeClass'>$text";
             if ($count > 0) {
                 echo "<span class='badge'>$count</span>";
             }
@@ -38,7 +41,7 @@
         echo "</div>";
     }
 
-    /// Подсчет количества мероприятий, ожидающих одобрения
+    // Подсчет количества мероприятий, ожидающих одобрения
     $pendingEventsQuery = "
                             SELECT COUNT(*)
                             FROM events e
@@ -46,7 +49,6 @@
                             WHERE e.is_approved = false
                             AND oe.organizator_id = $1;
                         ";
-
     $pendingEventsResult = pg_query_params($conn, $pendingEventsQuery, [$userId]);
     $pendingEventsCount = pg_fetch_result($pendingEventsResult, 0, 0);
 
@@ -61,13 +63,17 @@
     $eventRequestsCount = pg_fetch_result($eventRequestsResult, 0, 0);
 
     // Меню профиля
-    echo "<div class='title1 lk__menu-title' onclick=\"toggleForms('profile')\"><img src='img/icons/person.svg' alt='person'><a href='./lk.php'>Профиль</a></div>";
+    $profile_active = ($current_page == 'lk.php') ? 'active-link' : '';
+    echo "<div class='title1 lk__menu-title' onclick=\"toggleForms('profile')\">
+            <img src='img/icons/person.svg' alt='person'>
+            <a href='./lk.php' class='$profile_active'>Профиль</a>
+          </div>";
 
     // Меню участника
     renderMenuItemsWithCount('Участник', [
         'nowEvent_participant.php' => 'Предстоящие события',
         'pastEvent_participant.php' => 'История'
-    ], []);
+    ], [], $current_page);
 
     // Проверка, если пользователь является организатором
     if ($userStatus['is_approved'] === 't') {
@@ -80,12 +86,12 @@
                 'createEvent.php' => 'Создать мероприятие'
             ], [
                 'futureEvent_organizer.php' => $pendingEventsCount
-            ]);
+            ], $current_page);
         } else {
             renderMenuItemsWithCount('Организатор', [
                 'nowEventActive_organizer.php' => 'Предстоящие события',
                 'pastEvent_organizer.php' => 'История'
-            ], []);
+            ], [], $current_page);
         }
     }
 
@@ -101,10 +107,10 @@
         ], [
             'listRequestOrganizator_admin.php' => $orgRequestsCount,
             'listRequestEvent_admin.php' => $eventRequestsCount
-        ]);
+        ], $current_page);
     }
     ?>
-    <!-- Выход и удаление аккаунта -->
+    <!-- Выход из аккаунта -->
     <div class="lk__menu-footer">
         <a href="#!" onclick="logout()" class="title2 lk__menu-title">Выйти<img src="img/icons/exit.svg" alt="exit"></a>
     </div>
@@ -113,6 +119,6 @@
 <script>
     function toggleMenu() {
         let menu = document.querySelector(".lk__menu");
-        menu.classList.toggle("active");
+        menu.classList.toggle("active-link");
     }
 </script>

@@ -18,7 +18,8 @@
             flex-direction: column;
             gap: 25px;
         }
-        .card_organizator{
+
+        .card_organizator {
             margin-right: 0;
         }
     </style>
@@ -45,14 +46,14 @@
 
     // Запросы для подсчета мероприятий
     $statsQuery = "
-        SELECT
-            COUNT(CASE WHEN e.is_active = true AND e.is_approved = true THEN 1 END) AS current_events,
-            COUNT(CASE WHEN e.is_active = false AND e.is_approved = true THEN 1 END) AS past_events,
-            COUNT(CASE WHEN e.is_active = false AND e.is_approved = false THEN 1 END) AS canceled_events
-        FROM events e
-        JOIN organizators_events oe ON e.event_id = oe.event_id
-        WHERE oe.organizator_id = $1
-    ";
+    SELECT
+        COUNT(CASE WHEN e.is_active = true AND e.is_approved = true and e.event_date >= CURRENT_DATE THEN 1 END) AS current_events,
+        COUNT(CASE WHEN e.is_active = true AND e.is_approved = true and e.event_date < CURRENT_DATE THEN 1 END) AS past_events,
+        COUNT(CASE WHEN e.is_active = false AND e.is_approved = true THEN 1 END) AS canceled_events
+    FROM events e
+    JOIN organizators_events oe ON e.event_id = oe.event_id
+    WHERE oe.organizator_id = $1
+";
     $statsResult = pg_query_params($conn, $statsQuery, [$organizerId]);
     $stats = pg_fetch_assoc($statsResult);
 
@@ -99,14 +100,31 @@
 
             <div class="cards">
                 <?php
-                $getEventUser = "
-                SELECT * FROM events e
-                JOIN organizators_events oe ON e.event_id = oe.event_id
-                WHERE oe.organizator_id = $1 AND e.event_date < CURRENT_DATE";
-                $resultGetEventUser = pg_query_params($conn, $getEventUser, [$organizerId]);
+                $limit = 6; // Количество мероприятий на страницу
+                $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+                $offset = ($page - 1) * $limit;
 
-                if ($resultGetEventUser && pg_num_rows($resultGetEventUser) > 0) {
-                    while ($row = pg_fetch_assoc($resultGetEventUser)) {
+                // Получение списка мероприятий с пагинацией
+                $getEvents = "SELECT e.* FROM events e
+                JOIN organizators_events oe ON e.event_id = oe.event_id
+                WHERE oe.organizator_id = $1 and e.is_active = true
+                AND e.is_approved = true and e.event_date < CURRENT_DATE
+                ORDER BY e.event_date LIMIT $limit OFFSET $offset";
+
+                $resultGetEvents = pg_query_params($conn, $getEvents, [$organizerId]);
+
+                // Подсчет общего количества мероприятий
+                $countQuery = "SELECT COUNT(*) FROM events e
+                JOIN organizators_events oe ON e.event_id = oe.event_id
+                WHERE oe.organizator_id = $1 AND e.is_active = true
+                AND e.is_approved = true and e.event_date < CURRENT_DATE ;";
+
+                $countResult = pg_query_params($conn, $countQuery, [$organizerId]);
+                $totalRows = pg_fetch_result($countResult, 0, 0);
+                $totalPages = ($totalRows > 0) ? ceil($totalRows / $limit) : 1;
+
+                if ($resultGetEvents && pg_num_rows($resultGetEvents) > 0) {
+                    while ($row = pg_fetch_assoc($resultGetEvents)) {
                         require './php/card.php';
                     }
                 } else {
@@ -114,6 +132,20 @@
                 }
                 ?>
             </div>
+            <!-- Пагинация -->
+            <?php if ($totalPages > 1): ?>
+                <div class="pagination">
+                    <?php if ($page > 1): ?>
+                        <a href="?<?= http_build_query(array_merge($_GET, ['page' => $page - 1])) ?>">Назад</a>
+                    <?php endif; ?>
+
+                    <span>Страница <?= $page ?> из <?= $totalPages ?></span>
+
+                    <?php if ($page < $totalPages): ?>
+                        <a href="?<?= http_build_query(array_merge($_GET, ['page' => $page + 1])) ?>">Вперед</a>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
         </section>
     </div>
 

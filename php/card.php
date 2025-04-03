@@ -19,7 +19,7 @@ $formattedDate = intval($dateParts[2]) . ' ' . $months[intval($dateParts[1])];
 $imageSrc = !empty($row["image"])
     ? "data:image/jpeg;base64," . base64_encode(pg_unescape_bytea($row["image"]))
     : "img/profile.jpg"; ?>
-<div class="card" data-aos="fade-up">
+<div class="card">
     <div class="card__img" style="background-image: url(<?= $imageSrc ?>)"></div>
     <div class="card__content">
         <div class="card__type"><?= htmlspecialchars($row["type"]) ?></div>

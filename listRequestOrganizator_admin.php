@@ -78,6 +78,11 @@
                             return;
                         }
                     }
+                    if (action === 'approve') {
+                        if (!confirm("Вы уверены, что хотите одобрить заявку?")) {
+                            return; // Если пользователь отменил, ничего не делаем
+                        }
+                    }
 
                     fetch('./php/toggle_request.php', {
                             method: 'POST',

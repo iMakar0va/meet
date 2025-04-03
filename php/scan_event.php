@@ -1,8 +1,13 @@
 <?php
+require '../php/conn.php';
+
 $eventId = isset($_GET['event_id']) ? intval($_GET['event_id']) : null;
 if (!$eventId) {
     die("Ошибка: event_id не указан.");
 }
+$getTitle = "select * from events where event_id = $1";
+$getTitleResult = pg_query_params($conn, $getTitle, [$eventId]);
+$row = pg_fetch_assoc($getTitleResult);
 ?>
 
 <!DOCTYPE html>
@@ -45,17 +50,18 @@ if (!$eventId) {
         }
 
         .scan-next-btn {
-            background-color:rgb(0, 83, 173);
+            background-color: rgb(0, 83, 173);
         }
     </style>
 </head>
 
 <body>
 
+    <h2>Название мероприятия: <?= htmlspecialchars($row['title']) ?></h2>
     <h2>Сканируйте QR-код</h2>
     <div id="reader"></div>
     <div id="result">Ожидание сканирования...</div>
-    <button class="back-btn" onclick="window.history.back();">Назад</button>
+    <button class="back-btn" onclick="window.history.back();">Выход</button>
     <!-- Кнопка для перезагрузки страницы и повторного сканирования -->
     <button class="scan-next-btn" onclick="reloadScanner();">Сканировать следующий</button>
 

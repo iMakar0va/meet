@@ -85,52 +85,43 @@ $totalPages = ceil($totalRows / $limit);
                 </div>
                 <div class="links">
                     <a href="./listEventActive_admin.php" class="no_active">Активные мероприятия</a>
-                    <a href="./listEventCancelled_admin.php" class="active">Отмененные мероприятия</a>
+                    <a href="./listEventCancelled_admin.php" class="active">Неактивные мероприятия</a>
                 </div>
-                <?php
-                if (!$resultGetEvents) {
-                    echo "<div class='no-results'>Ошибка при получении данных: " . pg_last_error() . "</div>";
-                } elseif (pg_num_rows($resultGetEvents) == 0) {
-                    echo "<div class='no-results'><img src='./img/icons/not_found.svg' alt='not found'><div>Мероприятий не найдено</div></div>";
-                } else {
-                ?>
-                    <div class="cards" style="margin-top: 25px;">
+                <div class="cards" style="margin-top: 25px;">
                     <?php
-                    if ($resultGetEvents) {
+                    if ($resultGetEvents && pg_num_rows($resultGetEvents) > 0) {
                         while ($row = pg_fetch_assoc($resultGetEvents)) {
                             require './php/card_active_event.php';
                         }
                     } else {
-                        echo "Ошибка при получении данных: " . pg_last_error();
+                        echo "<p>Мероприятий не найдено</p>";
                     }
-                }
                     ?>
+                </div>
+                <div id="commentModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span> <!-- Крестик для закрытия -->
+                        <h2>Название мероприятия:</h2>
+                        <div id="modalTitle"></div> <!-- Название мероприятия -->
+                        <br>
+                        <h2>Комментарий:</h2>
+                        <p id="modalComment"></p> <!-- Комментарий (причина отказа) -->
                     </div>
+                </div>
+                <!-- Пагинация -->
+                <?php if ($totalPages > 1): ?>
+                    <div class="pagination">
+                        <?php if ($page > 1): ?>
+                            <a href="?page=<?php echo $page - 1; ?>">Назад</a>
+                        <?php endif; ?>
 
-                    <div id="commentModal" class="modal">
-                        <div class="modal-content">
-                            <span class="close">&times;</span> <!-- Крестик для закрытия -->
-                            <h2>Название мероприятия:</h2>
-                            <div id="modalTitle"></div> <!-- Название мероприятия -->
-                            <br>
-                            <h2>Комментарий:</h2>
-                            <p id="modalComment"></p> <!-- Комментарий (причина отказа) -->
-                        </div>
+                        <span>Страница <?php echo $page; ?> из <?php echo $totalPages; ?></span>
+
+                        <?php if ($page < $totalPages): ?>
+                            <a href="?page=<?php echo $page + 1; ?>">Вперед</a>
+                        <?php endif; ?>
                     </div>
-                    <!-- Пагинация -->
-                    <?php if ($totalPages > 1): ?>
-                        <div class="pagination">
-                            <?php if ($page > 1): ?>
-                                <a href="?page=<?php echo $page - 1; ?>">Назад</a>
-                            <?php endif; ?>
-
-                            <span>Страница <?php echo $page; ?> из <?php echo $totalPages; ?></span>
-
-                            <?php if ($page < $totalPages): ?>
-                                <a href="?page=<?php echo $page + 1; ?>">Вперед</a>
-                            <?php endif; ?>
-                        </div>
-                    <?php endif; ?>
+                <?php endif; ?>
             </div>
         </div>
         <?php pg_close($conn); ?>
