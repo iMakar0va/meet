@@ -26,6 +26,12 @@ if (!$eventId) {
     die("Ошибка: отсутствует идентификатор мероприятия.");
 }
 
+// Получаем название мероприятия
+$queryEvent = "SELECT title FROM events WHERE event_id = $1";
+$resultEvent = pg_query_params($conn, $queryEvent, [$eventId]);
+$event = pg_fetch_assoc($resultEvent);
+$eventName = $event['title'] ?? 'Не найдено';
+
 // Фильтрация по ID пользователя и email
 $whereClauses = ["ue.event_id = $1", "ue.is_signed = true"]; // Обязательные условия
 $params = [$eventId];
@@ -60,56 +66,10 @@ $resultUsers = pg_query_params($conn, $getUsersQuery, $params);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Список участников</title>
     <link rel="stylesheet" href="styles/lk.css">
-    <link rel="stylesheet" href="styles/events.css">
+    <link rel="stylesheet" href="styles/search_form.css">
     <link rel="stylesheet" href="styles/media/media_auth.css">
     <link rel="stylesheet" href="styles/media/media_lk.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        table {
-            color: black;
-        }
-
-        table button {
-            width: 100%;
-        }
-
-        thead {
-            color: white;
-            background-color: var(--blue-color);
-        }
-
-        th:first-child,
-        td:first-child {
-            width: 10%;
-            text-align: center;
-        }
-
-        th:last-child,
-        td:last-child {
-            width: 30%;
-            text-align: center;
-        }
-
-        tr:hover td {
-            background-color: rgb(166, 213, 230);
-        }
-
-        td:last-child:hover {
-            color: var(--blue-color);
-        }
-
-        th {
-            padding: 5px;
-        }
-
-        tbody tr,
-        tbody th,
-        tbody td {
-            text-align: center;
-            padding: 5px;
-            border-bottom: 3px solid var(--blue-color);
-        }
-    </style>
 </head>
 
 <body>
@@ -118,12 +78,13 @@ $resultUsers = pg_query_params($conn, $getUsersQuery, $params);
         <div class="lk">
             <?php require 'php/lk/lk_menu.php'; ?>
             <div class="lk__profile">
+                <div class="title1"><?= htmlspecialchars($eventName) ?></div>
                 <div class="title1">Список участников мероприятия</div>
                 <div class="search-form">
                     <form id="userSearchForm" method="GET">
                         <input type="hidden" name="event_id" value="<?= htmlspecialchars($eventId) ?>">
-                        <input type="text" name="user_id" placeholder="ID пользователя" value="<?= htmlspecialchars($_GET['user_id'] ?? '') ?>">
-                        <input type="text" name="email" placeholder="Почта пользователя" value="<?= htmlspecialchars($_GET['email'] ?? '') ?>">
+                        <input type="text" name="user_id" id="user_id" placeholder="ID пользователя" value="<?= htmlspecialchars($_GET['user_id'] ?? '') ?>">
+                        <input type="text" name="email" id="email" placeholder="Почта пользователя" value="<?= htmlspecialchars($_GET['email'] ?? '') ?>">
                         <button type="submit"><img src="./img/icons/search.svg" alt="Найти"></button>
                         <button type="button" id="resetButton"><img src="./img/icons/close.svg" alt="Сбросить"></button>
                     </form>
@@ -161,7 +122,9 @@ $resultUsers = pg_query_params($conn, $getUsersQuery, $params);
             </div>
         </div>
     </div>
-
+    <?php
+    require './php/footer.php';
+    ?>
     <script>
         $(document).ready(function() {
             $('.presense-button').click(function() {

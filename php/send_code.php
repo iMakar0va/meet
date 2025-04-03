@@ -57,45 +57,6 @@ if (pg_num_rows($resultGetIsUser) > 0) {
 // Хешируем пароль перед сохранением
 $hashedPassword = password_hash($userData['password'], PASSWORD_DEFAULT);
 
-// Обработка изображения
-$fileContentEscaped = null;
-if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
-    $allowed_types = ['image/jpeg', 'image/jpg', 'image/png'];
-    $max_size = 10 * 1024 * 1024; // 10 МБ
-
-    if (!in_array($_FILES['file']['type'], $allowed_types)) {
-        echo json_encode(['success' => false, 'message' => 'Формат изображения должен быть JPEG, JPG или PNG.']);
-        exit();
-    }
-
-    if ($_FILES['file']['size'] > $max_size) {
-        echo json_encode(['success' => false, 'message' => 'Размер изображения не должен превышать 10 МБ.']);
-        exit();
-    }
-
-    $fileContent = file_get_contents($_FILES['file']['tmp_name']);
-    if ($fileContent === false) {
-        echo json_encode(['success' => false, 'message' => 'Ошибка чтения содержимого файла.']);
-        exit();
-    }
-
-    $fileContentEscaped = pg_escape_bytea($conn, $fileContent);
-} else {
-    // Используем дефолтное изображение
-    $defaultImagePath = '../img/profile.jpg';
-    if (file_exists($defaultImagePath)) {
-        $defaultImageContent = file_get_contents($defaultImagePath);
-        if ($defaultImageContent === false) {
-            echo json_encode(['success' => false, 'message' => 'Ошибка чтения дефолтного изображения.']);
-            exit();
-        }
-        $fileContentEscaped = pg_escape_bytea($conn, $defaultImageContent);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Ошибка: дефолтное изображение не найдено.']);
-        exit();
-    }
-}
-
 // Отправка письма с кодом подтверждения
 $mail = new PHPMailer(true);
 
@@ -119,8 +80,7 @@ try {
         'first_name' => $userData['first_name'],
         'hashedPassword' => $hashedPassword,
         'birth_date' => $userData['birth_date'],
-        'gender' => $userData['gender'],
-        'image' => $fileContentEscaped,
+        'gender' => $userData['gender']
     ];
 
     $mail->CharSet = 'UTF-8';

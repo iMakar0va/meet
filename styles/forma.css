@@ -6,15 +6,6 @@ form {
 }
 
 .form {
-    /* max-width: 740px;
-    min-height: 440px;
-
-    margin: 50px auto;
-    padding: 0 0 50px;
-    text-align: center;
-
-    border-radius: 10px;
-    background-color: var(--color3); */
     max-width: 740px;
     margin: 35px auto;
     padding: 35px 28px 100px;
@@ -24,8 +15,6 @@ form {
 
 
 .form__group {
-    /* margin-bottom: 20px; */
-    /* padding: 0 20px; */
     flex: 1;
     position: relative;
 }
@@ -65,13 +54,6 @@ form {
     border: 3px solid rgb(189, 213, 211);
 }
 
-/* .input:focus+.label,
-.input:not(:placeholder-shown)+.label {
-    background-color: var(--white-color);
-    padding: 5px;
-    border-radius: 5px;
-} */
-
 .input:not(:placeholder-shown)+.label {
     transform: translateY(-30px);
     background-color: var(--white-color);
@@ -86,7 +68,6 @@ textarea .input::placeholder {
 
 textarea {
     max-width: 928px;
-    min-width: 300px;
     min-height: 125px;
 }
 

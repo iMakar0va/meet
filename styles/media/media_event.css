@@ -2,7 +2,7 @@
 @media (max-width: 700px) {
     .event__banner {
         flex-direction: column-reverse;
-        padding-top: 20px;
+        padding-top: 40px;
         gap: 45px;
     }
 
@@ -23,29 +23,3 @@
         padding: 15px 0px;
     }
 }
-
-/* @media (max-width: 768px) {
-    .event__banner {
-        flex-direction: column-reverse;
-        height: auto;
-        gap: 40px;
-        padding: 25px;
-    }
-
-    .event-people {
-        margin: 10px auto;
-    }
-
-    .event-time {
-        margin-bottom: 50px;
-    }
-}
-@media (max-width: 460px) {
-    .event__banner {
-        flex-direction: column-reverse;
-        height: auto;
-        gap: 40px;
-        padding: 15px 0;
-    }
-
-} */

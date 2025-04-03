@@ -155,37 +155,3 @@ $(document).ready(function () {
     });
 });
 
-
-// Отображение фото меропрития
-var dt = new DataTransfer();
-
-$('.input-file input[type=file]').on('change', function () {
-    let $files_list = $(this).closest('.input-file').next();
-    $files_list.empty();
-    $('#removeImageField').val('0');
-
-    for (var i = 0; i < this.files.length; i++) {
-        let file = this.files.item(i);
-        dt.items.add(file);
-
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = function () {
-            let new_file_input = '<div class="input-file-list-item">' +
-                '<img class="input-file-list-img" src="' + reader.result + '">' +
-                '<a href="#" onclick="removeFilesItem(this); return false;" class="input-file-list-remove">x</a>' +
-                '</div>';
-            $files_list.append(new_file_input);
-        };
-    }
-    this.files = dt.files;
-});
-// Удаление фото меропрития
-function removeFilesItem(target) {
-    let input = $(target).closest('.input-file-row').find('input[type=file]');
-    $(target).closest('.input-file-list-item').remove();
-    dt.items.clear();
-    input[0].files = dt.files;
-
-    $('#removeImageField').val('1');
-}

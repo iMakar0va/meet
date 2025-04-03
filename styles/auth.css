@@ -217,9 +217,6 @@ form.show-passwords input[type="password"] {
     border-radius: 7px;
     background-color: white;
     cursor: pointer;
-    /* position: relative;
-    vertical-align: middle;
-    display: inline-block; */
 }
 
 .checkbox-container input[type="checkbox"]:checked {
@@ -234,7 +231,6 @@ form.show-passwords input[type="password"] {
     text-align: center;
     line-height: 22px;
     padding: 5px;
-    /* display: none; */
 }
 
 .checkbox-container input[type="checkbox"]:checked::before {

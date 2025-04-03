@@ -24,18 +24,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $hashedPassword = $_SESSION['reg_data']['hashedPassword'];
         $birth_date = $_SESSION['reg_data']['birth_date'];
         $gender = $_SESSION['reg_data']['gender'];
-        $image = $_SESSION['reg_data']['image'];
 
-
-        $stmt = pg_prepare($conn, "insert_user", "insert into users(last_name, first_name, email, password, birth_date, gender, image) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING user_id;");
+        $stmt = pg_prepare($conn, "insert_user", "insert into users(last_name, first_name, email, password, birth_date, gender) VALUES($1, $2, $3, $4, $5, $6) RETURNING user_id;");
         $resultInsert = pg_execute($conn, "insert_user", [
             $last_name,
             $first_name,
             $email,
             $hashedPassword,
             $birth_date,
-            $gender,
-            $image
+            $gender
         ]);
 
         if ($resultInsert) {
@@ -66,21 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/auth.css">
     <link rel="stylesheet" href="styles/media/media_auth.css">
-    <!-- <link rel="stylesheet" href="styles/general.css"> -->
     <title>Подтверждение</title>
     <style>
-        body {
-            /* background-color: var(--blue-color); */
-        }
-
         form {
             text-align: center;
-            /* height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 50px; */
         }
 
         h1 {
@@ -95,10 +81,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .ap-otp-input {
             border: 3px solid #ebebeb;
-            border-radius: 18px;
-            width: 10%;
-            /* height: 100px; */
-            padding: 20px 10px;
+            border-radius: 5px;
+            width: 68px;
+            height: 73px;
             margin: 4px;
             text-align: center;
             font-size: 24px;
@@ -109,6 +94,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             outline: none !important;
             border: 3px solid #02494C;
             transition: 0.12s ease-in;
+        }
+
+        @media (max-width: 560px) {
+            h1 {
+                font-size: 28px;
+            }
+
+            .ap-otp-input {
+                width: 54px;
+                height: 65px;
+
+            }
+
+            .form {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 462px) {
+            h1 {
+                font-size: 26px;
+            }
+
+            .ap-otp-input {
+                width: 34px;
+                height: 45px;
+            }
+        }
+
+        @media (max-width: 342px) {
+            h1 {
+                font-size: 22px;
+            }
+
+            .ap-otp-input {
+                width: 30px;
+                height: 35px;
+            }
         }
     </style>
 </head>

@@ -34,19 +34,6 @@ $('.input-file input[type=file]').on('change', function () {
     this.files = dt.files;
 });
 
-// Удаление фото
-function removeFilesItem(target) {
-    let name = $(target).prev().text();
-    let input = $(target).closest('.input-file-row').find('input[type=file]');
-    $(target).closest('.input-file-list-item').remove();
-    for (let i = 0; i < dt.items.length; i++) {
-        if (name === dt.items[i].getAsFile().name) {
-            dt.items.remove(i);
-        }
-    }
-    input[0].files = dt.files;
-}
-
 // Скрыть/показать пароль
 function show_hide_password(target, inputId) {
     var input = document.getElementById(inputId);

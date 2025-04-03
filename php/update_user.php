@@ -2,13 +2,6 @@
 session_start();
 require 'conn.php';
 
-require 'autoload.php';
-
-$variables = require 'variables.php';
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
 // Получаем user_id
 $userId = $_POST['user_id'] ?? null;
 
@@ -75,55 +68,6 @@ if (!empty($oldPassword) && !empty($newPassword)) {
         }
     } else {
         echo json_encode(['success' => false, 'message' => 'Ошибка при получении пароля из базы.']);
-        exit();
-    }
-}
-
-// Обработка изображения
-if (isset($_POST['remove_image']) && $_POST['remove_image'] === '1') {
-    // Восстановление дефолтного изображения
-    $defaultImage = file_get_contents('../img/profile.jpg');
-    if ($defaultImage === false) {
-        echo json_encode(['success' => false, 'message' => 'Ошибка при чтении дефолтного изображения.']);
-        exit();
-    }
-    $escapedData = pg_escape_bytea($conn, $defaultImage);
-    $query = "UPDATE users SET image = $1 WHERE user_id = $2";
-    $result = pg_query_params($conn, $query, [$escapedData, $userId]);
-
-    if (!$result) {
-        echo json_encode(['success' => false, 'message' => 'Ошибка при восстановлении изображения.']);
-        exit();
-    }
-} elseif (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
-    // Проверка и загрузка нового изображения
-    $file = $_FILES['file'];
-    $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-    $maxSize = 10 * 1024 * 1024; // 10 МБ
-
-    if (!in_array($file['type'], $allowedTypes)) {
-        echo json_encode(['success' => false, 'message' => 'Формат изображения должен быть JPEG, JPG или PNG.']);
-        exit();
-    }
-
-    if ($file['size'] > $maxSize) {
-        echo json_encode(['success' => false, 'message' => 'Размер изображения не должен превышать 10 МБ.']);
-        exit();
-    }
-
-    // Чтение и сохранение изображения
-    $imageData = file_get_contents($file['tmp_name']);
-    if ($imageData === false) {
-        echo json_encode(['success' => false, 'message' => 'Ошибка при чтении содержимого изображения.']);
-        exit();
-    }
-
-    $escapedData = pg_escape_bytea($conn, $imageData);
-    $query = "UPDATE users SET image = $1 WHERE user_id = $2";
-    $result = pg_query_params($conn, $query, [$escapedData, $userId]);
-
-    if (!$result) {
-        echo json_encode(['success' => false, 'message' => 'Ошибка при обновлении изображения.']);
         exit();
     }
 }

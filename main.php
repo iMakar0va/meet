@@ -4,8 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="icon" type="image/png" href="./img/icons/logo.svg">
-    <meta name="theme-color" content="#000"> -->
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/media/media_main.css">
     <title>Главная</title>
@@ -22,14 +20,14 @@
         <div class="container">
             <div class="banner__wrapper">
                 <div class="banner__block">
-                    <div class="banner-title">
+                    <div class="banner-title title6">
                         Твой мир событий –
                         от идеи до участия!
                     </div>
-                    <div class="banner-desc">
+                    <div class="banner-desc title2">
                         Здесь каждый сможет найти событие, которое поможет раскрыть новые горизонты знаний, получить полезные навыки или просто насладиться интересным временем. Мы делаем организацию твоих мероприятий простой и удобной, чтобы ты мог сосредоточиться на самом важном!
                     </div>
-                    <a href="events.php" class="btn1">Присоединиться</a>
+                    <a href="events.php" class="btn1 title2">Присоединиться</a>
                 </div>
                 <!-- /banner__block -->
                 <div class="banner__block">

@@ -1,30 +1,23 @@
 @import url(media_general.css);
-/* При ширине экрана менее 800px показываем бургер и скрываем меню */
+
 @media screen and (max-width: 800px) {
     .burger-menu {
-        display: block;
         display: flex;
         align-items: center;
         gap: 20px;
-        font-size: 24px;
+        border-bottom: 3px solid white;
     }
 
     .lk__menu {
+        padding: 0px 20px 20px 20px;
         display: none;
-        /* position: fixed; */
-        /* top: 0; */
-        /* left: 0; */
-        /* width: 70%; */
         max-width: 100%;
-        /* height: 100%; */
         background: var(--blue-color);
-        padding: 20px;
-        /* z-index: 999; */
         border-radius: 0px;
     }
 
-    .lk__menu.active {
-        display: block;
+    .lk__menu img {
+        width: 30px;
     }
 
     .close-menu {
@@ -33,12 +26,6 @@
 
     .lk {
         flex-direction: column;
-    }
-
-    .lk__menu {
-        /* border-radius: 15px 15px 0 0; */
-        padding-top: 10px;
-        padding-bottom: 30px;
     }
 
     .lk__profile {
@@ -50,11 +37,44 @@
         border-radius: 0 0 15px 15px;
         padding-top: 25px;
     }
+
+    .active-link {
+        display: block;
+    }
 }
 
 @media (max-width: 600px) {
+    .links {
+        flex-direction: column;
+    }
+
+    .lk__profile form {
+        flex-wrap: wrap;
+    }
+
+    .lk__profile form input,
+    #email,
+    #user_id,
+    #title {
+        width: 100%;
+    }
+
     .lk__profile-top {
         flex-direction: column;
         gap: 10px;
+    }
+}
+
+@media (max-width: 460px) {
+    table {
+        font-size: 10px;
+    }
+
+    .burger-menu {
+        padding: 15px;
+    }
+
+    .lk__profile {
+        padding: 20px;
     }
 }

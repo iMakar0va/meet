@@ -118,7 +118,7 @@
                             </div>
                             <div class="contact__item title2">
                                 <img src="img/icons/email-event.svg" alt="email">
-                                <?= htmlspecialchars($resGetOrganizator['email']) ?>
+                                <?= htmlspecialchars($event['email']) ?>
                             </div>
                             <div class="contact__item title2">
                                 <img src="img/icons/place.svg" alt="place">

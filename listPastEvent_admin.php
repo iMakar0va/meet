@@ -4,8 +4,8 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="styles/auth.css">
     <link rel="stylesheet" href="styles/lk.css">
+    <link rel="stylesheet" href="styles/search_form.css">
     <link rel="stylesheet" href="styles/media/media_auth.css">
     <link rel="stylesheet" href="styles/media/media_lk.css">
     <title>Личный кабинет</title>
@@ -35,19 +35,33 @@
         exit();
     }
 
-    $limit = 1; // Количество мероприятий на страницу
+    $limit = 6; // Количество мероприятий на страницу
     $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
     $offset = ($page - 1) * $limit;
+    // ..............
+    // Фильтрация
+    $whereClauses = [];
+    $params = [];
 
-    // Запрос на получение прошедших мероприятий с пагинацией
-    $userId = $_SESSION['user_id'];
-    $getEventUser = "SELECT * FROM organizators o JOIN organizators_events oe ON o.organizator_id = oe.organizator_id JOIN events e ON oe.event_id = e.event_id WHERE e.event_date < CURRENT_DATE LIMIT $limit OFFSET $offset;";
+    if (!empty($_GET['title'])) {
+        $whereClauses[] = "title ILIKE '%' || $" . (count($params) + 1) . " || '%'";
+        $params[] = $_GET['title'];
+    }
 
-    $resultGetEventUser = pg_query($conn, $getEventUser);
+    if (!empty($_GET['event_date'])) {
+        $whereClauses[] = "event_date = $" . (count($params) + 1);
+        $params[] = $_GET['event_date'];
+    }
+    $whereClause = count($whereClauses) > 0 ? " AND " . implode(" AND ", $whereClauses) : "";
+    // ..............
+
+    // Запрос на получение мероприятий с пагинацией
+    $getEventUser = "SELECT * FROM organizators o JOIN organizators_events oe ON o.organizator_id = oe.organizator_id JOIN events e ON oe.event_id = e.event_id WHERE e.event_date < CURRENT_DATE and e.is_approved = true and e.is_active = true $whereClause LIMIT $limit OFFSET $offset;";
+    $resultGetEventUser = pg_query_params($conn, $getEventUser, $params);;
 
     // Запрос для подсчёта всех записей (без лимита и оффсета)
-    $countQuery = "SELECT COUNT(*) FROM organizators o JOIN organizators_events oe ON o.organizator_id = oe.organizator_id JOIN events e ON oe.event_id = e.event_id WHERE e.event_date < CURRENT_DATE;";
-    $countResult = pg_query($conn, $countQuery);
+    $countQuery = "SELECT COUNT(*) FROM organizators o JOIN organizators_events oe ON o.organizator_id = oe.organizator_id JOIN events e ON oe.event_id = e.event_id WHERE e.event_date < CURRENT_DATE and e.is_approved = true and e.is_active = true $whereClause;";
+    $countResult = pg_query_params($conn, $countQuery, $params);
     $totalRows = pg_fetch_result($countResult, 0, 0);
     $totalPages = ceil($totalRows / $limit);
     ?>
@@ -57,14 +71,24 @@
             <?php require 'php/lk/lk_menu.php'; ?>
             <div class="lk__profile">
                 <div class="title1">Прошедшие мероприятия</div>
+                <div class="search-form">
+                    <form id="eventSearchForm" method="GET" action="">
+                        <input type="text" id="title" name="title" placeholder="Название мероприятия" autocomplete="off"
+                            value="<?= htmlspecialchars($_GET['title'] ?? '') ?>">
+                        <input type="date" id="event_date" name="event_date"
+                            value="<?= htmlspecialchars($_GET['event_date'] ?? '') ?>">
+                        <button type="submit"><img src="./img/icons/search.svg" alt="Найти"></button>
+                        <button type="button" id="resetButton"><img src="./img/icons/close.svg" alt="Сбросить"></button>
+                    </form>
+                </div>
                 <div class="cards">
                     <?php
-                    if ($resultGetEventUser) {
+                    if ($resultGetEventUser && pg_num_rows($resultGetEventUser) > 0) {
                         while ($row = pg_fetch_assoc($resultGetEventUser)) {
                             require './php/card_report.php';
                         }
                     } else {
-                        echo "Ошибка при получении данных: " . pg_last_error();
+                        echo "<p>Мероприятий не найдено</p>";
                     }
                     ?>
                 </div>
@@ -98,6 +122,11 @@
     <?php
     require './php/footer.php';
     ?>
+    <script>
+        document.getElementById('resetButton').addEventListener('click', function() {
+            window.location.href = 'listPastEvent_admin.php';
+        });
+    </script>
 </body>
 
 </html>

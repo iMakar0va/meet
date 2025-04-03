@@ -124,8 +124,10 @@
                     </div>
                     <div class="" style="color: black;">*-поля для обязательного заполения</div>
                     <div id="error" class="error title2" style="display: none;">Пользователь с такой почтой уже зарегистрирован!</div>
-                    <button class="btn1 title2" type="submit">Создать мероприятие</button>
-                    <button class="btn1 title2" type="button" id="cancelBtn">Отмена</button>
+                    <div class="btns__lk">
+                        <button class="btn1 title2" type="button" id="cancelBtn">Отмена</button>
+                        <button class="btn1 title2" type="submit">Создать мероприятие</button>
+                    </div>
                 </form>
             </div>
             <!-- /lk__profile -->

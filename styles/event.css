@@ -17,26 +17,18 @@
     left: 0;
     right: 0;
     bottom: 0;
-    /* background: linear-gradient(rgba(0, 0, 0, 0.8), transparent); */
     background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.5));
-    /* filter: brightness(50%); */
     z-index: 1;
 }
 
 .event__banner {
     position: relative;
     z-index: 2;
-    /* height: 100vh; */
     display: flex;
     justify-content: space-between;
     align-items: start;
     gap: 10px;
     padding-top: 60px;
-}
-
-
-.event__banner-block {
-    /* width: 50%; */
 }
 
 .event-date {

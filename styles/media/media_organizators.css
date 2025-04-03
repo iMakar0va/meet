@@ -6,7 +6,6 @@
 
     .card__blocks {
         flex-direction: column;
-        /* gap: 10px; */
     }
 
     .card__block {

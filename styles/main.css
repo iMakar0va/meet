@@ -2,6 +2,10 @@
 @import url(https://fonts.googleapis.com/css?family=Arsenal:regular,italic,700,700italic);
 
 /* =============Banner============= */
+.banner__block .btn1 {
+    padding: 10px 15px;
+}
+
 .banner {
     position: relative;
     background-position: center;
@@ -9,12 +13,11 @@
     background-size: cover;
 
     width: 100%;
-    height: 90vh;
 
     background-image: url(../img/banner.png);
     background-color: var(--blue-color);
 
-    padding: 50px 0;
+    padding: 50px 0px 70px;
 }
 
 .banner__wrapper {
@@ -26,13 +29,11 @@
 
 .banner-title {
     font-family: "Arsenal";
-    font-size: 64px;
     font-weight: bold;
     max-width: 580px;
 }
 
 .banner-desc {
-    font-size: 18px;
     max-width: 620px;
     margin-top: 40px;
     margin-bottom: 80px;
@@ -238,7 +239,7 @@
 }
 
 .faq-item.active .faq-answer {
-    max-height: 200px;
+    max-height: 1000px;
     opacity: 1;
     padding: 10px;
 }

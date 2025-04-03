@@ -1,6 +1,6 @@
 @media (max-width: 800px) {
-    .title {
-        font-size: 34px;
+    .title6 {
+        font-size: 56px;
     }
 
     .title0 {
@@ -20,7 +20,7 @@
     }
 
     .header__icons img {
-        width: 66px;
+        width: 46px;
     }
 
     .logo img {
@@ -59,7 +59,7 @@
         display: flex;
         flex-direction: column;
 
-        font-size: 32px;
+        font-size: 26px;
     }
 
     .nav.open #lk {
@@ -72,7 +72,6 @@
 
     .nav.open .header__icons {
         position: fixed;
-        /* bottom: 350px; */
         top: 400px;
         right: 0;
         left: 0;
@@ -114,8 +113,21 @@
 }
 
 @media (max-width: 460px) {
+    .btns__lk {
+        flex-direction: column-reverse;
+        width: 100%;
+    }
+
+    .btns__lk button {
+        width: 100%;
+    }
+
+    .title6 {
+        font-size: 42px;
+    }
+
     .title {
-        font-size: 24px;
+        font-size: 32px;
     }
 
     .title0 {

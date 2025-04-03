@@ -90,13 +90,9 @@ function fetchOrganizerStatistics($conn, $userId)
 $userDataResult = fetchUserData($conn, $userId);
 if ($userDataResult) {
     $user = pg_fetch_assoc($userDataResult);
-    $profileImageSrc = !empty($user["image"]) ? "data:image/jpeg;base64," . base64_encode(pg_unescape_bytea($user["image"])) : "img/profile.jpg";
 ?>
     <div class="lk__profile-top">
         <div id="qrcode"></div>
-        <!-- <div class="lk__profile-img">
-            <img src="<?= $profileImageSrc ?>" alt="Профильное изображение">
-        </div> -->
         <div class="lk-a">
             <a class="title2 setting" href="changeUser.php?user_id=<?= $user['user_id'] ?>">
                 <img src="img/icons/setting.svg" alt="setting">Редактировать профиль

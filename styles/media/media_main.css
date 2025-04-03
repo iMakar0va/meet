@@ -1,15 +1,5 @@
 @import url(media_general.css);
 
-@media (max-width: 1200px) {
-    .banner__block-item:first-child {
-        right: 75px;
-    }
-
-    .banner__block-item:last-child {
-        right: 190px;
-    }
-}
-
 @media (max-width: 1024px) {
     .banner__block:last-child {
         display: none;
@@ -32,7 +22,7 @@
     }
 
     .info__block {
-        /* width: 450px; */
+        padding: 10px 50px 15px 20px;
         width: 100%;
     }
 
@@ -59,7 +49,23 @@
     }
 }
 
+@media (max-width: 850px) {
+    .info__number img {
+        right: -20px;
+    }
+
+    .creation,
+    .faq-container {
+        padding: 24px;
+    }
+}
+
 @media (max-width: 480px) {
+
+    .info__number img {
+        right: -15px;
+    }
+
     .banner-title {
         margin-bottom: 40px;
     }
@@ -71,10 +77,9 @@
     .card {
         width: 100%;
     }
-}
 
-@media (max-width: 365px) {
-    .info__block {
-        width: 300px;
+    .creation,
+    .faq-container {
+        padding: 18px;
     }
 }

@@ -1,5 +1,5 @@
 <!-- Бургер-кнопка -->
-<div class="burger-menu" onclick="toggleMenu()">
+<div class="burger-menu title0" onclick="toggleMenu()">
     <img src="img/icons/burger-menu.svg" alt="open"> Меню личного кабинета
 </div>
 <div class="lk__menu">

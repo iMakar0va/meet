@@ -33,11 +33,6 @@ if (!$user) {
     die("Ошибка: пользователь не найден.");
 }
 
-// Определяем изображение
-$imageSrc = !empty($user["image"])
-    ? "data:image/jpeg;base64," . base64_encode(pg_unescape_bytea($user["image"]))
-    : "img/profile.jpg";
-
 $dateFormatted = date("d/m/Y", strtotime($user['birth_date']));
 
 ?>
@@ -79,18 +74,6 @@ $dateFormatted = date("d/m/Y", strtotime($user['birth_date']));
                 <div class="title1">Редактирование профиля пользователя</div>
                 <form id="editUserForm" enctype="multipart/form-data">
                     <input type="hidden" name="user_id" value="<?= $usertId ?>">
-                    <div class="input-file-row">
-                        <label class="input-file">
-                            <input type="file" name="file" multiple accept="image/*" id="profilePictureInput">
-                            <span class="title2">Выберите фото для профиля</span>
-                        </label>
-                        <div class="input-file-list">
-                            <div class="input-file-list-item">
-                                <img class="input-file-list-img" src="<?= $imageSrc ?>" alt="user_image">
-                                <a href="#" onclick="removeFilesItem(this); return false;" class="input-file-list-remove">x</a>
-                            </div>
-                        </div>
-                    </div>
                     <div class="form__group">
                         <input id="last_name" name="last_name" class="input title2" type="text" value="<?php echo $user['last_name']; ?>" placeholder=" " required>
                         <label class="label title2" for="">Фамилия</label>
@@ -126,7 +109,6 @@ $dateFormatted = date("d/m/Y", strtotime($user['birth_date']));
                         <a href="#" class="password-control" onclick="return show_hide_password(this, 'repeat_password');"></a>
                     </div>
                     <div id="error" class="error title2" style="display: none;">Ошибка!</div>
-                    <input type="hidden" name="remove_image" id="removeImageField" value="0">
                     <div class="btns__lk">
                         <button class="btn1 title2" type="button" onclick="window.history.back();">Отмена</button>
                         <button class="btn1 title2" id="saveProfile" type="submit">Сохранить изменения</button>

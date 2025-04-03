@@ -45,7 +45,7 @@
     $getEventUser = "SELECT * FROM organizators o
                      JOIN organizators_events oe ON o.organizator_id = oe.organizator_id
                      JOIN events e ON oe.event_id = e.event_id
-                     WHERE o.organizator_id = $1 AND e.event_date < CURRENT_DATE and e.is_approved = true
+                     WHERE o.organizator_id = $1 AND e.event_date < CURRENT_DATE and e.is_approved = true and e.is_active = true
                      order by e.event_date LIMIT $limit OFFSET $offset;";
 
     $resultGetEventUser = pg_query_params($conn, $getEventUser, [$userId]);
@@ -54,7 +54,7 @@
     $countQuery = "SELECT COUNT(*) FROM organizators o
                    JOIN organizators_events oe ON o.organizator_id = oe.organizator_id
                    JOIN events e ON oe.event_id = e.event_id
-                   WHERE o.organizator_id = $1 AND e.event_date < CURRENT_DATE and e.is_approved = true;";
+                   WHERE o.organizator_id = $1 AND e.event_date < CURRENT_DATE and e.is_approved = true and e.is_active = true;";
     $countResult = pg_query_params($conn, $countQuery, [$userId]);
     $totalRows = pg_fetch_result($countResult, 0, 0);
     $totalPages = ceil($totalRows / $limit);

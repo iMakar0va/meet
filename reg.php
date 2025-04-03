@@ -34,13 +34,6 @@
                 <div class="text-field__icon text-field__icon_person">
                     <input id="first_name" name="first_name" class="text-field__input title2" type="text" placeholder="Имя*" required>
                 </div>
-                <div class="input-file-row">
-                    <label class="input-file">
-                        <input type="file" name="file" multiple accept="image/*">
-                        <span class="title2">Выберите фото для профиля</span>
-                    </label>
-                    <div class="input-file-list"></div>
-                </div>
                 <div class="gender title2">
                     <div class="custom">
                         <input type="radio" id="male" name="gender" value="мужской" required checked>
