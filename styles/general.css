@@ -416,7 +416,7 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
 .modal-content {
     background-color: #fefefe;
     color: var(--black-color);
-    margin: 25% 10px;
+    margin: 25% auto;
     padding: 20px;
     border: 1px solid #888;
     max-width: 600px;
@@ -430,6 +430,7 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
+    margin-left: 10px;
 }
 
 .close:hover {

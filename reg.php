@@ -75,12 +75,12 @@
                     <label for="terms" class="terms-label">Я согласен с <a href="document/политика обработки данных.docx" style="color: #FADD84;">Политикой обрабоки персональных данных</a></label>
                 </div>
                 <div class="checkbox-container">
-                    <input type="checkbox" id="terms2" name="terms2" required>
+                    <input type="checkbox" id="terms3" name="terms3" required>
                     <label for="terms" class="terms-label">Я согласен с <a href="document/пользовательское соглашение.docx" style="color: #FADD84;">Пользовательским соглашением</a></label>
                 </div>
                 <div class="">*-поля для обязательного заполения</div>
                 <div id="error" class="error title2" style="display: none;">Пользователь с такой почтой уже зарегистрирован!</div>
-                <button class="btn1 title2" type="submit">Зарегистрироваться</button>
+                <button class="btn1" type="submit">Зарегистрироваться</button>
                 <a href="./leaderid_login.php" style="text-align: center;">
                     <img src="./img/leader_id.png" alt="Войти через Leader-ID" style="width: 140px; padding: 13px 0px; background: white; border-radius: 10px;">
                 </a>

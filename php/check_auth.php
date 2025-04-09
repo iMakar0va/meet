@@ -33,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Создаем новую сессию и устанавливаем cookie
             session_regenerate_id(true); // Обновляем ID сессии для защиты
             $_SESSION['user_id'] = $userId;
-            // setcookie("user_id", $userId, time() + 3600 * 24 * 30, "/"); // cookie на 30 дней
 
             echo json_encode(['success' => true]);
         } else {
@@ -43,6 +42,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['success' => false, 'message' => 'Пользователь с таким email не найден.']);
     }
 } else {
-    // Если не POST запрос
     echo json_encode(['success' => false, 'message' => 'Неверный метод запроса.']);
 }

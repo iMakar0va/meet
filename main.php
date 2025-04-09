@@ -48,7 +48,7 @@
 
     <div class="carousel">
         <div class="hash">
-            <div class="hash__item title3"><img src="img/icons/hash/tech.svg" alt="">Технологии и инновации</div>
+            <div class="hash__item title3"><img src="img/icons/hash/tech.svg" alt="">Технологии</div>
             <div class="hash__item title3"><img src="img/icons/hash/money.svg" alt="">Бизнес и финансы</div>
             <div class="hash__item title3"><img src="img/icons/hash/bike.svg" alt="">Здоровье и фитнес</div>
             <div class="hash__item title3"><img src="img/icons/hash/picture.svg" alt="">Искусство и культура</div>

@@ -34,7 +34,7 @@
                 </div>
                 <a href="#!" id="resetPasswordLink" class="title3">Восстановить пароль</a>
                 <div id="error" class="error title2" style="display:none;"></div>
-                <button class="btn1 title2">Войти</button>
+                <button class="btn1">Войти</button>
                 <a href="./leaderid_login.php" style="text-align: center;">
                     <img src="./img/leader_id.png" alt="Войти через Leader-ID" style="width: 140px; padding: 13px 0px; background: white; border-radius: 10px;">
                 </a>
