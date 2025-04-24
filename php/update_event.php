@@ -113,7 +113,7 @@ if (isset($_POST['remove_image']) && $_POST['remove_image'] === '1') {
 // Получаем email всех участников мероприятия
 $queryParticipants = "SELECT users.email FROM user_events
                       JOIN users ON user_events.user_id = users.user_id
-                      WHERE user_events.event_id = $1";
+                      WHERE user_events.event_id = $1 and user_events.is_signed = true";
 $resultParticipants = pg_query_params($conn, $queryParticipants, [$eventId]);
 
 $emails = [];

@@ -60,8 +60,8 @@ $html .= '<table border="1" cellpadding="5" cellspacing="0" style="width: 100%; 
     <tbody>';
 
 while ($user = pg_fetch_assoc($resultUsers)) {
-    $presenceStatus = $user['presense'] ? '✓' : '✘'; // Галочка или крестик
-    $signStatus = $user['is_signed'] ? '✓' : '✘'; // Галочка или крестик
+    $presenceStatus = $user['presense'] == 't' ? '✓' : '✘'; // Галочка или крестик
+    $signStatus = $user['is_signed'] == 't' ? '✓' : '✘'; // Галочка или крестик
 
     $html .= sprintf(
         '<tr>
@@ -78,8 +78,8 @@ while ($user = pg_fetch_assoc($resultUsers)) {
         htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8'),
         htmlspecialchars($user['gender'] == 'M' ? 'Муж' : 'Жен', ENT_QUOTES, 'UTF-8'),
         htmlspecialchars($user['birth_date'], ENT_QUOTES, 'UTF-8'),
-        $user['presense'] ? '✔' : '❌',
-        $user['is_signed'] ? '✔' : '❌'
+        $presenceStatus,
+        $signStatus
     );
 }
 

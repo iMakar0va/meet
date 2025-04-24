@@ -176,7 +176,6 @@ header {
     display: none;
 }
 
-
 /* =============Footer============= */
 footer {
     background-color: var(--blue-color);
@@ -197,7 +196,12 @@ footer {
     font-weight: bold;
 }
 
-.footer__block a:hover {
+.footer__cookie a {
+    color: var(--white-color);
+}
+
+.footer__block a:hover,
+.footer__cookie a:hover {
     text-decoration: underline;
 }
 

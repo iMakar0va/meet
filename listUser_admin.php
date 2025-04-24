@@ -48,9 +48,17 @@
         $whereClauses[] = "user_id = $" . (count($params) + 1);
         $params[] = intval($_GET['user_id']); // Приводим к числу для безопасности
     }
+    if (!empty($_GET['last_name'])) {
+        $whereClauses[] = "last_name ILIKE $" . (count($params) + 1);
+        $params[] = '%' . $_GET['last_name'] . '%';
+    }
+    if (!empty($_GET['first_name'])) {
+        $whereClauses[] = "first_name ILIKE $" . (count($params) + 1);
+        $params[] = '%' . $_GET['first_name'] . '%';
+    }
     if (!empty($_GET['email'])) {
-        $whereClauses[] = "email = $" . (count($params) + 1);
-        $params[] = $_GET['email'];
+        $whereClauses[] = "email ILIKE $" . (count($params) + 1);
+        $params[] = '%' . $_GET['email'] . '%';
     }
 
     $whereClause = count($whereClauses) > 0 ? " WHERE " . implode(" AND ", $whereClauses) : "";
@@ -74,9 +82,11 @@
                 <div class="title1">Список пользователей</div>
                 <div class="search-form">
                     <form id="userSearchForm" method="GET" action="">
-                        <input type="text" id="user_id" name="user_id" placeholder="ID пользователя" autocomplete="off"
+                        <input type="text" id="user_id" name="user_id" placeholder="ID" autocomplete="off"
                             value="<?= htmlspecialchars($_GET['user_id'] ?? '') ?>">
-                        <input type="text" id="email" name="email" placeholder="Почта пользователя" autocomplete="off"
+                        <input type="text" name="last_name" id="last_name" placeholder="Фамилия" autocomplete="off" value="<?= htmlspecialchars($_GET['last_name'] ?? '') ?>">
+                        <input type="text" name="first_name" id="first_name" placeholder="Имя" autocomplete="off" value="<?= htmlspecialchars($_GET['first_name'] ?? '') ?>">
+                        <input type="text" id="email" name="email" placeholder="Почта" autocomplete="off"
                             value="<?= htmlspecialchars($_GET['email'] ?? '') ?>">
                         <button type="submit"><img src="./img/icons/search.svg" alt="Найти"></button>
                         <button type="button" id="resetButton"><img src="./img/icons/close.svg" alt="Сбросить"></button>

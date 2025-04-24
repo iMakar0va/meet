@@ -39,6 +39,12 @@ input[type="date"] {
     width: 60%;
 }
 
+#last_name,
+#first_name,
+#email {
+    width: 33%;
+}
+
 #user_id {
     width: 18%;
 }

@@ -40,6 +40,14 @@ if (!empty($_GET['user_id'])) {
     $whereClauses[] = "u.user_id = $" . (count($params) + 1);
     $params[] = intval($_GET['user_id']);
 }
+if (!empty($_GET['last_name'])) {
+    $whereClauses[] = "u.last_name ILIKE $" . (count($params) + 1);
+    $params[] = '%' . $_GET['last_name'] . '%';
+}
+if (!empty($_GET['first_name'])) {
+    $whereClauses[] = "u.first_name ILIKE $" . (count($params) + 1);
+    $params[] = '%' . $_GET['first_name'] . '%';
+}
 if (!empty($_GET['email'])) {
     $whereClauses[] = "u.email ILIKE $" . (count($params) + 1);
     $params[] = '%' . $_GET['email'] . '%';
@@ -83,8 +91,10 @@ $resultUsers = pg_query_params($conn, $getUsersQuery, $params);
                 <div class="search-form">
                     <form id="userSearchForm" method="GET">
                         <input type="hidden" name="event_id" value="<?= htmlspecialchars($eventId) ?>">
-                        <input type="text" name="user_id" id="user_id" placeholder="ID пользователя" value="<?= htmlspecialchars($_GET['user_id'] ?? '') ?>">
-                        <input type="text" name="email" id="email" placeholder="Почта пользователя" value="<?= htmlspecialchars($_GET['email'] ?? '') ?>">
+                        <input type="text" name="user_id" id="user_id" placeholder="ID" autocomplete="off" value="<?= htmlspecialchars($_GET['user_id'] ?? '') ?>">
+                        <input type="text" name="last_name" id="last_name" placeholder="Фамилия" autocomplete="off" value="<?= htmlspecialchars($_GET['last_name'] ?? '') ?>">
+                        <input type="text" name="first_name" id="first_name" placeholder="Имя" autocomplete="off" value="<?= htmlspecialchars($_GET['first_name'] ?? '') ?>">
+                        <input type="text" name="email" id="email" placeholder="Почта" autocomplete="off" value="<?= htmlspecialchars($_GET['email'] ?? '') ?>">
                         <button type="submit"><img src="./img/icons/search.svg" alt="Найти"></button>
                         <button type="button" id="resetButton"><img src="./img/icons/close.svg" alt="Сбросить"></button>
                     </form>

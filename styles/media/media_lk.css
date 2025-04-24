@@ -55,7 +55,9 @@
     .lk__profile form input,
     #email,
     #user_id,
-    #title {
+    #title,
+    #last_name,
+    #first_name {
         width: 100%;
     }
 

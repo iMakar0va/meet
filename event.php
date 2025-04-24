@@ -155,7 +155,10 @@
                         window.location.href = "auth.php";
                         return;
                     }
-
+                    const wantsToUnregister = registerButton.textContent.trim() === "Отписаться";
+                    if (wantsToUnregister && !confirm("Вы уверены, что хотите отменить запись?")) {
+                        return; // пользователь нажал «Отмена» – ничего не делаем
+                    }
                     // Запись на мероприятие
                     fetch("php/register_for_event.php", {
                             method: "POST",
