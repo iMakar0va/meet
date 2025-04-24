@@ -80,9 +80,20 @@
     margin: 45px auto;
 }
 
+.event-bottom-block:first-child {
+    width: 70%;
+}
+
+.event-bottom-block a:hover {
+    text-decoration: underline;
+}
+
 .event-bottom {
     color: var(--black-color);
     padding: 35px 0px;
+    display: flex;
+    justify-content: space-between;
+    gap: 50px;
 }
 
 .event-bottom .title1 {

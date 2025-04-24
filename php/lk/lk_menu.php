@@ -93,6 +93,14 @@
                 'pastEvent_organizer.php' => 'История'
             ], [], $current_page);
         }
+    } else if ($userStatus['is_approved'] === 'f') {
+        renderMenuItemsWithCount('Организатор', [
+            '#!' => 'Ожидание ответа'
+        ], [], $current_page);
+    } else {
+        renderMenuItemsWithCount('Организатор', [
+            'request.php' => 'Стать организатором'
+        ], [], $current_page);
     }
 
     // Проверка, если пользователь является администратором

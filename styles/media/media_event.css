@@ -20,6 +20,12 @@
     }
 
     .event-bottom {
+        flex-direction: column;
+        gap: 0;
         padding: 15px 0px;
+    }
+
+    .event-bottom-block:first-child {
+        width: 100%;
     }
 }

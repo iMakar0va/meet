@@ -68,6 +68,27 @@ if ($userId) {
 // Проверка изображения
 $imageContent = handleImageUpload();
 
+// Загрузка программы мероприятия
+$programFile  = null;
+$programMime  = null;
+
+if (isset($_FILES['program']) && $_FILES['program']['error'] === UPLOAD_ERR_OK) {
+    $allowedDocTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ];
+    if (in_array($_FILES['program']['type'], $allowedDocTypes, true)) {
+        $tmp = $_FILES['program']['tmp_name'];
+        $programFile = pg_escape_bytea($conn, file_get_contents($tmp));
+        $programMime = $_FILES['program']['type'];  // сохраняем тип
+    } else {
+        $response['message'] = 'Допустимы только PDF или DOCX.';
+        echo json_encode($response);
+        exit();
+    }
+}
+
 if ($imageContent === false) {
     echo json_encode($response);
     exit();
@@ -76,8 +97,8 @@ if ($imageContent === false) {
 try {
     // Вставка мероприятия
     $insertEventQuery = "
-        INSERT INTO events(image, title, type, topic, description, start_time, end_time, event_date, city, address, organizer, place, phone, email)
-        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+        INSERT INTO events(image, title, type, topic, description, start_time, end_time, event_date, city, address, organizer, place, phone, email, program_file)
+        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
         RETURNING event_id;
     ";
 
@@ -96,7 +117,8 @@ try {
         $organizer,
         $eventData['place'],
         $eventData['phone'],
-        $organizerEmail
+        $organizerEmail,
+        $programFile
     ]);
 
     // Получаем ID вставленного события
@@ -121,7 +143,6 @@ try {
     } else {
         throw new Exception('Ошибка при сохранении данных в базу.');
     }
-
 } catch (Exception $e) {
     $response['message'] = 'Ошибка: ' . $e->getMessage();
 } finally {

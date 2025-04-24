@@ -22,7 +22,7 @@
         $eventQuery = pg_prepare($conn, "get_event", "SELECT * FROM events WHERE event_id = $1;");
         $resultGetEvents = pg_execute($conn, "get_event", [$eventId]);
 
-        $organizerQuery = pg_prepare($conn, "get_organizer", "SELECT o.organizator_id, o.name, o.email, o.phone_number FROM organizators_events oe
+        $organizerQuery = pg_prepare($conn, "get_organizer", "SELECT * FROM organizators_events oe
                                                               JOIN organizators o ON o.organizator_id = oe.organizator_id
                                                               WHERE oe.event_id = $1;");
         $resultGetOrganizator = pg_execute($conn, "get_organizer", [$eventId]);
@@ -106,23 +106,39 @@
 
                 <div class="container">
                     <div class="event-bottom">
-                        <div class="title1">Описание мероприятия</div>
-                        <p class="title2">
-                            <?= htmlspecialchars($event['description']) ?>
-                        </p>
-                        <div class="title1">Контакты</div>
-                        <div class="contact">
-                            <div class="contact__item title2">
-                                <img src="img/icons/phone.svg" alt="phone">
-                                <?= htmlspecialchars($event['phone']) ?>
+                        <div class="event-bottom-block">
+                            <div class="title1">Описание мероприятия</div>
+                            <p class="title2">
+                                <?= htmlspecialchars($event['description']) ?>
+                            </p>
+                        </div>
+                        <div class="event-bottom-block">
+                            <div class="title1">Программа мероприятия</div>
+                            <div class="contact">
+                                <?php if ($event['program_file'] !== null): ?>
+                                    <a class="download"
+                                        href="php/download_program.php?event_id=<?= $eventId ?>">
+                                        Скачать программу мероприятия <?= htmlspecialchars($event['title']) ?>
+                                    </a>
+                                <?php else: ?>
+                                    <span class="title2">Файл не загружен</span>
+                                <?php endif; ?>
                             </div>
-                            <div class="contact__item title2">
-                                <img src="img/icons/email-event.svg" alt="email">
-                                <?= htmlspecialchars($event['email']) ?>
-                            </div>
-                            <div class="contact__item title2">
-                                <img src="img/icons/place.svg" alt="place">
-                                <?= htmlspecialchars($event['address']) ?>
+
+                            <div class="title1">Контакты</div>
+                            <div class="contact">
+                                <div class="contact__item title2">
+                                    <img src="img/icons/phone.svg" alt="phone">
+                                    <?= htmlspecialchars($event['phone']) ?>
+                                </div>
+                                <div class="contact__item title2">
+                                    <img src="img/icons/email-event.svg" alt="email">
+                                    <?= htmlspecialchars($event['email']) ?>
+                                </div>
+                                <div class="contact__item title2">
+                                    <img src="img/icons/place.svg" alt="place">
+                                    <?= htmlspecialchars($event['address']) ?>
+                                </div>
                             </div>
                         </div>
                     </div>

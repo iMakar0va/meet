@@ -28,20 +28,28 @@
         <div class="lk">
             <?php require 'php/lk/lk_menu.php'; ?>
             <div class="lk__profile">
+                <div class="title1">Хочешь стать организатором?</div>
+                <div class="title2" style="color: var(--black-color);">
+                    Хочешь не просто участвовать, а создавать собственные мероприятия? Воплоти свои идеи в жизнь — стань организатором и собери единомышленников!
+                </div>
                 <div class="title1">Формирование заявки</div>
                 <form id="requestForm">
-                    <div class="text-field__icon">
-                        <input id="name_organizer" name="name_organizer" class="text-field__input title2" type="text" placeholder="Название оргинизации" required>
-                    </div>
-                    <div class="text-field__icon">
-                        <input id="phone" name="phone" class="text-field__input title2" type="text" placeholder="Номер телефона" required>
-                    </div>
-                    <div class="text-field__icon">
-                        <input id="date_start_work" name="date_start_work" class="text-field__input title2" type="text" placeholder="Дата начала деятельности" required>
+                    <div class="form__group">
+                        <input id="name_organizer" name="name_organizer" class="input title2" type="text" placeholder=" " required>
+                        <label class="label title2" for="">Название организации*</label>
                     </div>
                     <div class="form__group">
-                        <textarea class="input textarea title2" id="description" name="description" rows="4" placeholder="Описание деятельности организации" required></textarea>
+                        <input id="phone" name="phone" class="input title2" type="text" placeholder=" " required>
+                        <label class="label title2" for="">Номер телефона*</label>
                     </div>
+                    <div class="form__group">
+                        <input id="date_start_work" name="date_start_work" class="input title2" type="text" placeholder=" " required>
+                        <label class="label title2" for="">Дата начала деятельности*</label>
+                    </div>
+                    <div class="form__group">
+                        <textarea class="input textarea title2" id="description" name="description" rows="4" placeholder="Описание деятельности организации*" required></textarea>
+                    </div>
+                    <div class="" style="color: black;">*-поля для обязательного заполения</div>
                     <div id="error" class="error title2" style="display: none;"></div>
                     <button class="btn1 title2" type="submit">Отправить заявку</button>
                 </form>

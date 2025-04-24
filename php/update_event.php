@@ -31,6 +31,26 @@ $address = $_POST['address_event'] ?? '';
 $phone = $_POST['phone'] ?? '';
 $email = $_POST['email'] ?? '';
 
+// Загрузка программы мероприятия
+$programFile  = null;
+$programMime  = null;
+
+if (isset($_FILES['program']) && $_FILES['program']['error'] === UPLOAD_ERR_OK) {
+    $allowedDocTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ];
+    if (in_array($_FILES['program']['type'], $allowedDocTypes, true)) {
+        $tmp = $_FILES['program']['tmp_name'];
+        $programFile = pg_escape_bytea($conn, file_get_contents($tmp));
+        $programMime = $_FILES['program']['type'];  // сохраняем тип
+    } else {
+        $response['message'] = 'Допустимы только PDF или DOCX.';
+        echo json_encode($response);
+        exit();
+    }
+}
 // Проверка обязательных полей
 if (empty($title) || empty($type) || empty($topic) || empty($description) || empty($eventDate) || empty($startTime) || empty($endTime) || empty($city) || empty($place) || empty($address) || empty($phone) || empty($email)) {
     echo json_encode(['success' => false, 'message' => 'Ошибка: все поля должны быть заполнены.']);
@@ -38,7 +58,7 @@ if (empty($title) || empty($type) || empty($topic) || empty($description) || emp
 }
 
 // Обновление данных мероприятия
-$query = "UPDATE events SET title = $1, type = $2, topic = $3, description = $4, event_date = $5, start_time = $6, end_time = $7, city = $8, place = $9, address = $10, phone = $11, email = $12 WHERE event_id = $13";
+$query = "UPDATE events SET title = $1, type = $2, topic = $3, description = $4, event_date = $5, start_time = $6, end_time = $7, city = $8, place = $9, address = $10, phone = $11, email = $12, program_file = $13 WHERE event_id = $14";
 $result = pg_query_params($conn, $query, [
     $title,
     $type,
@@ -52,6 +72,7 @@ $result = pg_query_params($conn, $query, [
     $address,
     $phone,
     $email,
+    $programFile,
     $eventId
 ]);
 

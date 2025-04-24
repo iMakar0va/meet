@@ -128,7 +128,18 @@ $endTimeFormatted = date("H:i", strtotime($event['end_time']));
                             </div>
                         </div>
                     </div>
-
+                    <div class="form__group" style="text-align: center;">
+                        <label class="input-file">
+                            <input type="file"
+                                id="programInput"
+                                name="program"
+                                multiple
+                                accept=".pdf,.doc,.docx">
+                            <span class="title2" id="programLabel">
+                                PDF или DOCX с программой
+                            </span>
+                        </label>
+                    </div>
                     <div class="form__group">
                         <input id="title_event" name="title_event" class="input title2" type="text" value="<?= htmlspecialchars($event['title']) ?>" placeholder=" " required>
                         <label class="label title2" for="">Название мероприятия</label>
@@ -225,6 +236,24 @@ $endTimeFormatted = date("H:i", strtotime($event['end_time']));
     ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="./scripts/change_event.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const fileInput = document.getElementById('programInput');
+            const fileLabel = document.getElementById('programLabel');
+            const defaultTxt = fileLabel.textContent;
+
+            fileInput.addEventListener('change', () => {
+                fileLabel.textContent = "";
+                if (fileInput.files.length) {
+                    // Отображаем имя последнего выбранного файла
+                    fileLabel.textContent = fileInput.files[fileInput.files.length - 1].name;
+                } else {
+                    // Если файлы не выбраны, возвращаем подпись по-умолчанию
+                    fileLabel.textContent = defaultTxt;
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
