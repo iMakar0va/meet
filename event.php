@@ -156,8 +156,8 @@
     ?>
 
     <?php require './php/footer.php'; ?>
+    <script src="./scripts/custom‑dialogs.js"></script>
     <script>
-        // Обработчик записи на мероприятие
         document.addEventListener("DOMContentLoaded", function() {
             const registerButton = document.getElementById("registerButton");
             const participantsCount = document.getElementById("participantsCount");
@@ -171,35 +171,47 @@
                         window.location.href = "auth.php";
                         return;
                     }
-                    const wantsToUnregister = registerButton.textContent.trim() === "Отписаться";
-                    if (wantsToUnregister && !confirm("Вы уверены, что хотите отменить запись?")) {
-                        return; // пользователь нажал «Отмена» – ничего не делаем
-                    }
-                    // Запись на мероприятие
-                    fetch("php/register_for_event.php", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/x-www-form-urlencoded"
-                            },
-                            body: `event_id=<?= $eventId ?>`
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            alert(data.message);
 
-                            if (data.success) {
-                                if (data.action === "registered") {
-                                    registerButton.textContent = "Отписаться";
-                                    registerButton.style.backgroundColor = "var(--brown-color)";
-                                    participantsCount.textContent = parseInt(participantsCount.textContent) + 1;
-                                } else if (data.action === "unregistered") {
-                                    registerButton.textContent = "Записаться";
-                                    registerButton.style.backgroundColor = "var(--yellow-color)";
-                                    participantsCount.textContent = parseInt(participantsCount.textContent) - 1;
-                                }
-                            }
-                        })
-                        .catch(error => console.error("Ошибка:", error));
+                    const wantsToUnregister = registerButton.textContent.trim() === "Отписаться";
+
+                    // Кастомный confirm
+                    if (wantsToUnregister) {
+                        customConfirm("Вы уверены, что хотите отменить запись?", function(userConfirmed) {
+                            if (!userConfirmed) return;
+
+                            sendRegisterRequest(); // вызов общей функции
+                        });
+                    } else {
+                        sendRegisterRequest(); // если это не отписка, сразу отправляем
+                    }
+
+                    function sendRegisterRequest() {
+                        fetch("php/register_for_event.php", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                },
+                                body: `event_id=<?= $eventId ?>`
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                // Кастомный alert
+                                customAlert(data.message, function() {
+                                    if (data.success) {
+                                        if (data.action === "registered") {
+                                            registerButton.textContent = "Отписаться";
+                                            registerButton.style.backgroundColor = "var(--brown-color)";
+                                            participantsCount.textContent = parseInt(participantsCount.textContent) + 1;
+                                        } else if (data.action === "unregistered") {
+                                            registerButton.textContent = "Записаться";
+                                            registerButton.style.backgroundColor = "var(--yellow-color)";
+                                            participantsCount.textContent = parseInt(participantsCount.textContent) - 1;
+                                        }
+                                    }
+                                });
+                            })
+                            .catch(error => console.error("Ошибка:", error));
+                    }
                 });
             }
         });

@@ -95,14 +95,15 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 if (response.success) {
-                    alert(response.message);
-                    window.location.href = "listOrganizatorActive_admin.php";
+                    customAlert(response.message, function () {
+                        window.location.href = "listOrganizatorActive_admin.php";
+                    });
                 } else {
-                    alert("Ошибка: " + response.message);
+                    customAlert("Ошибка: " + response.message);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                alert("Ошибка AJAX: " + textStatus + " - " + errorThrown);
+                customAlert("Ошибка AJAX: " + textStatus + " - " + errorThrown);
                 console.log(jqXHR.responseText); // Логирование ошибки в консоль
             }
         });

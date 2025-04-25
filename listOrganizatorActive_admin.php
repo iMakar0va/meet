@@ -92,6 +92,7 @@ $totalPages = ceil($totalRows / $limit);
     </div>
 
     <?php require './php/footer.php'; ?>
+    <script src="./scripts/custom‑dialogs.js"></script>
     <script>
         // Обработчик отмены активных организаторов
         document.addEventListener('DOMContentLoaded', function() {
@@ -102,33 +103,58 @@ $totalPages = ceil($totalRows / $limit);
                     let reason = '';
 
                     if (isApproved) {
-                        reason = prompt('Укажите причину отмены статуса организатора:');
-                        if (!reason || reason.trim() === '') {
-                            alert('Причина обязательна.');
-                            return;
-                        }
-                    }
+                        // Используем кастомную функцию для prompt
+                        customPrompt('Укажите причину отмены статуса организатора:', function(inputValue) {
+                            reason = inputValue;
 
-                    // Отмена активных организаторов
-                    fetch('./php/toggle_organizator.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded'
-                            },
-                            body: `organizator_id=${organizatorId}&action=${isApproved ? 'cancel' : 'approve'}&reason=${encodeURIComponent(reason)}`
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                alert("Статус организатора снят!");
-                                document.querySelector(`.card_organizator[data-id="${organizatorId}"]`).remove();
-                            } else {
-                                alert(data.message || 'Ошибка при изменении статуса.');
+                            if (!reason || reason.trim() === '') {
+                                return;
                             }
-                        })
-                        .catch(error => {
-                            console.error('Ошибка сети:', error);
+
+                            // Отмена активных организаторов
+                            fetch('./php/toggle_organizator.php', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/x-www-form-urlencoded'
+                                    },
+                                    body: `organizator_id=${organizatorId}&action=${isApproved ? 'cancel' : 'approve'}&reason=${encodeURIComponent(reason)}`
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        customAlert("Статус организатора снят!");
+                                        document.querySelector(`.card_organizator[data-id="${organizatorId}"]`).remove();
+                                    } else {
+                                        customAlert(data.message || 'Ошибка при изменении статуса.');
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Ошибка сети:', error);
+                                    customAlert('Произошла ошибка при отправке запроса. Попробуйте позже.');
+                                });
                         });
+                    } else {
+                        // Если статус не активен, сразу меняем его на "одобрен"
+                        fetch('./php/toggle_organizator.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                body: `organizator_id=${organizatorId}&action=approve&reason=`
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    customAlert("Статус организатора одобрен!");
+                                } else {
+                                    customAlert(data.message || 'Ошибка при изменении статуса.');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Ошибка сети:', error);
+                                customAlert('Произошла ошибка при отправке запроса. Попробуйте позже.');
+                            });
+                    }
                 });
             });
         });

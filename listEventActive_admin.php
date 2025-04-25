@@ -4,7 +4,6 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
-    <!-- <link rel="stylesheet" href="styles/auth.css"> -->
     <link rel="stylesheet" href="styles/lk.css">
     <link rel="stylesheet" href="styles/search_form.css">
     <link rel="stylesheet" href="styles/media/media_auth.css">
@@ -40,7 +39,6 @@
     $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
     $offset = ($page - 1) * $limit;
 
-    // ..............
     // Фильтрация
     $whereClauses = [];
     $params = [];
@@ -55,7 +53,6 @@
         $params[] = $_GET['event_date'];
     }
     $whereClause = count($whereClauses) > 0 ? " AND " . implode(" AND ", $whereClauses) : "";
-    // ..............
 
     // Запрос на получение мероприятий с пагинацией
     $getEvents = "SELECT * FROM events WHERE is_active = true and is_approved = true AND event_date >= CURRENT_DATE $whereClause ORDER BY event_date LIMIT $limit OFFSET $offset";
@@ -119,6 +116,7 @@
     </div>
 
     <?php require './php/footer.php'; ?>
+    <script src="./scripts/custom‑dialogs.js"></script>
     <script>
         document.getElementById('resetButton').addEventListener('click', function() {
             window.location.href = 'listEventActive_admin.php';
@@ -138,10 +136,11 @@
                     if (!isActive) {
                         updateEventStatus(eventId, null);
                     } else {
-                        const reason = prompt('Укажите причину отмены мероприятия:');
-                        if (reason !== null && reason.trim() !== '') {
-                            updateEventStatus(eventId, reason);
-                        }
+                        customPrompt('Укажите причину отмены мероприятия:', function(reason) {
+                            if (reason !== null && reason.trim() !== '') {
+                                updateEventStatus(eventId, reason);
+                            }
+                        });
                     }
                 });
             });
@@ -159,13 +158,14 @@
                     .then(data => {
                         if (data.success) {
                             document.querySelector(`.toggle-event-button[data-id="${eventId}"]`).closest('.card').remove();
+                            customAlert('Мероприятие отменено.');
                         } else {
-                            alert(data.message || 'Ошибка при изменении статуса.');
+                            customAlert(data.message || 'Ошибка при изменении статуса.');
                         }
                     })
                     .catch(error => {
                         console.error('Ошибка сети:', error);
-                        alert('Ошибка сети. Попробуйте позже.');
+                        customAlert('Ошибка сети. Попробуйте позже.');
                     });
             }
         });

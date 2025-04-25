@@ -72,10 +72,16 @@
 
     <?php require './php/footer.php'; ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="./scripts/custom‑dialogs.js"></script>
     <script>
         // Обработчик запросов мероприятия
         function approveEvent(eventId, eventTitle) {
-            if (confirm(`Одобрить мероприятие "${eventTitle}"?`)) {
+            customConfirm(`Вы уверены, что хотите одобрить мероприятие "${eventTitle}"?`, function(confirmed) {
+                if (!confirmed) {
+                    return; // Если пользователь отменил, ничего не делаем
+                }
+
+                // Отправка запроса на одобрение мероприятия
                 fetch('php/process_event_request.php', {
                         method: 'POST',
                         headers: {
@@ -85,37 +91,47 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-                        alert(data.message);
+                        customAlert(data.message); // Показываем кастомное сообщение
                         if (data.success) {
                             const eventCard = document.querySelector(`#event-${eventId}`);
                             if (eventCard) eventCard.remove();
                         }
                     })
-                    .catch(error => console.error('Ошибка:', error));
-            }
+                    .catch(error => {
+                        console.error('Ошибка:', error);
+                        customAlert('Произошла ошибка при обработке запроса.');
+                    });
+            });
         }
 
-        // Указание причины откза
+        // Указание причины откоза
         function rejectEvent(eventId, eventTitle) {
-            let reason = prompt(`Укажите причину отклонения мероприятия "${eventTitle}":`);
-            if (!reason) return;
+            customPrompt(`Укажите причину отклонения мероприятия "${eventTitle}":`, function(reason) {
+                if (!reason) {
+                    return; // Если причина не указана, ничего не делаем
+                }
 
-            fetch('php/process_event_request.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: 'event_id=' + eventId + '&action=reject&reason=' + encodeURIComponent(reason)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    alert(data.message);
-                    if (data.success) {
-                        const eventCard = document.querySelector(`#event-${eventId}`);
-                        if (eventCard) eventCard.remove();
-                    }
-                })
-                .catch(error => console.error('Ошибка:', error));
+                // Отправка запроса на отклонение мероприятия с причиной
+                fetch('php/process_event_request.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: 'event_id=' + eventId + '&action=reject&reason=' + encodeURIComponent(reason)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        customAlert(data.message); // Показываем кастомное сообщение
+                        if (data.success) {
+                            const eventCard = document.querySelector(`#event-${eventId}`);
+                            if (eventCard) eventCard.remove();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Ошибка:', error);
+                        customAlert('Произошла ошибка при обработке запроса.');
+                    });
+            });
         }
     </script>
     <script>

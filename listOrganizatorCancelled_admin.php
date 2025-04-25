@@ -92,36 +92,44 @@ $totalPages = ceil($totalRows / $limit);
 
     <?php pg_close($conn); ?>
     <?php require './php/footer.php'; ?>
-
+    <script src="./scripts/custom‑dialogs.js"></script>
     <script>
         // Обработчик одобрения активных организаторов
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.toggle-button').forEach(button => {
                 button.addEventListener('click', function() {
                     const organizatorId = button.getAttribute('data-id');
-                    if (!confirm("Вы уверены, что хотите предоставить права организатору?")) {
-                        return; // Если пользователь отменил, ничего не делаем
-                    }
-                    // Одобрение активных организаторов
-                    fetch('./php/toggle_organizator.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded'
-                            },
-                            body: `organizator_id=${organizatorId}&action=approve`
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                alert("Статус организатора присвоен!");
-                                document.querySelector(`.card_organizator[data-id="${organizatorId}"]`).remove();
-                            } else {
-                                alert(data.message || 'Ошибка при изменении статуса.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Ошибка сети:', error);
-                        });
+
+                    // Используем кастомный confirm
+                    customConfirm("Вы уверены, что хотите предоставить права организатору?", function(confirmed) {
+                        if (!confirmed) {
+                            return; // Если пользователь отменил, ничего не делаем
+                        }
+
+                        // Одобрение активных организаторов
+                        fetch('./php/toggle_organizator.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                body: `organizator_id=${organizatorId}&action=approve`
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    // Используем кастомное уведомление
+                                    customAlert("Статус организатора присвоен!", function() {
+                                        document.querySelector(`.card_organizator[data-id="${organizatorId}"]`).remove();
+                                    });
+                                } else {
+                                    // Используем кастомное уведомление
+                                    customAlert(data.message || 'Ошибка при изменении статуса.');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Ошибка сети:', error);
+                            });
+                    });
                 });
             });
         });

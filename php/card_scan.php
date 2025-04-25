@@ -32,7 +32,7 @@ $imageSrc = !empty($row["image"])
     </div>
     <div class="card__btns">
         <a href="php/scan_event.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Начать сканирование</a>
-        <a href="listUserEvent.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Посмотреть список</a>
+        <a href="listUserEvent.php?event_id=<?= htmlspecialchars($row['event_id']) ?>" class="btn1">Список участников</a>
     </div>
 </div>
 <!-- /card -->

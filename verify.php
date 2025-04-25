@@ -39,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $row = pg_fetch_assoc($resultInsert);
             $userId = $row['user_id'];
             $_SESSION['user_id'] = $userId;
-            // setcookie("user_id", $userId, time() + 3600 * 24 * 30, "/");
 
             unset($_SESSION['verification_code']);
             unset($_SESSION['reg_data']);
@@ -154,7 +153,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input class="ap-otp-input" type="text" maxlength="1" data-index="5" inputmode="numeric" name="input6">
                 </div>
                 <button type="submit" class="btn1">Подтвердить</button>
-                <!-- <h4 class="title3"></h4> -->
                 <a href="./reg.php">Вернуться к входу</a>
             </form>
         </div>

@@ -61,7 +61,7 @@
     </div>
 
     <?php require './php/footer.php'; ?>
-
+    <script src="./scripts/custom‑dialogs.js"></script>
     <script>
         // Обработчик запросов организаторов
         document.addEventListener('DOMContentLoaded', function() {
@@ -71,41 +71,57 @@
                     const action = button.classList.contains('approve-button') ? 'approve' : 'delete';
                     let reason = '';
 
+                    // Обработка отклонения заявки
                     if (action === 'delete') {
-                        reason = prompt('Укажите причину отклонения заявки:');
-                        if (!reason || reason.trim() === '') {
-                            alert('Причина отклонения обязательна.');
-                            return;
-                        }
-                    }
-                    if (action === 'approve') {
-                        if (!confirm("Вы уверены, что хотите одобрить заявку?")) {
-                            return; // Если пользователь отменил, ничего не делаем
-                        }
+                        customPrompt('Укажите причину отклонения заявки:', function(inputReason) {
+                            reason = inputReason;
+                            if (!reason || reason.trim() === '') {
+                                return;
+                            }
+
+                            // Отправка запроса на отклонение
+                            handleRequest(action, organizatorId, reason, button);
+                        });
                     }
 
-                    fetch('./php/toggle_request.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded'
-                            },
-                            body: `organizator_id=${organizatorId}&action=${action}&reason=${encodeURIComponent(reason)}`
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                button.closest('.card_organizator').remove();
-                            } else {
-                                alert(data.message || 'Ошибка при обработке запроса.');
+                    // Обработка одобрения заявки
+                    if (action === 'approve') {
+                        customConfirm('Вы уверены, что хотите одобрить заявку?', function(confirmed) {
+                            if (!confirmed) {
+                                return; // Если пользователь отменил, ничего не делаем
                             }
-                        })
-                        .catch(error => {
-                            console.error('Ошибка сети:', error);
-                            alert('Ошибка сети. Попробуйте позже.');
+
+                            // Отправка запроса на одобрение
+                            handleRequest(action, organizatorId, reason, button);
                         });
+                    }
                 });
             });
         });
+
+        // Функция для отправки запросов на одобрение или отклонение
+        function handleRequest(action, organizatorId, reason, button) {
+            fetch('./php/toggle_request.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `organizator_id=${organizatorId}&action=${action}&reason=${encodeURIComponent(reason)}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        button.closest('.card_organizator').remove();
+                        customAlert(data.message || 'Запрос обработан успешно.');
+                    } else {
+                        customAlert(data.message || 'Ошибка при обработке запроса.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка сети:', error);
+                    customAlert('Ошибка сети. Попробуйте позже.');
+                });
+        }
     </script>
 
 </body>

@@ -11,19 +11,22 @@ if (!isset($_SESSION['user_id'])) {
 
 $userId = $_SESSION['user_id'];
 
-// Проверка, является ли пользователь администратором
-$queryAdmin = "SELECT 1 FROM users WHERE user_id = $1 AND is_admin = true";
-$resultAdmin = pg_query_params($conn, $queryAdmin, [$userId]);
-
-if (!$resultAdmin || pg_num_rows($resultAdmin) == 0) {
+// Проверка наличия event_id в GET
+if (!isset($_GET['event_id'])) {
     header("Location: lk.php");
     exit();
 }
 
-// Получаем ID мероприятия из GET-параметров
-$eventId = $_GET['event_id'] ?? null;
-if (!$eventId) {
-    die("Ошибка: отсутствует идентификатор мероприятия.");
+$eventId = $_GET['event_id'];
+
+// Проверка, является ли пользователь организатором мероприятия
+$queryOrganizer = "SELECT 1 FROM events WHERE event_id = $1 AND organizer_id = $2";
+$resultOrganizer = pg_query_params($conn, $queryOrganizer, [$eventId, $userId]);
+
+if (!$resultOrganizer || pg_num_rows($resultOrganizer) === 0) {
+    // Если пользователь не организатор этого мероприятия
+    header("Location: lk.php");
+    exit();
 }
 
 // Получаем название мероприятия
@@ -57,7 +60,7 @@ $whereClause = " WHERE " . implode(" AND ", $whereClauses);
 
 // Запрос на получение пользователей, записанных на мероприятие
 $getUsersQuery = "
-    SELECT u.user_id, u.email, ue.presense
+    SELECT u.user_id, u.email, ue.presense, u.first_name, u.last_name
     FROM users u
     JOIN user_events ue ON u.user_id = ue.user_id
     $whereClause
@@ -115,7 +118,7 @@ $resultUsers = pg_query_params($conn, $getUsersQuery, $params);
                                 $presense = $row['presense'] == 't' ? 'Присутствует' : 'Не присутствует';
                                 echo "<tr>";
                                 echo "<td>{$row['user_id']}</td>";
-                                echo "<td>{$row['email']}</td>";
+                                echo "<td>{$row['last_name']} {$row['first_name']} <br> {$row['email']}</td>";
                                 echo "<td>
                                 <button class='presense-button' data-user='{$row['user_id']}' data-presense='{$row['presense']}'>
                                     {$presense}

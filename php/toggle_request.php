@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Получаем email организатора
-    $emailQuery = "SELECT email FROM organizators WHERE organizator_id = $1";
+    $emailQuery = "SELECT email, name FROM organizators WHERE organizator_id = $1";
     $emailResult = pg_query_params($conn, $emailQuery, [$organizatorId]);
     $userData = pg_fetch_assoc($emailResult);
     $userEmail = $userData['email'] ?? null;
@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $mail->Subject = 'Ваша заявка отклонена';
             $mail->Subject = 'Уведомление об отказе';
-                $mail->Body = "
+            $mail->Body = "
                     <h1>Уведомление об отказе</h1>
                     <p>Уважаемый организатор,</p>
                     <p>Мы вынуждены сообщить вам, что ваша заявка на становление организатором <strong>\"{$userData['name']}\"</strong> на платформе <strong>MEET</strong> была отклонена.</p>
@@ -88,11 +88,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <p>Команда MEET</p>
                 ";
 
-                $mail->AltBody = "Уважаемый организатор,\n\n"
-                    . "Мы вынуждены сообщить вам, что ваша заявка на становление организатором на платформе MEET была отклонена.\n\n"
-                    . "Причина: {$reason}\n\n"
-                    . "Если у вас возникли вопросы или вы хотите уточнить детали, пожалуйста, свяжитесь с нашей командой.\n\n"
-                    . "С уважением,\nКоманда MEET";
+            $mail->AltBody = "Уважаемый организатор,\n\n"
+                . "Мы вынуждены сообщить вам, что ваша заявка на становление организатором на платформе MEET была отклонена.\n\n"
+                . "Причина: {$reason}\n\n"
+                . "Если у вас возникли вопросы или вы хотите уточнить детали, пожалуйста, свяжитесь с нашей командой.\n\n"
+                . "С уважением,\nКоманда MEET";
 
             $response['message'] = 'Заявка удалена, уведомление отправлено';
         }

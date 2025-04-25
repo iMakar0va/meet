@@ -105,6 +105,7 @@ $dateFormatted = date("d/m/Y", strtotime($organizator['date_start_work']));
     require './php/footer.php';
     ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="./scripts/custom‑dialogs.js"></script>
     <script src="./scripts/change_organizator.js"></script>
 </body>
 

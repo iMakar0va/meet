@@ -132,7 +132,7 @@ $(document).ready(function () {
             errorBlock.style.display = 'block';
             return;
         }
-        // Обработчик изменения меропрития
+        // Обработчик изменения мероприятия
         $.ajax({
             url: "php/update_event.php",
             type: "POST",
@@ -142,18 +142,19 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 if (response.success) {
-                    alert(response.message);
-                    window.history.back();
-                    // window.location.href = "listEventActive_admin.php";
+                    customAlert(response.message, function () {
+                        window.history.back();
+                    });
                 } else {
-                    alert("Ошибка: " + response.message);
+                    customAlert("Ошибка: " + response.message);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                alert("Ошибка AJAX: " + textStatus + " - " + errorThrown);
+                customAlert("Ошибка AJAX: " + textStatus + " - " + errorThrown);
                 console.log(jqXHR.responseText); // Логирование ошибки в консоль
             }
         });
+
     });
 });
 

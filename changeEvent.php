@@ -71,10 +71,6 @@ $query = "SELECT * FROM events WHERE event_id = $1";
 $result = pg_query_params($conn, $query, [$eventId]);
 $event = pg_fetch_assoc($result);
 
-// if (!$event) {
-//     die("Ошибка: мероприятие не найдено.");
-// }
-
 // Определяем изображение
 $imageSrc = !empty($event["image"])
     ? "data:image/jpeg;base64," . base64_encode(pg_unescape_bytea($event["image"]))
@@ -235,6 +231,7 @@ $endTimeFormatted = date("H:i", strtotime($event['end_time']));
     require './php/footer.php';
     ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="./scripts/custom‑dialogs.js"></script>
     <script src="./scripts/change_event.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {

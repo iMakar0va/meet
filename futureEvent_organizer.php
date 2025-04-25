@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="styles/auth.css">
     <link rel="stylesheet" href="styles/lk.css">
-    <!-- <link rel="stylesheet" href="styles/search_form.css"> -->
     <link rel="stylesheet" href="styles/media/media_auth.css">
     <link rel="stylesheet" href="styles/media/media_lk.css">
     <title>Личный кабинет</title>
@@ -107,36 +106,38 @@
     </div>
 
     <?php require './php/footer.php'; ?>
-    <!-- Подключение jQuery (если еще не подключен) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="./scripts/custom‑dialogs.js"></script>
     <script>
         // Функция для удаления мероприятия
         function deleteEvent(eventId) {
-            // Подтверждение удаления
-            if (!confirm("Вы уверены, что хотите удалить это мероприятие?")) {
-                return; // Если пользователь отменил, ничего не делаем
-            }
-
-            // Отправка AJAX-запроса
-            $.ajax({
-                url: 'php/delete_event.php', // Файл, который обрабатывает удаление
-                type: 'GET',
-                data: {
-                    event_id: eventId
-                }, // Передаем ID мероприятия
-                dataType: 'json', // Ожидаем JSON-ответ
-                success: function(response) {
-                    if (response.success) {
-                        // Удаляем карточку мероприятия со страницы
-                        $(`#event-${eventId}`).remove(); // Удаляем элемент с ID event-{eventId}
-                        alert(response.message); // Показываем сообщение об успехе
-                    } else {
-                        alert(response.message); // Показываем сообщение об ошибке
-                    }
-                },
-                error: function(xhr, status, error) {
-                    alert("Ошибка при отправке запроса: " + error); // Обработка ошибок AJAX
+            // Подтверждение удаления через кастомное окно
+            customConfirm("Вы уверены, что хотите удалить это мероприятие?", function(isConfirmed) {
+                if (!isConfirmed) {
+                    return; // Если пользователь отменил, ничего не делаем
                 }
+
+                // Отправка AJAX-запроса
+                $.ajax({
+                    url: 'php/delete_event.php', // Файл, который обрабатывает удаление
+                    type: 'GET',
+                    data: {
+                        event_id: eventId
+                    }, // Передаем ID мероприятия
+                    dataType: 'json', // Ожидаем JSON-ответ
+                    success: function(response) {
+                        if (response.success) {
+                            // Удаляем карточку мероприятия со страницы
+                            $(`#event-${eventId}`).remove(); // Удаляем элемент с ID event-{eventId}
+                            customAlert(response.message); // Показываем сообщение об успехе
+                        } else {
+                            customAlert(response.message); // Показываем сообщение об ошибке
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        customAlert("Ошибка при отправке запроса: " + error); // Обработка ошибок AJAX
+                    }
+                });
             });
         }
     </script>
@@ -158,14 +159,15 @@
                         $('#modalComment').text(response.comment); // Комментарий
                         $('#commentModal').css('display', 'block'); // Показываем модальное окно
                     } else {
-                        alert(response.message); // Показываем сообщение об ошибке
+                        customAlert(response.message); // Показываем сообщение об ошибке через кастомное окно
                     }
                 },
                 error: function(xhr, status, error) {
-                    alert("Ошибка при загрузке данных: " + error); // Обработка ошибок AJAX
+                    customAlert("Ошибка при загрузке данных: " + error); // Обработка ошибок AJAX через кастомное окно
                 }
             });
         }
+
 
         // Закрытие модального окна
         $(document).ready(function() {

@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="styles/auth.css">
     <link rel="stylesheet" href="styles/lk.css">
-    <!-- <link rel="stylesheet" href="styles/search_form.css"> -->
     <link rel="stylesheet" href="styles/media/media_auth.css">
     <link rel="stylesheet" href="styles/media/media_lk.css">
     <title>Личный кабинет</title>
@@ -46,7 +45,6 @@
                      JOIN events e ON oe.event_id = e.event_id
                      WHERE o.organizator_id = $userId AND e.event_date >= CURRENT_DATE AND is_active = false and e.is_approved = true
                      ORDER BY event_date LIMIT $limit OFFSET $offset";
-    // $getEvents = "SELECT * FROM events WHERE is_active = true AND event_date >= CURRENT_DATE ORDER BY event_date LIMIT $limit OFFSET $offset";
     $resultGetEvents = pg_query($conn, $getEvents);
 
     // Запрос для подсчёта всех записей (без лимита и оффсета)
@@ -54,7 +52,6 @@
                    JOIN organizators_events oe ON o.organizator_id = oe.organizator_id
                    JOIN events e ON oe.event_id = e.event_id
                    WHERE o.organizator_id = $userId AND e.event_date > CURRENT_DATE AND is_active = false and e.is_approved = true;";
-    // $countQuery = "SELECT COUNT(*) FROM events WHERE is_active = true AND event_date >= CURRENT_DATE";
     $countResult = pg_query($conn, $countQuery);
     $totalRows = pg_fetch_result($countResult, 0, 0);
     $totalPages = ceil($totalRows / $limit);
@@ -111,6 +108,7 @@
 
     <?php require './php/footer.php'; ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="./scripts/custom‑dialogs.js"></script>
     <script>
         // Обработчик отмены активных мероприятий
         document.addEventListener('DOMContentLoaded', function() {
@@ -123,15 +121,19 @@
                     const isActive = button.getAttribute('data-status') === 't';
 
                     if (!isActive) {
-                        if (!confirm("Вы уверены, что хотите отпрвить мероприятие повторно?")) {
-                            return; // Если пользователь отменил, ничего не делаем
-                        }
-                        updateEventStatus(eventId, null);
+                        customConfirm("Вы уверены, что хотите отправить мероприятие повторно?", function(confirmed) {
+                            if (confirmed) {
+                                updateEventStatus(eventId, null);
+                            }
+                        });
                     } else {
-                        const reason = prompt('Укажите причину отмены мероприятия:');
-                        if (reason !== null && reason.trim() !== '') {
-                            updateEventStatus(eventId, reason);
-                        }
+                        customPrompt('Укажите причину отмены мероприятия:', function(reason) {
+                            if (reason !== null && reason.trim() !== '') {
+                                updateEventStatus(eventId, reason);
+                            } else {
+                                customAlert('Причина отмены обязательна.');
+                            }
+                        });
                     }
                 });
             });
@@ -148,15 +150,15 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            alert(data.message);
+                            customAlert(data.message);
                             document.querySelector(`.toggle-event-button[data-id="${eventId}"]`).closest('.card').remove();
                         } else {
-                            alert(data.message || 'Ошибка при изменении статуса.');
+                            customAlert(data.message || 'Ошибка при изменении статуса.');
                         }
                     })
                     .catch(error => {
                         console.error('Ошибка сети:', error);
-                        alert('Ошибка сети. Попробуйте позже.');
+                        customAlert('Ошибка сети. Попробуйте позже.');
                     });
             }
         });

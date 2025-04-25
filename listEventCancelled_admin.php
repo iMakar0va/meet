@@ -25,7 +25,6 @@ $limit = 6; // Количество мероприятий на страницу
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
-// ..............
 // Фильтрация
 $whereClauses = [];
 $params = [];
@@ -40,7 +39,6 @@ if (!empty($_GET['event_date'])) {
     $params[] = $_GET['event_date'];
 }
 $whereClause = count($whereClauses) > 0 ? " AND " . implode(" AND ", $whereClauses) : "";
-// ..............
 
 // Запрос на получение мероприятий с пагинацией
 $getEvents = "SELECT * FROM events WHERE is_active = false and is_approved = true  AND event_date >= CURRENT_DATE $whereClause ORDER BY event_date LIMIT $limit OFFSET $offset";
@@ -59,7 +57,6 @@ $totalPages = ceil($totalRows / $limit);
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
-    <!-- <link rel="stylesheet" href="styles/auth.css"> -->
     <link rel="stylesheet" href="styles/lk.css">
     <link rel="stylesheet" href="styles/search_form.css">
     <link rel="stylesheet" href="styles/media/media_auth.css">
@@ -133,6 +130,8 @@ $totalPages = ceil($totalRows / $limit);
             window.location.href = 'listEventCancelled_admin.php';
         });
     </script>
+    <script src="./scripts/custom‑dialogs.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         // Обработчик одобрения активных мероприятий
         document.addEventListener('DOMContentLoaded', function() {
@@ -142,34 +141,39 @@ $totalPages = ceil($totalRows / $limit);
             toggleButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const eventId = button.getAttribute('data-id');
-                    const statusElement = document.querySelector(`.status[data-id="${eventId}"]`);
 
-                    fetch('./php/toggle_event.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                            body: `event_id=${eventId}`
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                if (data.newStatus === 'true') {
+                    // Используем кастомное подтверждение
+                    customConfirm("Вы уверены, что хотите одобрить это мероприятие?", function(confirmed) {
+                        if (!confirmed) {
+                            return; // Если пользователь отменил, ничего не делаем
+                        }
+
+                        // Если пользователь подтвердил, отправляем запрос на одобрение мероприятия
+                        fetch('./php/toggle_event.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: `event_id=${eventId}`
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
                                     button.closest('.card').remove();
+                                    customAlert("Мероприятие одобрено.");
+                                } else {
+                                    customAlert(data.message || 'Ошибка при изменении статуса.');
                                 }
-                            } else {
-                                alert(data.message || 'Ошибка при изменении статуса.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Ошибка сети:', error);
-                            alert('Ошибка сети. Попробуйте позже.');
-                        });
+                            })
+                            .catch(error => {
+                                console.error('Ошибка сети:', error);
+                                customAlert('Ошибка сети. Попробуйте позже.');
+                            });
+                    });
                 });
             });
         });
     </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         // Функция для открытия модального окна и загрузки данных
         function showComment(eventId) {

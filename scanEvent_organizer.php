@@ -25,7 +25,16 @@
 
     $userId = $_SESSION['user_id'];
 
-    // .......................
+    // Проверка, является ли пользователь организатором
+    $query = "SELECT 1 FROM organizators WHERE organizator_id = $1";
+    $result = pg_query_params($conn, $query, [$userId]);
+
+    if (!$result || pg_num_rows($result) == 0) {
+        // Если пользователь не организатор, перенаправляем в личный кабинет
+        header("Location: lk.php");
+        exit();
+    }
+
     // Настройки пагинации
     $limit = 6; // Количество мероприятий на страницу
     $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
@@ -49,8 +58,6 @@
     $countResult = pg_query_params($conn, $countQuery, [$userId]);
     $totalRows = pg_fetch_result($countResult, 0, 0);
     $totalPages = ceil($totalRows / $limit);
-    // .................
-
     ?>
 
     <div class="container">

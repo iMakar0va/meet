@@ -1,6 +1,7 @@
 <?php
 session_start();
 require 'php/conn.php';
+
 // Проверка, авторизован ли пользователь
 if (!isset($_SESSION['user_id'])) {
     header("Location: auth.php");
@@ -9,22 +10,28 @@ if (!isset($_SESSION['user_id'])) {
 
 $userIdSession = $_SESSION['user_id'];
 
-// Проверка, является ли пользователь администратором
-$queryAdmin = "SELECT 1 FROM users WHERE user_id = $1 AND is_admin = true";
-$resultAdmin = pg_query_params($conn, $queryAdmin, [$userIdSession]);
+// Проверка, является ли пользователь администратором или его user_id совпадает с параметром в GET
+if (isset($_GET['user_id'])) {
+    $userIdFromGet = $_GET['user_id'];
 
-// if (!$resultAdmin || pg_num_rows($resultAdmin) == 0) {
-//     // Если пользователь не является администратором, перенаправляем на страницу личного кабинета
-//     header("Location: lk.php");
-//     exit();
-// }
-if (!isset($_GET['user_id'])) {
-    die("Ошибка: пользователь не найден.");
+    // Если это не администратор и user_id не совпадает с сессионным, перенаправляем на личный кабинет
+    if ($userIdFromGet !== $userIdSession) {
+        // Проверка, является ли пользователь администратором
+        $queryAdmin = "SELECT 1 FROM users WHERE user_id = $1 AND is_admin = true";
+        $resultAdmin = pg_query_params($conn, $queryAdmin, [$userIdSession]);
+
+        if (!$resultAdmin || pg_num_rows($resultAdmin) == 0) {
+            // Если пользователь не администратор и его user_id не совпадает с параметром GET
+            header("Location: lk.php");
+            exit();
+        }
+    }
+} else {
+    die("Ошибка: user_id не передан.");
 }
 
-$usertId = intval($_GET['user_id']);
-
-// Получаем данные мероприятия
+// Получаем данные пользователя из базы
+$usertId = intval($_GET['user_id']); // Важно использовать intval для безопасности
 $query = "SELECT * FROM users WHERE user_id = $1";
 $result = pg_query_params($conn, $query, [$usertId]);
 $user = pg_fetch_assoc($result);
@@ -129,6 +136,7 @@ $dateFormatted = date("d/m/Y", strtotime($user['birth_date']));
     require './php/footer.php';
     ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="./scripts/custom‑dialogs.js"></script>
     <script src="./scripts/change_user.js"></script>
 </body>
 

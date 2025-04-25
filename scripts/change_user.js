@@ -140,15 +140,15 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 if (response.success) {
-                    alert(response.message);
-                    window.history.back();
-                    // window.location.href = "listUser_admin.php";
+                    customAlert(response.message, function () {
+                        window.history.back();
+                    });
                 } else {
-                    alert("Ошибка: " + response.message);
+                    customAlert("Ошибка: " + response.message);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                alert("Ошибка AJAX: " + textStatus + " - " + errorThrown);
+                customAlert("Ошибка AJAX: " + textStatus + " - " + errorThrown);
                 console.log(jqXHR.responseText); // Логирование ошибки в консоль
             }
         });
