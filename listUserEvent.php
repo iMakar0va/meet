@@ -20,7 +20,7 @@ if (!isset($_GET['event_id'])) {
 $eventId = $_GET['event_id'];
 
 // Проверка, является ли пользователь организатором мероприятия
-$queryOrganizer = "SELECT 1 FROM events WHERE event_id = $1 AND organizer_id = $2";
+$queryOrganizer = "SELECT 1 FROM organizators_events WHERE event_id = $1 AND organizator_id = $2";
 $resultOrganizer = pg_query_params($conn, $queryOrganizer, [$eventId, $userId]);
 
 if (!$resultOrganizer || pg_num_rows($resultOrganizer) === 0) {

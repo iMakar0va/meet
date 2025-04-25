@@ -1,10 +1,30 @@
 <?php
+session_start();
 require '../php/conn.php';
+
+// Проверка авторизации
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../lk.php");
+    exit();
+}
+
+$userId = $_SESSION['user_id'];
 
 $eventId = isset($_GET['event_id']) ? intval($_GET['event_id']) : null;
 if (!$eventId) {
     die("Ошибка: event_id не указан.");
 }
+
+// Проверка, является ли пользователь организатором мероприятия
+$queryOrganizer = "SELECT 1 FROM organizators_events WHERE event_id = $1 AND organizator_id = $2";
+$resultOrganizer = pg_query_params($conn, $queryOrganizer, [$eventId, $userId]);
+
+if (!$resultOrganizer || pg_num_rows($resultOrganizer) === 0) {
+    // Если пользователь не организатор этого мероприятия
+    header("Location: ../lk.php");
+    exit();
+}
+
 $getTitle = "select * from events where event_id = $1";
 $getTitleResult = pg_query_params($conn, $getTitle, [$eventId]);
 $row = pg_fetch_assoc($getTitleResult);
