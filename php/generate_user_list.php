@@ -37,7 +37,7 @@ if ($event = pg_fetch_assoc($resultEvent)) {
 $queryUsers = "SELECT u.user_id, u.first_name, u.last_name, u.email, u.gender, u.birth_date, ue.presense, ue.is_signed
                FROM users u
                JOIN user_events ue ON u.user_id = ue.user_id
-               WHERE ue.event_id = $1";
+               WHERE ue.event_id = $1 order by user_id";
 $resultUsers = pg_query_params($conn, $queryUsers, [$eventId]);
 
 if (!$resultUsers) {
@@ -76,7 +76,7 @@ while ($user = pg_fetch_assoc($resultUsers)) {
         $user['user_id'],
         htmlspecialchars($user['last_name'], ENT_QUOTES, 'UTF-8') . ' ' . htmlspecialchars($user['first_name'], ENT_QUOTES, 'UTF-8'),
         htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8'),
-        htmlspecialchars($user['gender'] == 'M' ? 'Муж' : 'Жен', ENT_QUOTES, 'UTF-8'),
+        htmlspecialchars($user['gender'] == 'мужской' ? 'Муж' : 'Жен', ENT_QUOTES, 'UTF-8'),
         htmlspecialchars($user['birth_date'], ENT_QUOTES, 'UTF-8'),
         $presenceStatus,
         $signStatus

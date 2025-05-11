@@ -3,7 +3,7 @@ session_start();
 require './php/header.php';
 require './php/conn.php';
 
-$limit = 6; // Количество организаторов на страницу
+$limit = 4; // Количество организаторов на страницу
 $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $offset = ($page - 1) * $limit;
 

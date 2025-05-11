@@ -21,7 +21,7 @@ if (!$resultAdmin || pg_num_rows($resultAdmin) == 0) {
     exit();
 }
 
-$limit = 1; // Количество организаторов на страницу
+$limit = 4; // Количество организаторов на страницу
 $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $offset = ($page - 1) * $limit;
 

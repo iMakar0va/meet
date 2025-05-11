@@ -40,7 +40,7 @@ $imageSrc = !empty($row["image"])
         <button class="btn1 toggle-event-button"
             data-id="<?= htmlspecialchars($row['event_id']) ?>"
             data-status="<?= htmlspecialchars($row["is_active"]) ?>">
-            <?= htmlspecialchars($row["is_active"]) === 't' ? 'Отменить' : 'Одобрить' ?>
+            <?= htmlspecialchars($row["is_active"]) === 't' ? 'Отменить' : 'Возобновить' ?>
         </button>
         <?php
         if ($row["is_active"] != 't') { ?>
