@@ -41,16 +41,14 @@
 
     // Запрос на получение мероприятий с пагинацией
     $getEvents = "SELECT * FROM organizators o
-                     JOIN organizators_events oe ON o.organizator_id = oe.organizator_id
-                     JOIN events e ON oe.event_id = e.event_id
+                     JOIN events e ON e.organizator_id = o.organizator_id
                      WHERE o.organizator_id = $userId AND e.event_date >= CURRENT_DATE AND is_active = false and e.is_approved = true
                      ORDER BY event_date LIMIT $limit OFFSET $offset";
     $resultGetEvents = pg_query($conn, $getEvents);
 
     // Запрос для подсчёта всех записей (без лимита и оффсета)
     $countQuery = "SELECT COUNT(*) FROM organizators o
-                   JOIN organizators_events oe ON o.organizator_id = oe.organizator_id
-                   JOIN events e ON oe.event_id = e.event_id
+                   JOIN events e ON e.organizator_id = o.organizator_id
                    WHERE o.organizator_id = $userId AND e.event_date > CURRENT_DATE AND is_active = false and e.is_approved = true;";
     $countResult = pg_query($conn, $countQuery);
     $totalRows = pg_fetch_result($countResult, 0, 0);

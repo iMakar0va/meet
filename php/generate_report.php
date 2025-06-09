@@ -57,9 +57,9 @@ if ($event = pg_fetch_assoc($resultEvent)) {
 
 // Получение данных об организаторе
 $queryOrganizer = "SELECT o.name, o.phone_number, o.email
-                   FROM organizators_events oe
-                   JOIN organizators o ON o.organizator_id = oe.organizator_id
-                   WHERE oe.event_id = $1";
+                   FROM events e
+                   JOIN organizators o ON o.organizator_id = e.organizator_id
+                   WHERE e.event_id = $1";
 
 $resultOrganizer = pg_query_params($conn, $queryOrganizer, [$eventId]);
 

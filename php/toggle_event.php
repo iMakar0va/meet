@@ -53,8 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Получаем email организатора
         $emailQuery = "SELECT u.email FROM users u
-                       JOIN organizators_events oe ON u.user_id = oe.organizator_id
-                       WHERE oe.event_id = $1";
+                       JOIN events e ON u.user_id = e.organizator_id
+                       WHERE e.event_id = $1";
         $emailResult = pg_query_params($conn, $emailQuery, [$eventId]);
         $organizerEmail = ($emailResult && $userData = pg_fetch_assoc($emailResult)) ? $userData['email'] : null;
 

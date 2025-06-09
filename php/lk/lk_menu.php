@@ -44,10 +44,9 @@
     // Подсчет количества мероприятий, ожидающих одобрения
     $pendingEventsQuery = "
                             SELECT COUNT(*)
-                            FROM events e
-                            JOIN organizators_events oe ON e.event_id = oe.event_id
-                            WHERE e.is_approved = false
-                            AND oe.organizator_id = $1;
+                            FROM events
+                            WHERE is_approved = false
+                            AND organizator_id = $1;
                         ";
     $pendingEventsResult = pg_query_params($conn, $pendingEventsQuery, [$userId]);
     $pendingEventsCount = pg_fetch_result($pendingEventsResult, 0, 0);

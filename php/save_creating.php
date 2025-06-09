@@ -97,8 +97,8 @@ if ($imageContent === false) {
 try {
     // Вставка мероприятия
     $insertEventQuery = "
-        INSERT INTO events(image, title, type, topic, description, start_time, end_time, event_date, city, address, organizer, place, phone, email, program_file)
-        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+        INSERT INTO events(image, title, type, topic, description, start_time, end_time, event_date, city, address, organizer, place, phone, email, program_file, organizator_id)
+        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
         RETURNING event_id;
     ";
 
@@ -118,26 +118,11 @@ try {
         $eventData['place'],
         $eventData['phone'],
         $organizerEmail,
-        $programFile
+        $programFile,
+        $userId
     ]);
 
-    // Получаем ID вставленного события
-    $eventRow = pg_fetch_assoc($eventResult);
-    $eventId = $eventRow['event_id'];
-
-    // Вставка связи между мероприятием и организатором
-    $insertOrganizerEventQuery = "
-        INSERT INTO organizators_events(event_id, organizator_id)
-        VALUES ($1, $2);
-    ";
-
-    $organizerStmt = pg_prepare($conn, "insert_organizator_event", $insertOrganizerEventQuery);
-    $organizerResult = pg_execute($conn, "insert_organizator_event", [
-        $eventId,
-        $userId // организатор из сессии
-    ]);
-
-    if ($eventResult && $organizerResult) {
+    if ($eventResult) {
         $response['success'] = true;
         $response['message'] = 'Мероприятие успешно создано.';
     } else {

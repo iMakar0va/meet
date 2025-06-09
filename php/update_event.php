@@ -145,9 +145,9 @@ while ($row = pg_fetch_assoc($resultParticipants)) {
 }
 
 // Получаем email организатора
-$queryOrganizer = "SELECT organizators.email FROM organizators_events
-                   JOIN organizators ON organizators_events.organizator_id = organizators.organizator_id
-                   WHERE organizators_events.event_id = $1 LIMIT 1";
+$queryOrganizer = "SELECT organizators.email FROM events
+                   JOIN organizators ON events.organizator_id = organizators.organizator_id
+                   WHERE events.event_id = $1 LIMIT 1";
 $resultOrganizer = pg_query_params($conn, $queryOrganizer, [$eventId]);
 
 if ($resultOrganizer && pg_num_rows($resultOrganizer) > 0) {

@@ -39,40 +39,36 @@ function fetchEventStatistics($conn, $userId)
     ];
 }
 
-// Функция для получения статистики организатора (с учетом связи через organizators_events)
+// Функция для получения статистики организатора
 function fetchOrganizerStatistics($conn, $userId)
 {
     // Количество предстоящих мероприятий
     $createdUpcomingEventsQuery = "
         SELECT COUNT(*)
-        FROM events e
-        JOIN organizators_events oe ON e.event_id = oe.event_id
-        WHERE oe.organizator_id = $1 AND e.is_active = true AND e.is_approved = true and e.event_date >= CURRENT_DATE
+        FROM events
+        WHERE organizator_id = $1 AND is_active = true AND is_approved = true and event_date >= CURRENT_DATE
     ";
 
     // Количество прошедших мероприятий
     $createdPastEventsQuery = "
         SELECT COUNT(*)
-        FROM events e
-        JOIN organizators_events oe ON e.event_id = oe.event_id
-        WHERE oe.organizator_id = $1 AND e.is_active = true AND e.is_approved = true and e.event_date < CURRENT_DATE
+        FROM events
+        WHERE organizator_id = $1 AND is_active = true AND is_approved = true and event_date < CURRENT_DATE
     ";
 
     // Количество отменённых мероприятий
     $createdCancelledEventsQuery = "
         SELECT COUNT(*)
-        FROM events e
-        JOIN organizators_events oe ON e.event_id = oe.event_id
-        WHERE oe.organizator_id = $1 AND e.is_active = false AND e.is_approved = true
+        FROM events
+        WHERE organizator_id = $1 AND is_active = false AND is_approved = true
     ";
 
     // Популярные темы мероприятий
     $popularTopicsQuery = "
         SELECT e.topic, COUNT(*) AS topic_count
         FROM events e
-        JOIN organizators_events oe ON e.event_id = oe.event_id
-        WHERE oe.organizator_id = $1
-        GROUP BY e.topic
+        WHERE organizator_id = $1
+        GROUP BY topic
         ORDER BY topic_count DESC
         LIMIT 3
     ";

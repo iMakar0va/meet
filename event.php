@@ -22,9 +22,9 @@
         $eventQuery = pg_prepare($conn, "get_event", "SELECT * FROM events WHERE event_id = $1;");
         $resultGetEvents = pg_execute($conn, "get_event", [$eventId]);
 
-        $organizerQuery = pg_prepare($conn, "get_organizer", "SELECT * FROM organizators_events oe
-                                                              JOIN organizators o ON o.organizator_id = oe.organizator_id
-                                                              WHERE oe.event_id = $1;");
+        $organizerQuery = pg_prepare($conn, "get_organizer", "SELECT * FROM events e
+                                                              JOIN organizators o ON o.organizator_id = e.organizator_id
+                                                              WHERE e.event_id = $1;");
         $resultGetOrganizator = pg_execute($conn, "get_organizer", [$eventId]);
         $resGetOrganizator = pg_fetch_assoc($resultGetOrganizator);
 

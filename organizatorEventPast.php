@@ -51,8 +51,7 @@
         COUNT(CASE WHEN e.is_active = true AND e.is_approved = true and e.event_date < CURRENT_DATE THEN 1 END) AS past_events,
         COUNT(CASE WHEN e.is_active = false AND e.is_approved = true THEN 1 END) AS canceled_events
     FROM events e
-    JOIN organizators_events oe ON e.event_id = oe.event_id
-    WHERE oe.organizator_id = $1
+    WHERE e.organizator_id = $1
 ";
     $statsResult = pg_query_params($conn, $statsQuery, [$organizerId]);
     $stats = pg_fetch_assoc($statsResult);
@@ -61,8 +60,7 @@
     $eventTypesQuery = "
         SELECT DISTINCT e.topic
         FROM events e
-        JOIN organizators_events oe ON e.event_id = oe.event_id
-        WHERE oe.organizator_id = $1";
+        WHERE e.organizator_id = $1";
     $eventTypesResult = pg_query_params($conn, $eventTypesQuery, [$organizerId]);
 
     $eventTypes = [];
@@ -106,8 +104,7 @@
 
                 // Получение списка мероприятий с пагинацией
                 $getEvents = "SELECT e.* FROM events e
-                JOIN organizators_events oe ON e.event_id = oe.event_id
-                WHERE oe.organizator_id = $1 and e.is_active = true
+                WHERE e.organizator_id = $1 and e.is_active = true
                 AND e.is_approved = true and e.event_date < CURRENT_DATE
                 ORDER BY e.event_date LIMIT $limit OFFSET $offset";
 
@@ -115,8 +112,7 @@
 
                 // Подсчет общего количества мероприятий
                 $countQuery = "SELECT COUNT(*) FROM events e
-                JOIN organizators_events oe ON e.event_id = oe.event_id
-                WHERE oe.organizator_id = $1 AND e.is_active = true
+                WHERE e.organizator_id = $1 AND e.is_active = true
                 AND e.is_approved = true and e.event_date < CURRENT_DATE ;";
 
                 $countResult = pg_query_params($conn, $countQuery, [$organizerId]);

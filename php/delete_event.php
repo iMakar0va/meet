@@ -32,8 +32,8 @@ $eventData = pg_fetch_assoc($result);
 $eventTitle = $eventData['title'];
 $organizerEmail = $eventData['email'];
 
-// Удаляем мероприятие из таблицы organizators_events
-$deleteOrganizersQuery = "DELETE FROM organizators_events WHERE event_id = $1;";
+// Удаляем мероприятие из таблицы
+$deleteOrganizersQuery = "DELETE FROM events WHERE event_id = $1;";
 $deleteOrganizersResult = pg_query_params($conn, $deleteOrganizersQuery, [$eventId]);
 
 if (!$deleteOrganizersResult) {

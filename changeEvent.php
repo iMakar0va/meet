@@ -28,7 +28,7 @@ if ($resultAdmin && pg_num_rows($resultAdmin) > 0) {
     // Если пользователь не администратор, проверяем, является ли он организатором этого мероприятия
     $queryOrganizer = "
         SELECT 1
-        FROM organizators_events
+        FROM events
         WHERE organizator_id = $1 AND event_id = $2
     ";
     $resultOrganizer = pg_query_params($conn, $queryOrganizer, [$userId, $eventId]);
